@@ -8,7 +8,7 @@ import AppWidget from './App';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'jupyterlab-apod',
+  id: 'jupyterlab-ap',
   autoStart: true,
   requires: [ICommandPalette],
   activate: async (app: JupyterFrontEnd, palette: ICommandPalette) => {
