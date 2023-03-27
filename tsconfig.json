@@ -3,7 +3,6 @@
     "allowSyntheticDefaultImports": true,
     "composite": true,
     "skipLibCheck": true,
-    "declaration": true,
     "esModuleInterop": true,
     "incremental": true,
     "jsx": "react-jsx",
@@ -21,10 +20,7 @@
     "target": "ES2018",
     "allowJs": true,
     "types": ["jest"],
-    "checkJs":false,
-    "emitDeclarationOnly": true,
     "jsxImportSource": "@emotion/react",
-  
   },
-  "include": ["./src/**/*","./src/i18n/default/cn.json"]
+  "include": ["./src/**/*","./src/i18n/default/cn.json"],
 }

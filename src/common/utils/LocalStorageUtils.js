@@ -19,7 +19,10 @@ export default class LocalStorageUtils {
   }
 
   static getSessionScopedStoreForComponent(componentName, id) {
-    return new LocalStorageStore([componentName, id].join('-'), 'sessionStorage');
+    return new LocalStorageStore(
+      [componentName, id].join('-'),
+      'sessionStorage'
+    );
   }
 }
 
@@ -27,7 +30,7 @@ export default class LocalStorageUtils {
  * Interface to browser local storage that allows for setting key-value pairs under the specified
  * "scope".
  */
-class LocalStorageStore {
+export class LocalStorageStore {
   constructor(scope, type) {
     this.scope = scope;
     if (type === 'localStorage') {
@@ -54,7 +57,10 @@ class LocalStorageStore {
    * @param stateRecord: Immutable.Record instance containing component state.
    */
   saveComponentState(stateRecord) {
-    this.setItem(LocalStorageStore.reactComponentStateKey, JSON.stringify(stateRecord.toJSON()));
+    this.setItem(
+      LocalStorageStore.reactComponentStateKey,
+      JSON.stringify(stateRecord.toJSON())
+    );
   }
 
   /**
@@ -62,7 +68,12 @@ class LocalStorageStore {
    * local storage.
    */
   withScopePrefix(key) {
-    return ['MLflowLocalStorage', LocalStorageUtils.version, this.scope, key].join('-');
+    return [
+      'MLflowLocalStorage',
+      LocalStorageUtils.version,
+      this.scope,
+      key
+    ].join('-');
   }
 
   /** Save the specified key-value pair in local storage. */
