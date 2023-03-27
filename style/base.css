@@ -3,3 +3,5 @@
 
     https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
+@import url(../node_modules/antd/dist/antd.css);
+@import url(./antd-override.css);

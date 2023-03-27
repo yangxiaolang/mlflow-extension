@@ -2,10 +2,11 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "composite": true,
+    "skipLibCheck": true,
     "declaration": true,
     "esModuleInterop": true,
     "incremental": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -18,7 +19,12 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ES2018",
-    "types": ["jest"]
+    "allowJs": true,
+    "types": ["jest"],
+    "checkJs":false,
+    "emitDeclarationOnly": true,
+    "jsxImportSource": "@emotion/react",
+  
   },
-  "include": ["src/*"]
+  "include": ["./src/**/*","./src/i18n/default/cn.json"]
 }
