@@ -8,7 +8,7 @@ const FALLBACK_LOCALES = {
   ja: 'ja-JP',
   kr: 'kr-KR',
   it: 'it-IT',
-  de: 'de-DE',
+  de: 'de-DE'
 };
 
 const loadedMessages = {};

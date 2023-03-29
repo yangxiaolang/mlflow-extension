@@ -32,7 +32,7 @@
     "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
-    "build:lib": "tsc --sourceMap",
+    "build:lib": "webpack -c webpack.config.js",
     "build:lib:prod": "tsc",
     "clean": "jlpm clean:lib",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
@@ -64,6 +64,8 @@
     "@jupyterlab/builder": "^3.1.0",
     "@jupyterlab/testutils": "^3.0.0",
     "@types/jest": "^26.0.0",
+    "@types/react": "^18.0.31",
+    "@types/react-redux": "^7.1.25",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
@@ -71,6 +73,7 @@
     "argparse": "^2.0.1",
     "babel-plugin-formatjs": "^10.2.14",
     "babel-plugin-react-require": "^3.1.3",
+    "convert-source-map": "^2.0.0",
     "customize-cra": "^1.0.0",
     "enzyme": "^3.11.0",
     "eslint": "^7.14.0",
@@ -78,6 +81,7 @@
     "eslint-plugin-no-only-tests": "^2.6.0",
     "eslint-plugin-prettier": "^3.1.4",
     "fast-glob": "^3.2.11",
+    "find-root": "^1.1.0",
     "jest": "^26.0.0",
     "jest-canvas-mock": "^2.2.0",
     "jest-localstorage-mock": "^2.3.0",
@@ -97,10 +101,6 @@
     "webpack": "^5.76.3",
     "webpack-cli": "^5.0.1"
   },
-  "sideEffects": [
-    "style/*.css",
-    "style/index.js"
-  ],
   "styleModule": "style/index.js",
   "publishConfig": {
     "access": "public"

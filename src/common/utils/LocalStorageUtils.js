@@ -27,7 +27,7 @@ export default class LocalStorageUtils {
  * Interface to browser local storage that allows for setting key-value pairs under the specified
  * "scope".
  */
-class LocalStorageStore {
+export class LocalStorageStore {
   constructor(scope, type) {
     this.scope = scope;
     if (type === 'localStorage') {

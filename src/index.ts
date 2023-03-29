@@ -4,6 +4,7 @@ import {
 } from '@jupyterlab/application';
 import { ICommandPalette, MainAreaWidget } from '@jupyterlab/apputils';
 import AppWidget from './App';
+import { I18nUtils } from './i18n/I18nUtils';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
@@ -20,6 +21,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const newWidget = async () => {
       // Create a blank content widget inside of a MainAreaWidget
       const content = AppWidget;
+      await I18nUtils.initI18n();
       const widget = new MainAreaWidget({ content });
 
       widget.id = 'apod-jupyterlab';
