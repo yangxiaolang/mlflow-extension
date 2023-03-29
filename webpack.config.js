@@ -1,19 +1,25 @@
-var path = require('path');
-var webpack = require('webpack');
-
+const path = require('path');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 module.exports = {
   entry: './src/index.ts',
   mode: 'development',
   output: {
     path: path.resolve(__dirname, 'lib'),
-    filename: '[name].js',
-    libraryTarget: 'commonjs'
+    filename: 'index.js',
+    libraryTarget: 'commonjs2'
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js','jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
   },
   module: {
     rules: [
+      {
+        test: /\.m?jsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+        }
+      },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
@@ -21,12 +27,21 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['css-loader']
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.svg$/,
+        type: 'asset/inline'
+      },
+      {
+        test: /\.png/,
+        type: 'asset/resource'
       }
     ]
   },
-  devtool: 'eval-source-map',
-  plugins: [],
+  plugins: [
+    // new MiniCssExtractPlugin()
+  ],
   externals: [
     // Everything that starts with "@phosphor/"
     /^@phosphor\/.+$/,
