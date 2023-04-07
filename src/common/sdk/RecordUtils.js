@@ -15,7 +15,7 @@ export class RecordUtils {
     const record = {};
     for (const key in pojo) {
       // don't convert keys with undefined value
-      if (pojo.hasOwnProperty(key) && pojo[key] !== undefined) {
+      if (!!pojo && typeof pojo === 'object' && pojo[key] !== undefined) {
         // Record an event when the value is null, since if it's null and we still create the
         // object, it might cause some bug CJ-18735
         if (pojo[key] === null) {

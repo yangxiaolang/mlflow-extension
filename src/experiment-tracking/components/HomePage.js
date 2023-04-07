@@ -14,20 +14,22 @@ export class HomePageImpl extends Component {
     history: PropTypes.shape({}),
     dispatchListExperimentsApi: PropTypes.func.isRequired,
     experimentIds: PropTypes.arrayOf(PropTypes.string),
-    compareExperiments: PropTypes.bool,
+    compareExperiments: PropTypes.bool
   };
 
   static defaultProps = {
-    compareExperiments: false,
+    compareExperiments: false
   };
 
   state = {
-    listExperimentsRequestId: getUUID(),
+    listExperimentsRequestId: getUUID()
   };
 
   componentDidMount() {
     if (process.env.HIDE_EXPERIMENT_LIST !== 'true') {
-      this.props.dispatchListExperimentsApi(this.state.listExperimentsRequestId);
+      this.props.dispatchListExperimentsApi(
+        this.state.listExperimentsRequestId
+      );
     }
   }
 
@@ -57,9 +59,11 @@ const mapStateToProps = (state, ownProps) => {
   if (match.url === '/') {
     return {};
   }
-
   if (match.url.startsWith('/experiments')) {
-    return { experimentIds: [match.params.experimentId], compareExperiments: false };
+    return {
+      experimentIds: [match.params.experimentId],
+      compareExperiments: false
+    };
   }
 
   if (match.url.startsWith(Routes.compareExperimentsPageRoute)) {
@@ -72,12 +76,15 @@ const mapStateToProps = (state, ownProps) => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    dispatchListExperimentsApi: (requestId) => {
+    dispatchListExperimentsApi: requestId => {
       return dispatch(listExperimentsApi(requestId));
-    },
+    }
   };
 };
 
-export const HomePage = connect(mapStateToProps, mapDispatchToProps)(HomePageImpl);
+export const HomePage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomePageImpl);

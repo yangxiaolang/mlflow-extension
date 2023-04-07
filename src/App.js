@@ -1,6 +1,6 @@
 import { ReactWidget } from '@jupyterlab/apputils';
 import './index.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import './index.css';
 import '@databricks/design-system/dist/index.css';
@@ -36,6 +36,11 @@ export function MLFlowRoot() {
     </IntlProvider>
   );
 }
+
+// const Counter = () => {
+//   const [num, setNum] = useState(0);
+//   return <button onClick={() => setNum(num + 5)}>{num}</button>;
+// };
 
 // import './App.css';
 export default ReactWidget.create(<MLFlowRoot></MLFlowRoot>);

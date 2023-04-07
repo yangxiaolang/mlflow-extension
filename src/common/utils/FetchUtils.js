@@ -9,39 +9,43 @@ export const HTTPMethods = {
   POST: 'POST',
   PUT: 'PUT',
   PATCH: 'PATCH',
-  DELETE: 'DELETE',
+  DELETE: 'DELETE'
 };
 
 // To enable running behind applications that require specific headers
 // to be set during HTTP requests (e.g., CSRF tokens), we support parsing
 // a set of cookies with a key prefix of "$appName-request-header-$headerName",
 // which will be added as an HTTP header to all requests.
-export const getDefaultHeadersFromCookies = (cookieStr) => {
+export const getDefaultHeadersFromCookies = cookieStr => {
   const headerCookiePrefix = 'mlflow-request-header-';
   const parsedCookie = cookie.parse(cookieStr);
   if (!parsedCookie || Object.keys(parsedCookie).length === 0) {
     return {};
   }
   return Object.keys(parsedCookie)
-    .filter((cookieName) => cookieName.startsWith(headerCookiePrefix))
+    .filter(cookieName => cookieName.startsWith(headerCookiePrefix))
     .reduce(
       (acc, cookieName) => ({
         ...acc,
-        [cookieName.substring(headerCookiePrefix.length)]: parsedCookie[cookieName],
+        [cookieName.substring(headerCookiePrefix.length)]:
+          parsedCookie[cookieName]
       }),
-      {},
+      {}
     );
 };
 
-export const getDefaultHeaders = (cookieStr) => {
+export const getDefaultHeaders = cookieStr => {
   const cookieHeaders = getDefaultHeadersFromCookies(cookieStr);
   return {
-    ...cookieHeaders,
+    ...cookieHeaders
   };
 };
 
-export const getAjaxUrl = (relativeUrl) => {
-  if (process.env.USE_ABSOLUTE_AJAX_URLS === 'true' && !relativeUrl.startsWith('/')) {
+export const getAjaxUrl = relativeUrl => {
+  if (
+    process.env.USE_ABSOLUTE_AJAX_URLS === 'true' &&
+    !relativeUrl.startsWith('/')
+  ) {
     return '/' + relativeUrl;
   }
   return relativeUrl;
@@ -52,7 +56,7 @@ export const getAjaxUrl = (relativeUrl) => {
 // e.g. model artifact files are in yaml format. Currently it is parsed in a separate action.
 // We should remove the redundant action and use the yaml parser defined here
 export const parseResponse = ({ resolve, response, parser }) => {
-  response.text().then((text) => {
+  response.text().then(text => {
     try {
       resolve(parser(text));
     } catch {
@@ -68,7 +72,7 @@ export const jsonBigIntResponseParser = ({ resolve, response }) =>
   parseResponse({
     resolve,
     response,
-    parser: JsonBigInt({ strict: true, storeAsString: true }).parse,
+    parser: JsonBigInt({ strict: true, storeAsString: true }).parse
   });
 
 export const yamlResponseParser = ({ resolve, response }) =>
@@ -77,7 +81,9 @@ export const yamlResponseParser = ({ resolve, response }) =>
 export const defaultError = ({ reject, response, err }) => {
   console.error('Fetch failed: ', response || err);
   if (response) {
-    response.text().then((text) => reject(new ErrorWrapper(text, response.status)));
+    response
+      .text()
+      .then(text => reject(new ErrorWrapper(text, response.status)));
   } else if (err) {
     reject(new ErrorWrapper(err, 500));
   }
@@ -94,7 +100,7 @@ export const fetchEndpointRaw = ({
   body = undefined,
   headerOptions = {},
   options = {},
-  timeoutMs = undefined,
+  timeoutMs = undefined
 }) => {
   const url = getAjaxUrl(relativeUrl);
 
@@ -103,11 +109,11 @@ export const fetchEndpointRaw = ({
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     ...getDefaultHeaders(document.cookie),
-    ...headerOptions,
+    ...headerOptions
   };
 
   const defaultOptions = {
-    dataType: 'json',
+    dataType: 'json'
   };
   // use an abort controller for setting request timeout if defined
   // https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
@@ -121,7 +127,7 @@ export const fetchEndpointRaw = ({
     ...(body && { body }),
     ...defaultOptions,
     ...options,
-    ...(timeoutMs && { signal: abortController.signal }),
+    ...(timeoutMs && { signal: abortController.signal })
   });
 };
 
@@ -160,14 +166,18 @@ export const retry = async (
     errorCondition = () => false,
     error = ({ res, err }) => {
       throw new Error(res || err);
-    },
-  } = {},
+    }
+  } = {}
 ) => {
   try {
     const fnResult = await fn();
-    if (successCondition(fnResult)) return success({ res: fnResult });
-    if (retries === 0 || errorCondition(fnResult)) return error({ res: fnResult });
-    await new Promise((resolve) => setTimeout(resolve, interval));
+    if (successCondition(fnResult)) {
+      return success({ res: fnResult });
+    }
+    if (retries === 0 || errorCondition(fnResult)) {
+      return error({ res: fnResult });
+    }
+    await new Promise(resolve => setTimeout(resolve, interval));
     return retry(fn, {
       retries: retries - 1,
       interval: interval * retryIntervalMultiplier,
@@ -175,7 +185,7 @@ export const retry = async (
       success,
       error,
       successCondition,
-      errorCondition,
+      errorCondition
     });
   } catch (err) {
     return error({ err });
@@ -209,7 +219,7 @@ export const fetchEndpoint = ({
   retries = 7,
   initialDelay = 1000,
   success = defaultResponseParser,
-  error = defaultError,
+  error = defaultError
 }) => {
   return new Promise((resolve, reject) =>
     retry(
@@ -220,33 +230,34 @@ export const fetchEndpoint = ({
           body,
           headerOptions,
           options,
-          timeoutMs,
+          timeoutMs
         }),
       {
         retries,
         interval: initialDelay,
         retryIntervalMultiplier: 2,
         // 200s
-        successCondition: (res) => res && res.ok,
+        successCondition: res => res && res.ok,
         success: ({ res }) => success({ resolve, reject, response: res }),
         // not a 200 and also not a 429 (too many requests)
-        errorCondition: (res) => !res || (!res.ok && res.status !== 429),
-        error: ({ res, err }) => error({ resolve, reject, response: res, err: err }),
-      },
-    ),
+        errorCondition: res => !res || (!res.ok && res.status !== 429),
+        error: ({ res, err }) =>
+          error({ resolve, reject, response: res, err: err })
+      }
+    )
   );
 };
 
-const filterUndefinedFields = (data) => {
+const filterUndefinedFields = data => {
   if (!Array.isArray(data)) {
-    return _.pickBy(data, (v) => v !== undefined);
+    return _.pickBy(data, v => v !== undefined);
   } else {
-    return data.filter((v) => v !== undefined);
+    return data.filter(v => v !== undefined);
   }
 };
 
 // Generate request body from js object or a string
-const generateJsonBody = (data) => {
+const generateJsonBody = data => {
   if (typeof data === 'string') {
     // assuming the input is already a valid JSON string
     return data;
@@ -257,162 +268,172 @@ const generateJsonBody = (data) => {
       // Reported during ESLint upgrade
       // eslint-disable-next-line max-len
       'Unexpected type of input. The REST api payload type must be either an object or a string, got ' +
-        typeof data,
+        typeof data
     );
   }
 };
 
 /* All functions below are essentially syntactic sugars for fetchEndpoint */
 
-export const getJson = (props) => {
+export const getJson = props => {
   const { relativeUrl, data } = props;
   const queryParams = new URLSearchParams(filterUndefinedFields(data));
   return fetchEndpoint({
     ...props,
     ...(queryParams && { relativeUrl: `${relativeUrl}?${queryParams}` }),
     method: HTTPMethods.GET,
-    success: defaultResponseParser,
+    success: defaultResponseParser
   });
 };
 
-export const postJson = (props) => {
+export const postJson = props => {
   const { data } = props;
+  const XSRF_HEADER = document.cookie
+    .split(';')
+    .map(el => el.trim())
+    .find(el => /^_xsrf=/.test(el))
+    ?.replace(/^_xsrf=/, '');
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.POST,
+    headerOptions: {
+      'X-XSRFToken': XSRF_HEADER
+    },
     body: generateJsonBody(data),
-    success: defaultResponseParser,
+    success: defaultResponseParser
   });
 };
 
-export const putJson = (props) => {
+export const putJson = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.PUT,
     body: generateJsonBody(data),
-    success: defaultResponseParser,
+    success: defaultResponseParser
   });
 };
 
-export const patchJson = (props) => {
+export const patchJson = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.PATCH,
     body: generateJsonBody(data),
-    success: defaultResponseParser,
+    success: defaultResponseParser
   });
 };
 
-export const deleteJson = (props) => {
+export const deleteJson = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.DELETE,
     body: generateJsonBody(data),
-    success: defaultResponseParser,
+    success: defaultResponseParser
   });
 };
 
-export const getBigIntJson = (props) => {
+export const getBigIntJson = props => {
   const { relativeUrl, data } = props;
   const queryParams = new URLSearchParams(filterUndefinedFields(data));
   return fetchEndpoint({
     ...props,
-    ...(String(queryParams).length > 0 && { relativeUrl: `${relativeUrl}?${queryParams}` }),
+    ...(String(queryParams).length > 0 && {
+      relativeUrl: `${relativeUrl}?${queryParams}`
+    }),
     method: HTTPMethods.GET,
-    success: jsonBigIntResponseParser,
+    success: jsonBigIntResponseParser
   });
 };
 
-export const postBigIntJson = (props) => {
+export const postBigIntJson = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.POST,
     body: generateJsonBody(data),
-    success: jsonBigIntResponseParser,
+    success: jsonBigIntResponseParser
   });
 };
 
-export const putBigIntJson = (props) => {
+export const putBigIntJson = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.PUT,
     body: generateJsonBody(data),
-    success: jsonBigIntResponseParser,
+    success: jsonBigIntResponseParser
   });
 };
 
-export const patchBigIntJson = (props) => {
+export const patchBigIntJson = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.PATCH,
     body: generateJsonBody(data),
-    success: jsonBigIntResponseParser,
+    success: jsonBigIntResponseParser
   });
 };
 
-export const deleteBigIntJson = (props) => {
+export const deleteBigIntJson = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.DELETE,
     body: generateJsonBody(data),
-    success: jsonBigIntResponseParser,
+    success: jsonBigIntResponseParser
   });
 };
 
-export const getYaml = (props) => {
+export const getYaml = props => {
   const { relativeUrl, data } = props;
   const queryParams = new URLSearchParams(filterUndefinedFields(data));
   return fetchEndpoint({
     ...props,
     ...(queryParams && { relativeUrl: `${relativeUrl}?${queryParams}` }),
     method: HTTPMethods.GET,
-    success: yamlResponseParser,
+    success: yamlResponseParser
   });
 };
 
-export const postYaml = (props) => {
+export const postYaml = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.POST,
     body: generateJsonBody(data),
-    success: yamlResponseParser,
+    success: yamlResponseParser
   });
 };
 
-export const putYaml = (props) => {
+export const putYaml = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.PUT,
     body: generateJsonBody(data),
-    success: yamlResponseParser,
+    success: yamlResponseParser
   });
 };
 
-export const patchYaml = (props) => {
+export const patchYaml = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.PATCH,
     body: generateJsonBody(data),
-    success: yamlResponseParser,
+    success: yamlResponseParser
   });
 };
 
-export const deleteYaml = (props) => {
+export const deleteYaml = props => {
   const { data } = props;
   return fetchEndpoint({
     ...props,
     method: HTTPMethods.DELETE,
     body: generateJsonBody(data),
-    success: yamlResponseParser,
+    success: yamlResponseParser
   });
 };

@@ -1,50 +1,11 @@
-const path = require('path');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const webpack = require('webpack')
 module.exports = {
-  entry: './src/index.ts',
-  mode: 'development',
-  output: {
-    path: path.resolve(__dirname, 'lib'),
-    filename: 'index.js',
-    libraryTarget: 'commonjs2'
-  },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx']
-  },
-  module: {
-    rules: [
-      {
-        test: /\.m?jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-        }
-      },
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: '/node_modules/'
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.svg$/,
-        type: 'asset/inline'
-      },
-      {
-        test: /\.png/,
-        type: 'asset/resource'
+  plugins: [new webpack.DefinePlugin({
+    process:{
+      env:{
+        HIDE_EXPERIMENT_LIST:JSON.stringify('false'),
+        HIDE_HEADER:JSON.stringify('false')
       }
-    ]
-  },
-  plugins: [
-    // new MiniCssExtractPlugin()
-  ],
-  externals: [
-    // Everything that starts with "@phosphor/"
-    /^@phosphor\/.+$/,
-    /^@jupyterlab\/.+$/
-  ]
+    }
+  })],
 };

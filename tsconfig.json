@@ -33,5 +33,5 @@
     "types": ["jest"],
     "jsxImportSource": "@emotion/react"
   },
-  "include": ["./src/**/*","./src/i18n/default/cn.json"],
+  "include": ["./src/**/*","./src/i18n/**/*.json"],
 }
