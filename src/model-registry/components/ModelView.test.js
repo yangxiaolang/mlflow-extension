@@ -1,6 +1,9 @@
 import React from 'react';
 import { ModelView, ModelViewImpl, StageFilters } from './ModelView';
-import { mockModelVersionDetailed, mockRegisteredModelDetailed } from '../test-utils';
+import {
+  mockModelVersionDetailed,
+  mockRegisteredModelDetailed
+} from '../test-utils';
 import { ModelVersionStatus, Stages } from '../constants';
 import { BrowserRouter } from 'react-router-dom';
 import { ModelVersionTable } from './ModelVersionTable';
@@ -27,29 +30,63 @@ describe('ModelView', () => {
   const mockModel = {
     name: 'Model A',
     latestVersions: [
-      mockModelVersionDetailed('Model A', 1, Stages.PRODUCTION, ModelVersionStatus.READY),
-      mockModelVersionDetailed('Model A', 2, Stages.STAGING, ModelVersionStatus.READY),
-      mockModelVersionDetailed('Model A', 3, Stages.NONE, ModelVersionStatus.READY),
+      mockModelVersionDetailed(
+        'Model A',
+        1,
+        Stages.PRODUCTION,
+        ModelVersionStatus.READY
+      ),
+      mockModelVersionDetailed(
+        'Model A',
+        2,
+        Stages.STAGING,
+        ModelVersionStatus.READY
+      ),
+      mockModelVersionDetailed(
+        'Model A',
+        3,
+        Stages.NONE,
+        ModelVersionStatus.READY
+      )
     ],
     versions: [
-      mockModelVersionDetailed('Model A', 1, Stages.PRODUCTION, ModelVersionStatus.READY),
-      mockModelVersionDetailed('Model A', 2, Stages.STAGING, ModelVersionStatus.READY),
-      mockModelVersionDetailed('Model A', 3, Stages.NONE, ModelVersionStatus.READY),
+      mockModelVersionDetailed(
+        'Model A',
+        1,
+        Stages.PRODUCTION,
+        ModelVersionStatus.READY
+      ),
+      mockModelVersionDetailed(
+        'Model A',
+        2,
+        Stages.STAGING,
+        ModelVersionStatus.READY
+      ),
+      mockModelVersionDetailed(
+        'Model A',
+        3,
+        Stages.NONE,
+        ModelVersionStatus.READY
+      )
     ],
     tags: [
       {
         'special key': RegisteredModelTag.fromJs({
           key: 'special key',
-          value: 'not so special value',
-        }),
-      },
-    ],
+          value: 'not so special value'
+        })
+      }
+    ]
   };
 
   beforeEach(() => {
     // TODO: remove global fetch mock by explicitly mocking all the service API calls
     global.fetch = jest.fn(() =>
-      Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('') }),
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('')
+      })
     );
     historyMock = jest.fn();
     minimalProps = {
@@ -57,7 +94,7 @@ describe('ModelView', () => {
         mockModel.name,
         mockModel.latestVersions,
         mockModel.tags,
-        mockModel.permissionLevel,
+        mockModel.permissionLevel
       ),
       modelVersions: mockModel.versions,
       handleEditDescription: jest.fn(),
@@ -66,7 +103,7 @@ describe('ModelView', () => {
       history: { push: historyMock },
       tags: {},
       setRegisteredModelTagApi: jest.fn(),
-      deleteRegisteredModelTagApi: jest.fn(),
+      deleteRegisteredModelTagApi: jest.fn()
     };
     minimalStoreRaw = {
       entities: {
@@ -74,16 +111,16 @@ describe('ModelView', () => {
           'Model A': {
             'special key': RegisteredModelTag.fromJs({
               key: 'special key',
-              value: 'not so special value',
-            }),
-          },
-        },
+              value: 'not so special value'
+            })
+          }
+        }
       },
-      apis: {},
+      apis: {}
     };
     minimalStore = mockStore(minimalStoreRaw);
 
-    createComponentInstance = (modelViewProps) =>
+    createComponentInstance = modelViewProps =>
       mountWithIntl(
         <DesignSystemProvider>
           <Provider store={minimalStore}>
@@ -91,7 +128,7 @@ describe('ModelView', () => {
               <ModelView {...modelViewProps} />
             </BrowserRouter>
           </Provider>
-        </DesignSystemProvider>,
+        </DesignSystemProvider>
       );
   });
 
@@ -129,52 +166,67 @@ describe('ModelView', () => {
     const props = {
       ...minimalProps,
       model: {
-        ...minimalProps.model,
-      },
+        ...minimalProps.model
+      }
     };
     wrapper = createComponentInstance(props);
 
-    wrapper.find('button[data-test-id="overflow-menu-trigger"]').simulate('click');
+    wrapper
+      .find('button[data-test-id="overflow-menu-trigger"]')
+      .simulate('click');
     // The antd `Menu.Item` component converts the `disabled` attribute to `aria-disabled`
     // when generating HTML. Accordingly, we check for the presence of the `aria-disabled`
     // attribute within the rendered HTML.
     const deleteMenuItem = wrapper.find('[data-test-id="delete"]').hostNodes();
     expect(deleteMenuItem.prop('aria-disabled')).toBe(true);
     deleteMenuItem.simulate('click');
-    expect(wrapper.find(ModelViewImpl).instance().state.isDeleteModalVisible).toBe(false);
+    expect(
+      wrapper.find(ModelViewImpl).instance().state.isDeleteModalVisible
+    ).toBe(false);
   });
 
   test('compare button is disabled when no/1 run selected, active when 2+ runs selected', () => {
     wrapper = createComponentInstance(minimalProps);
 
-    expect(wrapper.find('[data-test-id="compareButton"]').hostNodes().length).toBe(1);
-    expect(wrapper.find('[data-test-id="compareButton"]').hostNodes().props().disabled).toEqual(
-      true,
-    );
+    expect(
+      wrapper.find('[data-test-id="compareButton"]').hostNodes().length
+    ).toBe(1);
+    expect(
+      wrapper.find('[data-test-id="compareButton"]').hostNodes().props()
+        .disabled
+    ).toEqual(true);
 
     wrapper
       .find(ModelViewImpl)
       .instance()
       .setState({
-        runsSelected: { run_id_1: 'version_1' },
+        runsSelected: { run_id_1: 'version_1' }
       });
     wrapper.update();
-    expect(wrapper.find('[data-test-id="compareButton"]').hostNodes().props().disabled).toEqual(
-      true,
-    );
+    expect(
+      wrapper.find('[data-test-id="compareButton"]').hostNodes().props()
+        .disabled
+    ).toEqual(true);
 
     const twoRunsSelected = { run_id_1: 'version_1', run_id_2: 'version_2' };
     wrapper.find(ModelViewImpl).instance().setState({
-      runsSelected: twoRunsSelected,
+      runsSelected: twoRunsSelected
     });
     wrapper.update();
-    expect(wrapper.find('[data-test-id="compareButton"]').hostNodes().props().disabled).toEqual(
-      false,
-    );
+    expect(
+      wrapper.find('[data-test-id="compareButton"]').hostNodes().props()
+        .disabled
+    ).toEqual(false);
 
-    wrapper.find('[data-test-id="compareButton"]').hostNodes().simulate('click');
+    wrapper
+      .find('[data-test-id="compareButton"]')
+      .hostNodes()
+      .simulate('click');
     expect(historyMock).toHaveBeenCalledWith(
-      getCompareModelVersionsPageRoute(minimalProps['model']['name'], twoRunsSelected),
+      getCompareModelVersionsPageRoute(
+        minimalProps['model']['name'],
+        twoRunsSelected
+      )
     );
   });
 
@@ -188,9 +240,15 @@ describe('ModelView', () => {
   test('creator description not rendered if user_id is unavailable', () => {
     wrapper = createComponentInstance(minimalProps);
 
-    expect(wrapper.find('[data-testid="model-view-metadata-item"]').length).toBe(2);
-    expect(wrapper.find('[data-testid="model-view-metadata"]').text()).toContain('Created Time');
-    expect(wrapper.find('[data-testid="model-view-metadata"]').text()).toContain('Last Modified');
+    expect(
+      wrapper.find('[data-testid="model-view-metadata-item"]').length
+    ).toBe(2);
+    expect(
+      wrapper.find('[data-testid="model-view-metadata"]').text()
+    ).toContain('Created Time');
+    expect(
+      wrapper.find('[data-testid="model-view-metadata"]').text()
+    ).toContain('Last Modified');
   });
 
   test('creator description rendered if user_id is available', () => {
@@ -199,13 +257,19 @@ describe('ModelView', () => {
       ...minimalProps,
       model: {
         ...minimalProps.model,
-        user_id,
-      },
+        user_id
+      }
     };
     wrapper = createComponentInstance(props);
 
-    expect(wrapper.find('[data-testid="model-view-metadata-item"]').length).toBe(3);
-    expect(wrapper.find('[data-testid="model-view-metadata"]').text()).toContain('Creator');
-    expect(wrapper.find('[data-testid="model-view-metadata"]').text()).toContain(user_id);
+    expect(
+      wrapper.find('[data-testid="model-view-metadata-item"]').length
+    ).toBe(3);
+    expect(
+      wrapper.find('[data-testid="model-view-metadata"]').text()
+    ).toContain('Creator');
+    expect(
+      wrapper.find('[data-testid="model-view-metadata"]').text()
+    ).toContain(user_id);
   });
 });

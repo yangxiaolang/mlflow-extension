@@ -1,5 +1,8 @@
 import React from 'react';
-import { mountWithIntl, shallowWithInjectIntl } from '../../common/utils/TestUtils';
+import {
+  mountWithIntl,
+  shallowWithInjectIntl
+} from '../../common/utils/TestUtils';
 import configureStore from 'redux-mock-store';
 import promiseMiddleware from 'redux-promise-middleware';
 import thunk from 'redux-thunk';
@@ -23,17 +26,19 @@ describe('RegisterModelButton', () => {
       createModelVersionApi: jest.fn(() => Promise.resolve({})),
       listRegisteredModelsApi: jest.fn(() => Promise.resolve({})),
       searchModelVersionsApi: jest.fn(() => Promise.resolve({})),
-      searchRegisteredModelsApi: jest.fn(() => Promise.resolve({})),
+      searchRegisteredModelsApi: jest.fn(() => Promise.resolve({}))
     };
     minimalStore = mockStore({
       entities: {
-        modelByName: {},
-      },
+        modelByName: {}
+      }
     });
   });
 
   test('should render with minimal props and store without exploding', () => {
-    wrapper = mountWithIntl(<RegisterModelButtonWithIntl {...minimalProps} store={minimalStore} />);
+    wrapper = mountWithIntl(
+      <RegisterModelButtonWithIntl {...minimalProps} store={minimalStore} />
+    );
     expect(wrapper.find('button').length).toBe(1);
   });
 
@@ -41,17 +46,17 @@ describe('RegisterModelButton', () => {
     const response = { value: {} };
     response.value[getProtoField('registered_models')] = [
       {
-        name: 'Model A',
-      },
+        name: 'Model A'
+      }
     ];
 
     const searchRegisteredModelsApi = jest.fn(() => Promise.resolve(response));
     const props = {
       ...minimalProps,
-      searchRegisteredModelsApi,
+      searchRegisteredModelsApi
     };
     wrapper = shallowWithInjectIntl(
-      <RegisterModelButtonWithIntl {...props} store={minimalStore} />,
+      <RegisterModelButtonWithIntl {...props} store={minimalStore} />
     );
     const instance = wrapper.instance();
     instance.handleSearchRegisteredModels('A');

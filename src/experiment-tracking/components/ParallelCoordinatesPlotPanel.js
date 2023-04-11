@@ -6,7 +6,7 @@ import { ParallelCoordinatesPlotControls } from './ParallelCoordinatesPlotContro
 import {
   getAllParamKeysByRunUuids,
   getAllMetricKeysByRunUuids,
-  getSharedMetricKeysByRunUuids,
+  getSharedMetricKeysByRunUuids
 } from '../reducers/Reducers';
 import _ from 'lodash';
 import { Empty } from 'antd';
@@ -23,7 +23,7 @@ export class ParallelCoordinatesPlotPanel extends React.Component {
     sharedMetricKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
     // A subset of allParamKeys where the values, potentially undefined,
     // of the parameters differ between runs
-    diffParamKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
+    diffParamKeys: PropTypes.arrayOf(PropTypes.string).isRequired
   };
 
   state = {
@@ -32,14 +32,14 @@ export class ParallelCoordinatesPlotPanel extends React.Component {
     selectedParamKeys: this.props.diffParamKeys.sort().slice(0, 3),
     // Default to select the first metric key.
     // Note that there will be no color scaling if no metric is selected.
-    selectedMetricKeys: this.props.sharedMetricKeys.slice(0, 1),
+    selectedMetricKeys: this.props.sharedMetricKeys.slice(0, 1)
   };
 
-  handleParamsSelectChange = (paramValues) => {
+  handleParamsSelectChange = paramValues => {
     this.setState({ selectedParamKeys: paramValues });
   };
 
-  handleMetricsSelectChange = (metricValues) => {
+  handleMetricsSelectChange = metricValues => {
     this.setState({ selectedMetricKeys: metricValues });
   };
 
@@ -80,12 +80,15 @@ export class ParallelCoordinatesPlotPanel extends React.Component {
 
 export const getDiffParams = (allParamKeys, runUuids, paramsByRunUuid) => {
   const diffParamKeys = [];
-  allParamKeys.forEach((param) => {
+  allParamKeys.forEach(param => {
     // collect all values for this param
     const paramVals = runUuids.map(
-      (runUuid) => paramsByRunUuid[runUuid][param] && paramsByRunUuid[runUuid][param].value,
+      runUuid =>
+        paramsByRunUuid[runUuid][param] && paramsByRunUuid[runUuid][param].value
     );
-    if (!paramVals.every((x, i, arr) => x === arr[0])) diffParamKeys.push(param);
+    if (!paramVals.every((x, i, arr) => x === arr[0])) {
+      diffParamKeys.push(param);
+    }
   });
   return diffParamKeys;
 };
@@ -102,7 +105,7 @@ const mapStateToProps = (state, ownProps) => {
     allParamKeys,
     allMetricKeys,
     sharedMetricKeys,
-    diffParamKeys,
+    diffParamKeys
   };
 };
 

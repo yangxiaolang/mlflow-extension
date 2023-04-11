@@ -11,16 +11,16 @@ import Utils from '../../common/utils/Utils';
 import { PageContainer } from '../../common/components/PageContainer';
 import Routes from '../routes';
 
-export const getFirstActiveExperiment = (experiments) => {
+export const getFirstActiveExperiment = experiments => {
   const sorted = experiments.concat().sort(Utils.compareExperiments);
-  return sorted.find((e) => e.lifecycle_stage === 'active');
+  return sorted.find(e => e.lifecycle_stage === 'active');
 };
 
 class HomeView extends Component {
   static propTypes = {
     experiments: PropTypes.arrayOf(PropTypes.object),
     experimentIds: PropTypes.arrayOf(PropTypes.string),
-    compareExperiments: PropTypes.bool,
+    compareExperiments: PropTypes.bool
   };
 
   render() {
@@ -32,7 +32,11 @@ class HomeView extends Component {
     if (experimentIds === undefined) {
       const firstExp = getFirstActiveExperiment(experiments);
       if (firstExp) {
-        return <Redirect to={Routes.getExperimentPageRoute(firstExp.experiment_id)} />;
+        return (
+          <Redirect
+            to={Routes.getExperimentPageRoute(firstExp.experiment_id)}
+          />
+        );
       }
     }
 
@@ -53,14 +57,20 @@ class HomeView extends Component {
       );
     }
     return (
-      <div className='outer-container' style={{ height: containerHeight }}>
+      <div className="outer-container" style={{ height: containerHeight }}>
         <div>
           <Spacer />
-          <ExperimentListView activeExperimentIds={experimentIds || []} experiments={experiments} />
+          <ExperimentListView
+            activeExperimentIds={experimentIds || []}
+            experiments={experiments}
+          />
         </div>
         <PageContainer>
           {hasExperiments ? (
-            <ExperimentPage experimentIds={experimentIds} compareExperiments={compareExperiments} />
+            <ExperimentPage
+              experimentIds={experimentIds}
+              compareExperiments={compareExperiments}
+            />
           ) : (
             <NoExperimentView />
           )}
@@ -70,7 +80,7 @@ class HomeView extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const experiments = getExperiments(state);
   return { experiments };
 };

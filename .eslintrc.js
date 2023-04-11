@@ -10,8 +10,17 @@ module.exports = {
     project: 'tsconfig.json',
     sourceType: 'module'
   },
-  plugins: ['@typescript-eslint'],
+  settings:{
+    additionalFunctionNames:['this.props.intl.formatMessage']
+  },
+  plugins: ['@typescript-eslint','formatjs'],
   rules: {
+    "formatjs/enforce-id": [
+      "error",
+      {
+        idInterpolationPattern: "[sha512:contenthash:base64:6]",
+      }
+    ],
     '@typescript-eslint/naming-convention': [
       'error',
       {

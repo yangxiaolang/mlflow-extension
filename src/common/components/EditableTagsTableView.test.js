@@ -1,5 +1,8 @@
 import React from 'react';
-import { EditableTagsTableView, EditableTagsTableViewImpl } from './EditableTagsTableView';
+import {
+  EditableTagsTableView,
+  EditableTagsTableViewImpl
+} from './EditableTagsTableView';
 import { mountWithIntl } from '../utils/TestUtils';
 import { BrowserRouter } from 'react-router-dom';
 import { DesignSystemProvider } from '@databricks/design-system';
@@ -10,14 +13,14 @@ describe('unit tests', () => {
   const minimalProps = {
     tags: {
       tag1: { getKey: () => 'tag1', getValue: () => 'value1' },
-      tag2: { getKey: () => 'tag2', getValue: () => 'value2' },
+      tag2: { getKey: () => 'tag2', getValue: () => 'value2' }
     },
     // eslint-disable-next-line no-unused-vars
-    form: { getFieldDecorator: jest.fn((opts) => (c) => c) },
+    form: { getFieldDecorator: jest.fn(opts => c => c) },
     handleAddTag: () => {},
     handleSaveEdit: () => {},
     handleDeleteTag: () => {},
-    isRequestPending: false,
+    isRequestPending: false
   };
 
   const createComponentInstance = () =>
@@ -26,7 +29,7 @@ describe('unit tests', () => {
         <BrowserRouter>
           <EditableTagsTableView {...minimalProps} />
         </BrowserRouter>
-      </DesignSystemProvider>,
+      </DesignSystemProvider>
     );
 
   test('should render with minimal props without exploding', () => {

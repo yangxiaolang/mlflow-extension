@@ -8,7 +8,10 @@ export const GetLinkModal = ({ visible, onCancel, link }) => {
   return (
     <Modal
       title={
-        <FormattedMessage defaultMessage='Get Link' description={'Title text for get-link modal'} />
+        <FormattedMessage
+          defaultMessage="Get Link"
+          description={'Title text for get-link modal'}
+        />
       }
       visible={visible}
       onCancel={onCancel}
@@ -21,5 +24,5 @@ export const GetLinkModal = ({ visible, onCancel, link }) => {
 GetLinkModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
-  link: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired
 };

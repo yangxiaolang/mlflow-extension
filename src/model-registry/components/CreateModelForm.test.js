@@ -5,7 +5,7 @@ import { CreateModelForm } from './CreateModelForm';
 describe('Render test', () => {
   const minimalProps = {
     visible: true,
-    form: { getFieldDecorator: jest.fn(() => (c) => c) },
+    form: { getFieldDecorator: jest.fn(() => c => c) }
   };
 
   test('should render with minimal props without exploding', () => {

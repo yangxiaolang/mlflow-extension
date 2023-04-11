@@ -14,8 +14,8 @@ const createLocation = (experimentIds, runUuids, metricKey) => {
       qs.stringify({
         experiments: experimentIds,
         runs: JSON.stringify(runUuids),
-        plot_metric_keys: JSON.stringify([metricKey]),
-      }),
+        plot_metric_keys: JSON.stringify([metricKey])
+      })
   };
 };
 
@@ -27,12 +27,12 @@ describe('MetricView', () => {
 
   beforeEach(() => {
     experimentIds = ['2'];
-    experiments = experimentIds.map((experimentId) =>
+    experiments = experimentIds.map(experimentId =>
       Fixtures.createExperiment({
         experiment_id: experimentId.toString(),
         name: experimentId.toString(),
-        lifecycle_stage: 'active',
-      }),
+        lifecycle_stage: 'active'
+      })
     );
 
     minimalProps = {
@@ -41,7 +41,7 @@ describe('MetricView', () => {
       runUuids: [],
       runNames: [],
       metricKey: 'metricKey',
-      location: createLocation(experimentIds, [''], 'metricKey'),
+      location: createLocation(experimentIds, [''], 'metricKey')
     };
   });
 
@@ -55,7 +55,7 @@ describe('MetricView', () => {
     const props = {
       ...minimalProps,
       runUuids: ['a', 'b', 'c'],
-      runNames: ['d', 'e', 'f'],
+      runNames: ['d', 'e', 'f']
     };
 
     Utils.getMetricPlotStateFromUrl = jest.fn(() => {

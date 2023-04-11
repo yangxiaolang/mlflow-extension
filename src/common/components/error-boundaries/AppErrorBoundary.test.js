@@ -9,7 +9,7 @@ describe('AppErrorBoundary', () => {
 
   beforeEach(() => {
     minimalProps = {
-      children: 'testChild',
+      children: 'testChild'
     };
     wrapper = shallow(<AppErrorBoundary {...minimalProps} />);
     jest.spyOn(console, 'error').mockImplementation(() => {});

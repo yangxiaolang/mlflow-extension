@@ -3,23 +3,23 @@ import PropTypes from 'prop-types';
 
 class ExpandableList extends Component {
   state = {
-    toggled: false,
+    toggled: false
   };
 
   static propTypes = {
     children: PropTypes.array.isRequired,
     onToggle: PropTypes.func,
     // how many lines to show in the compressed state
-    showLines: PropTypes.number,
+    showLines: PropTypes.number
   };
 
   static defaultProps = {
-    showLines: 1,
+    showLines: 1
   };
 
   handleToggle = () => {
-    this.setState((prevState) => ({
-      toggled: !prevState.toggled,
+    this.setState(prevState => ({
+      toggled: !prevState.toggled
     }));
     if (this.props.onToggle) {
       this.props.onToggle();
@@ -31,38 +31,42 @@ class ExpandableList extends Component {
       return (
         <div css={expandableListClassName}>
           {this.props.children.map((item, index) => (
-            <div className='expandable-list-item' key={index}>
+            <div className="expandable-list-item" key={index}>
               {item}
             </div>
           ))}
         </div>
       );
     } else {
-      const expandedElems = this.props.children.slice(this.props.showLines).map((item, index) => (
-        <div className='expandable-list-item' key={index}>
-          {item}
-        </div>
-      ));
+      const expandedElems = this.props.children
+        .slice(this.props.showLines)
+        .map((item, index) => (
+          <div className="expandable-list-item" key={index}>
+            {item}
+          </div>
+        ));
       const expandedContent = (
-        <div className='expanded-list-elems'>
+        <div className="expanded-list-elems">
           {expandedElems}
-          <div onClick={this.handleToggle} className='expander-text'>
+          <div onClick={this.handleToggle} className="expander-text">
             Less
           </div>
         </div>
       );
       const showMore = (
-        <div onClick={this.handleToggle} className='expander-text'>
+        <div onClick={this.handleToggle} className="expander-text">
           +{this.props.children.length - this.props.showLines} more
         </div>
       );
       return (
         <div css={expandableListClassName}>
-          {this.props.children.slice(0, this.props.showLines).map((item, index) => (
-            <div className='expandable-list-item' key={index}>
-              {item}
-            </div>
-          ))}
+          {this.props.children
+            .slice(0, this.props.showLines)
+            .map((item, index) => (
+              <div className="expandable-list-item" key={index}>
+                {item}
+              </div>
+            ))}
           {this.state.toggled ? expandedContent : showMore}
         </div>
       );
@@ -73,8 +77,8 @@ class ExpandableList extends Component {
 const expandableListClassName = {
   '.expander-text': {
     textDecoration: 'underline',
-    cursor: 'pointer',
-  },
+    cursor: 'pointer'
+  }
 };
 
 export default ExpandableList;

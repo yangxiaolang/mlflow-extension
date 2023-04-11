@@ -13,7 +13,7 @@ describe('BaggedCell', () => {
       onSortBy: () => {},
       isParam: false,
       isMetric: true,
-      onRemoveBagged: () => {},
+      onRemoveBagged: () => {}
     };
   });
 
@@ -26,13 +26,15 @@ describe('BaggedCell', () => {
     const mockOnSortByFn = jest.fn();
     const newProps = {
       ...minimalProps,
-      onSortBy: mockOnSortByFn,
+      onSortBy: mockOnSortByFn
     };
     const wrapper = shallow(<BaggedCell {...newProps} />);
     const overlay = mount(wrapper.find(Dropdown).first().props().overlay);
     const sortAscButton = overlay.find('[data-test-id="sort-ascending"]');
     sortAscButton.first().simulate('click');
-    expect(mockOnSortByFn.mock.calls[0][0]).toEqual(expect.stringContaining('key1'));
+    expect(mockOnSortByFn.mock.calls[0][0]).toEqual(
+      expect.stringContaining('key1')
+    );
     expect(mockOnSortByFn.mock.calls[0][1]).toBeTruthy(); // ascending
   });
 
@@ -40,13 +42,15 @@ describe('BaggedCell', () => {
     const mockOnSortByFn = jest.fn();
     const newProps = {
       ...minimalProps,
-      onSortBy: mockOnSortByFn,
+      onSortBy: mockOnSortByFn
     };
     const wrapper = shallow(<BaggedCell {...newProps} />);
     const overlay = mount(wrapper.find(Dropdown).first().props().overlay);
     const sortDescButton = overlay.find('[data-test-id="sort-descending"]');
     sortDescButton.first().simulate('click');
-    expect(mockOnSortByFn.mock.calls[0][0]).toEqual(expect.stringContaining('key1'));
+    expect(mockOnSortByFn.mock.calls[0][0]).toEqual(
+      expect.stringContaining('key1')
+    );
     expect(mockOnSortByFn.mock.calls[0][1]).toBeFalsy(); // descending
   });
 
@@ -54,13 +58,15 @@ describe('BaggedCell', () => {
     const mockOnRemoveBaggedFn = jest.fn();
     const newProps = {
       ...minimalProps,
-      onRemoveBagged: mockOnRemoveBaggedFn,
+      onRemoveBagged: mockOnRemoveBaggedFn
     };
     const wrapper = shallow(<BaggedCell {...newProps} />);
     const overlay = mount(wrapper.find(Dropdown).first().props().overlay);
     const removeBaggedButton = overlay.find('[data-test-id="remove-bagged"]');
     removeBaggedButton.first().simulate('click');
     expect(mockOnRemoveBaggedFn.mock.calls[0][0]).toBeFalsy();
-    expect(mockOnRemoveBaggedFn.mock.calls[0][1]).toEqual(expect.stringContaining('key1'));
+    expect(mockOnRemoveBaggedFn.mock.calls[0][1]).toEqual(
+      expect.stringContaining('key1')
+    );
   });
 });

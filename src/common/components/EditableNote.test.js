@@ -15,13 +15,13 @@ describe('EditableNote', () => {
     mockCancel = jest.fn(() => Promise.resolve({}));
     minimalProps = {
       onSubmit: mockSubmit,
-      onCancel: mockCancel,
+      onCancel: mockCancel
     };
     commonProps = { ...minimalProps, showEditor: true };
     wrapper = mountWithIntl(
       <BrowserRouter>
         <EditableNote {...minimalProps} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
   });
 
@@ -34,14 +34,14 @@ describe('EditableNote', () => {
     wrapper = mountWithIntl(
       <BrowserRouter>
         <EditableNote {...commonProps} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.length).toBe(1);
     expect(wrapper.find('.note-view-outer-container').length).toBe(1);
     expect(wrapper.find('.editable-note-actions').length).toBe(1);
   });
 
-  test('test handleSubmitClick with successful onSubmit', (done) => {
+  test('test handleSubmitClick with successful onSubmit', done => {
     wrapper.setState({ error: 'should not appear' });
     const instance = wrapper.find(EditableNoteImpl).instance();
     const promise = instance.handleSubmitClick();
@@ -52,23 +52,23 @@ describe('EditableNote', () => {
     });
   });
 
-  test('test handleRenameExperiment errors correctly', (done) => {
+  test('test handleRenameExperiment errors correctly', done => {
     mockSubmit = jest.fn(
       () =>
         new Promise((resolve, reject) => {
           window.setTimeout(() => {
             reject();
           }, 100);
-        }),
+        })
     );
     minimalProps = {
       onSubmit: mockSubmit,
-      onCancel: mockCancel,
+      onCancel: mockCancel
     };
     wrapper = mountWithIntl(
       <BrowserRouter>
         <EditableNote {...minimalProps} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
 
     const instance = wrapper.find(EditableNoteImpl).instance();

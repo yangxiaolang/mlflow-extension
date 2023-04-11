@@ -7,11 +7,11 @@ import { FormattedMessage } from 'react-intl';
 export class CreateModelButton extends React.Component {
   static propTypes = {
     buttonType: PropTypes.string,
-    buttonText: PropTypes.node,
+    buttonText: PropTypes.node
   };
 
   state = {
-    modalVisible: false,
+    modalVisible: false
   };
 
   hideModal = () => {
@@ -27,34 +27,38 @@ export class CreateModelButton extends React.Component {
     const buttonType = this.props.buttonType || 'primary';
     const buttonText = this.props.buttonText || (
       <FormattedMessage
-        defaultMessage='Create Model'
-        description='Create button to register a new model'
+        defaultMessage="Create Model"
+        id="ZwAzmu"
+        description="Create button to register a new model"
       />
     );
 
     return (
       <div css={styles.wrapper}>
         <Button
-          className={`create-model-btn`}
+          className={'create-model-btn'}
           css={styles.getButtonSize(buttonType)}
           type={buttonType}
           onClick={this.showModal}
         >
           {buttonText}
         </Button>
-        <CreateModelModal modalVisible={modalVisible} hideModal={this.hideModal} />
+        <CreateModelModal
+          modalVisible={modalVisible}
+          hideModal={this.hideModal}
+        />
       </div>
     );
   }
 }
 
 const styles = {
-  getButtonSize: (buttonType) =>
+  getButtonSize: buttonType =>
     buttonType === 'primary'
       ? {
           height: '40px',
-          width: 'fit-content',
+          width: 'fit-content'
         }
       : { padding: '0px' },
-  wrapper: { display: 'inline' },
+  wrapper: { display: 'inline' }
 };

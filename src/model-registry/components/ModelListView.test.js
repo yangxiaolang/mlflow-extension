@@ -1,6 +1,9 @@
 import React from 'react';
 import { ModelListView, ModelListViewImpl } from './ModelListView';
-import { mockModelVersionDetailed, mockRegisteredModelDetailed } from '../test-utils';
+import {
+  mockModelVersionDetailed,
+  mockRegisteredModelDetailed
+} from '../test-utils';
 import { ModelVersionStatus, Stages } from '../constants';
 import { BrowserRouter } from 'react-router-dom';
 import Utils from '../../common/utils/Utils';
@@ -43,7 +46,7 @@ describe('ModelListView', () => {
       getMaxResultValue: jest.fn().mockReturnValue(10),
       onSearchInputChange: jest.fn(),
       onStatusFilterChange: jest.fn(),
-      onOwnerFilterChange: jest.fn(),
+      onOwnerFilterChange: jest.fn()
     };
     minimalStore = mockStore({});
   });
@@ -55,7 +58,7 @@ describe('ModelListView', () => {
         <BrowserRouter>
           <ModelListView {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
   }
 
@@ -72,7 +75,7 @@ describe('ModelListView', () => {
   test('should not display onBoarding helper if disabled', () => {
     wrapper = setupModelListViewWithIntl();
     wrapper.find(ModelListViewImpl).setState({
-      showOnboardingHelper: false,
+      showOnboardingHelper: false
     });
     expect(wrapper.find('Alert').length).toBe(0);
   });
@@ -85,7 +88,7 @@ describe('ModelListView', () => {
   test('should render correct information if table is empty', () => {
     wrapper = setupModelListViewWithIntl();
     expect(wrapper.find(ANTD_TABLE_PLACEHOLDER_CLS).text()).toBe(
-      'No models yet. Create a model to get started.',
+      'No models yet. Create a model to get started.'
     );
 
     wrapper.setProps({
@@ -93,24 +96,43 @@ describe('ModelListView', () => {
         <BrowserRouter>
           <ModelListView {...{ ...minimalProps, searchInput: 'xyz' }} />
         </BrowserRouter>
-      ),
+      )
     });
-    expect(wrapper.find(ANTD_TABLE_PLACEHOLDER_CLS).text()).toBe('No models found.');
+    expect(wrapper.find(ANTD_TABLE_PLACEHOLDER_CLS).text()).toBe(
+      'No models found.'
+    );
 
-    wrapper.find(ModelListViewImpl).setState({ lastNavigationActionWasClickPrev: true });
+    wrapper
+      .find(ModelListViewImpl)
+      .setState({ lastNavigationActionWasClickPrev: true });
     expect(wrapper.find(ANTD_TABLE_PLACEHOLDER_CLS).text()).toBe(
       'No models found for the page. ' +
-        'Please refresh the page as the underlying data may have changed significantly.',
+        'Please refresh the page as the underlying data may have changed significantly.'
     );
   });
 
   test('should render latest version correctly', () => {
     const models = [
       mockRegisteredModelDetailed('Model A', [
-        mockModelVersionDetailed('Model A', 1, Stages.PRODUCTION, ModelVersionStatus.READY),
-        mockModelVersionDetailed('Model A', 2, Stages.STAGING, ModelVersionStatus.READY),
-        mockModelVersionDetailed('Model A', 3, Stages.NONE, ModelVersionStatus.READY),
-      ]),
+        mockModelVersionDetailed(
+          'Model A',
+          1,
+          Stages.PRODUCTION,
+          ModelVersionStatus.READY
+        ),
+        mockModelVersionDetailed(
+          'Model A',
+          2,
+          Stages.STAGING,
+          ModelVersionStatus.READY
+        ),
+        mockModelVersionDetailed(
+          'Model A',
+          3,
+          Stages.NONE,
+          ModelVersionStatus.READY
+        )
+      ])
     ];
     const props = { ...minimalProps, models };
     wrapper = setupModelListViewWithIntl(props);
@@ -122,8 +144,13 @@ describe('ModelListView', () => {
   test('should render `_` when there is no version to display for the cell', () => {
     const models = [
       mockRegisteredModelDetailed('Model A', [
-        mockModelVersionDetailed('Model A', 1, Stages.NONE, ModelVersionStatus.READY),
-      ]),
+        mockModelVersionDetailed(
+          'Model A',
+          1,
+          Stages.NONE,
+          ModelVersionStatus.READY
+        )
+      ])
     ];
     const props = { ...minimalProps, models };
     wrapper = setupModelListViewWithIntl(props);
@@ -141,16 +168,24 @@ describe('ModelListView', () => {
           { key: 'key', value: 'value' },
           { key: 'key2', value: 'value2' },
           { key: 'key3', value: 'value3' },
-          { key: 'key4', value: 'value4' },
-        ],
-      ),
+          { key: 'key4', value: 'value4' }
+        ]
+      )
     ];
     const props = { ...minimalProps, models };
     wrapper = setupModelListViewWithIntl(props);
-    expect(wrapper.find('td.table-tag-container').text()).toContain('key:value');
-    expect(wrapper.find('td.table-tag-container').text()).toContain('key2:value2');
-    expect(wrapper.find('td.table-tag-container').text()).toContain('key3:value3');
-    expect(wrapper.find('td.table-tag-container').text()).toContain('key4:value4');
+    expect(wrapper.find('td.table-tag-container').text()).toContain(
+      'key:value'
+    );
+    expect(wrapper.find('td.table-tag-container').text()).toContain(
+      'key2:value2'
+    );
+    expect(wrapper.find('td.table-tag-container').text()).toContain(
+      'key3:value3'
+    );
+    expect(wrapper.find('td.table-tag-container').text()).toContain(
+      'key4:value4'
+    );
   });
 
   test('tags cell renders multiple tags and collapses with more than 4 tags', () => {
@@ -163,23 +198,34 @@ describe('ModelListView', () => {
           { key: 'key2', value: 'value2' },
           { key: 'key3', value: 'value3' },
           { key: 'key4', value: 'value4' },
-          { key: 'key5', value: 'value5' },
-        ],
-      ),
+          { key: 'key5', value: 'value5' }
+        ]
+      )
     ];
     const props = { ...minimalProps, models };
     wrapper = setupModelListViewWithIntl(props);
-    expect(wrapper.find('td.table-tag-container').text()).toContain('key:value');
-    expect(wrapper.find('td.table-tag-container').text()).toContain('key2:value2');
-    expect(wrapper.find('td.table-tag-container').text()).toContain('key3:value3');
+    expect(wrapper.find('td.table-tag-container').text()).toContain(
+      'key:value'
+    );
+    expect(wrapper.find('td.table-tag-container').text()).toContain(
+      'key2:value2'
+    );
+    expect(wrapper.find('td.table-tag-container').text()).toContain(
+      'key3:value3'
+    );
     expect(wrapper.find('td.table-tag-container').text()).toContain('2 more');
   });
 
   test('should render `_` when there are no tags to display for the cell', () => {
     const models = [
       mockRegisteredModelDetailed('Model A', [
-        mockModelVersionDetailed('Model A', 1, Stages.NONE, ModelVersionStatus.READY),
-      ]),
+        mockModelVersionDetailed(
+          'Model A',
+          1,
+          Stages.NONE,
+          ModelVersionStatus.READY
+        )
+      ])
     ];
     const props = { ...minimalProps, models };
     wrapper = setupModelListViewWithIntl(props);
@@ -187,26 +233,28 @@ describe('ModelListView', () => {
   });
 
   const findColumn = (table, index) =>
-    table.props().columns.find((elem) => elem.dataIndex === index);
+    table.props().columns.find(elem => elem.dataIndex === index);
 
   test('orderByKey, orderByASC props are correctly passed to the table', () => {
     const models = [
       mockRegisteredModelDetailed('Model B', [], [], 'CAN_EDIT', 3),
       mockRegisteredModelDetailed('model c', [], [], 'CAN_EDIT', 1),
-      mockRegisteredModelDetailed('Model a', [], [], 'CAN_EDIT', 2),
+      mockRegisteredModelDetailed('Model a', [], [], 'CAN_EDIT', 2)
     ];
     let props = {
       ...minimalProps,
       models,
       orderByKey: 'name',
-      orderByAsc: true,
+      orderByAsc: true
     };
     wrapper = setupModelListViewWithIntl(props);
 
     let table = wrapper.find(Table);
     // prop values look legit
     expect(findColumn(table, 'name').sortOrder).toBe('ascend');
-    expect(findColumn(table, 'last_updated_timestamp').sortOrder).toBe(undefined);
+    expect(findColumn(table, 'last_updated_timestamp').sortOrder).toBe(
+      undefined
+    );
     // the table doesn't actually sort, though, and displays exactly what's given.
     expect(wrapper.find('td.model-name').length).toBe(3);
     expect(wrapper.find('td.model-name').at(0).text()).toBe('Model B');
@@ -217,13 +265,15 @@ describe('ModelListView', () => {
       ...minimalProps,
       models,
       orderByKey: 'timestamp',
-      orderByAsc: false,
+      orderByAsc: false
     };
     wrapper = setupModelListViewWithIntl(props);
     table = wrapper.find(Table);
     // prop values look legit
     expect(findColumn(table, 'name').sortOrder).toBe(undefined);
-    expect(findColumn(table, 'last_updated_timestamp').sortOrder).toBe('descend');
+    expect(findColumn(table, 'last_updated_timestamp').sortOrder).toBe(
+      'descend'
+    );
     // the table doesn't actually sort, though, and displays exactly what's given.
     expect(wrapper.find('td.model-name').length).toBe(3);
     expect(wrapper.find('td.model-name').at(0).text()).toBe('Model B');

@@ -1,7 +1,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { MetricsPlotViewImpl as MetricsPlotView } from './MetricsPlotView';
-import { X_AXIS_STEP, X_AXIS_RELATIVE, X_AXIS_WALL } from './MetricsPlotControls';
+import {
+  X_AXIS_STEP,
+  X_AXIS_RELATIVE,
+  X_AXIS_WALL
+} from './MetricsPlotControls';
 import { CHART_TYPE_BAR, CHART_TYPE_LINE } from './MetricsPlotPanel';
 import Utils from '../../common/utils/Utils';
 import { LazyPlot } from './LazyPlot';
@@ -19,17 +23,17 @@ const metricsForLine = [
         key: 'metric_0',
         value: 100,
         step: 0,
-        timestamp: 1556662043000,
+        timestamp: 1556662043000
       },
       {
         key: 'metric_0',
         value: 200,
         step: 1,
-        timestamp: 1556662044000,
-      },
+        timestamp: 1556662044000
+      }
     ],
     runUuid: 'runUuid1',
-    runDisplayName: 'RunDisplayName1',
+    runDisplayName: 'RunDisplayName1'
   },
   {
     metricKey: 'metric_1',
@@ -38,17 +42,17 @@ const metricsForLine = [
         key: 'metric_1',
         value: 300,
         step: 0,
-        timestamp: 1556662043000,
+        timestamp: 1556662043000
       },
       {
         key: 'metric_1',
         value: 400,
         step: 1,
-        timestamp: 1556662044000,
-      },
+        timestamp: 1556662044000
+      }
     ],
     runUuid: 'runUuid2',
-    runDisplayName: 'RunDisplayName2',
+    runDisplayName: 'RunDisplayName2'
   },
   {
     metricKey: 'metric_2',
@@ -57,18 +61,18 @@ const metricsForLine = [
         key: 'metric_2',
         value: 300,
         step: 0,
-        timestamp: 1556662043000,
-      },
+        timestamp: 1556662043000
+      }
     ],
     runUuid: 'runUuid3',
-    runDisplayName: 'RunDisplayName3',
+    runDisplayName: 'RunDisplayName3'
   },
   {
     metricKey: 'metric_3',
     history: [],
     runUuid: 'runUuid3',
-    runDisplayName: 'RunDisplayName3',
-  },
+    runDisplayName: 'RunDisplayName3'
+  }
 ];
 
 const metricsForLineWithNaNs = [
@@ -79,23 +83,23 @@ const metricsForLineWithNaNs = [
         key: 'metric_0',
         value: 100,
         step: 0,
-        timestamp: 1556662043000,
+        timestamp: 1556662043000
       },
       {
         key: 'metric_0',
         value: 200,
         step: 1,
-        timestamp: 1556662044000,
+        timestamp: 1556662044000
       },
       {
         key: 'metric_0',
         value: NaN,
         step: 2,
-        timestamp: 1556662045000,
-      },
+        timestamp: 1556662045000
+      }
     ],
     runUuid: 'runUuid1',
-    runDisplayName: 'RunDisplayName1',
+    runDisplayName: 'RunDisplayName1'
   },
   {
     metricKey: 'metric_1',
@@ -104,17 +108,17 @@ const metricsForLineWithNaNs = [
         key: 'metric_1',
         value: 'NaN',
         step: 0,
-        timestamp: 1556662043000,
+        timestamp: 1556662043000
       },
       {
         key: 'metric_1',
         value: 400,
         step: 1,
-        timestamp: 1556662044000,
-      },
+        timestamp: 1556662044000
+      }
     ],
     runUuid: 'runUuid2',
-    runDisplayName: 'RunDisplayName2',
+    runDisplayName: 'RunDisplayName2'
   },
   {
     metricKey: 'metric_2',
@@ -123,11 +127,11 @@ const metricsForLineWithNaNs = [
         key: 'metric_2',
         value: 'NaN',
         step: 0,
-        timestamp: 1556662043000,
-      },
+        timestamp: 1556662043000
+      }
     ],
     runUuid: 'runUuid3',
-    runDisplayName: 'RunDisplayName3',
+    runDisplayName: 'RunDisplayName3'
   },
   {
     metricKey: 'metric_3',
@@ -136,18 +140,18 @@ const metricsForLineWithNaNs = [
         key: 'metric_3',
         value: 'NaN',
         step: 0,
-        timestamp: 1556662043000,
+        timestamp: 1556662043000
       },
       {
         key: 'metric_3',
         value: 'NaN',
         step: 1,
-        timestamp: 1556662044000,
-      },
+        timestamp: 1556662044000
+      }
     ],
     runUuid: 'runUuid3',
-    runDisplayName: 'RunDisplayName3',
-  },
+    runDisplayName: 'RunDisplayName3'
+  }
 ];
 
 const metricsForBar = [
@@ -158,11 +162,11 @@ const metricsForBar = [
         key: 'metric_0',
         value: 100,
         step: 0,
-        timestamp: 1556662043000,
-      },
+        timestamp: 1556662043000
+      }
     ],
     runUuid: 'runUuid1',
-    runDisplayName: 'RunDisplayName1',
+    runDisplayName: 'RunDisplayName1'
   },
   {
     metricKey: 'metric_0',
@@ -171,12 +175,12 @@ const metricsForBar = [
         key: 'metric_0',
         value: 300,
         step: 0,
-        timestamp: 1556662043000,
-      },
+        timestamp: 1556662043000
+      }
     ],
     runUuid: 'runUuid2',
-    runDisplayName: 'RunDisplayName2',
-  },
+    runDisplayName: 'RunDisplayName2'
+  }
 ];
 
 const metricsForBarWithNaNs = [
@@ -187,11 +191,11 @@ const metricsForBarWithNaNs = [
         key: 'metric_0',
         value: 'NaN',
         step: 0,
-        timestamp: 1556662043000,
-      },
+        timestamp: 1556662043000
+      }
     ],
     runUuid: 'runUuid1',
-    runDisplayName: 'RunDisplayName1',
+    runDisplayName: 'RunDisplayName1'
   },
   {
     metricKey: 'metric_0',
@@ -200,12 +204,12 @@ const metricsForBarWithNaNs = [
         key: 'metric_0',
         value: NaN,
         step: 0,
-        timestamp: 1556662043000,
-      },
+        timestamp: 1556662043000
+      }
     ],
     runUuid: 'runUuid2',
-    runDisplayName: 'RunDisplayName2',
-  },
+    runDisplayName: 'RunDisplayName2'
+  }
 ];
 
 describe('unit tests', () => {
@@ -224,7 +228,7 @@ describe('unit tests', () => {
       runDisplayNames: ['RunDisplayName1', 'RunDisplayName2'],
       xAxis: X_AXIS_RELATIVE,
       metrics: metricsForLine,
-      metricKeys: metricsForLine.map((metric) => metric.metricKey),
+      metricKeys: metricsForLine.map(metric => metric.metricKey),
       showPoint: false,
       chartType: CHART_TYPE_LINE,
       isComparing: false,
@@ -235,31 +239,31 @@ describe('unit tests', () => {
       onLegendDoubleClick: jest.fn(),
       onLegendClick: jest.fn(),
       deselectedCurves: [],
-      intl: { formatMessage: (x) => x.toString() },
+      intl: { formatMessage: x => x.toString() }
     };
     minimalPropsForSmoothedLineChart = {
       ...minimalPropsForLineChart,
-      lineSmoothness: 50,
+      lineSmoothness: 50
     };
     minimalPropsForLineChartWithNaNs = {
       ...minimalPropsForLineChart,
       metrics: metricsForLineWithNaNs,
-      metricKeys: metricsForLineWithNaNs.map((metric) => metric.metricKey),
+      metricKeys: metricsForLineWithNaNs.map(metric => metric.metricKey)
     };
     minimalPropsForSmoothedLineChartWithNaNs = {
       ...minimalPropsForLineChartWithNaNs,
-      lineSmoothness: 50,
+      lineSmoothness: 50
     };
     minimalPropsForBarChart = {
       ...minimalPropsForLineChart,
       metrics: metricsForBar,
-      metricKeys: metricsForBar.map((metric) => metric.metricKey),
-      chartType: CHART_TYPE_BAR,
+      metricKeys: metricsForBar.map(metric => metric.metricKey),
+      chartType: CHART_TYPE_BAR
     };
     minimalPropsForBarChartWithNaNs = {
       ...minimalPropsForLineChart,
       metrics: metricsForBarWithNaNs,
-      metricKeys: metricsForBarWithNaNs.map((metric) => metric.metricKey),
+      metricKeys: metricsForBarWithNaNs.map(metric => metric.metricKey)
     };
 
     generateInfinityAnnotations.mockImplementation(() => emptyAnnotationsMock);
@@ -271,17 +275,23 @@ describe('unit tests', () => {
   });
 
   test('should render smoothed line chart successfully', () => {
-    wrapper = shallow(<MetricsPlotView {...minimalPropsForSmoothedLineChart} />);
+    wrapper = shallow(
+      <MetricsPlotView {...minimalPropsForSmoothedLineChart} />
+    );
     expect(wrapper.length).toBe(1);
   });
 
   test('should render line chart successfully for metrics containing NaN values', () => {
-    wrapper = shallow(<MetricsPlotView {...minimalPropsForLineChartWithNaNs} />);
+    wrapper = shallow(
+      <MetricsPlotView {...minimalPropsForLineChartWithNaNs} />
+    );
     expect(wrapper.length).toBe(1);
   });
 
   test('should render smoothed line chart successfully for metrics containing NaN values', () => {
-    wrapper = shallow(<MetricsPlotView {...minimalPropsForSmoothedLineChartWithNaNs} />);
+    wrapper = shallow(
+      <MetricsPlotView {...minimalPropsForSmoothedLineChartWithNaNs} />
+    );
     expect(wrapper.length).toBe(1);
   });
 
@@ -311,7 +321,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'lines+markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 0 },
+          marker: { opacity: 0 }
         },
         {
           metricName: 'metric_1',
@@ -324,7 +334,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'lines+markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 0 },
+          marker: { opacity: 0 }
         },
         {
           metricName: 'metric_2',
@@ -337,7 +347,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
+          marker: { opacity: 1 }
         },
         {
           metricName: 'metric_3',
@@ -350,15 +360,17 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
-        },
+          marker: { opacity: 1 }
+        }
       ],
-      layout: { ...emptyAnnotationsMock },
+      layout: { ...emptyAnnotationsMock }
     });
   });
 
   test('getPlotPropsForLineChart() with NaNs', () => {
-    wrapper = shallow(<MetricsPlotView {...minimalPropsForLineChartWithNaNs} />);
+    wrapper = shallow(
+      <MetricsPlotView {...minimalPropsForLineChartWithNaNs} />
+    );
     instance = wrapper.instance();
     expect(instance.getPlotPropsForLineChart()).toEqual({
       data: [
@@ -373,7 +385,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'lines+markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 0 },
+          marker: { opacity: 0 }
         },
         {
           metricName: 'metric_1',
@@ -386,7 +398,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
+          marker: { opacity: 1 }
         },
         {
           metricName: 'metric_2',
@@ -399,7 +411,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
+          marker: { opacity: 1 }
         },
         {
           metricName: 'metric_3',
@@ -412,15 +424,17 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
-        },
+          marker: { opacity: 1 }
+        }
       ],
-      layout: { ...emptyAnnotationsMock },
+      layout: { ...emptyAnnotationsMock }
     });
   });
 
   test('getPlotPropsForLineChart(lineSmoothness = 50)', () => {
-    wrapper = shallow(<MetricsPlotView {...minimalPropsForSmoothedLineChart} />);
+    wrapper = shallow(
+      <MetricsPlotView {...minimalPropsForSmoothedLineChart} />
+    );
     instance = wrapper.instance();
     expect(instance.getPlotPropsForLineChart()).toEqual({
       data: [
@@ -435,7 +449,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'lines+markers',
           hovertemplate: 'Value: %{text}<br>Smoothed: %{y}',
-          marker: { opacity: 0 },
+          marker: { opacity: 0 }
         },
         {
           metricName: 'metric_1',
@@ -448,7 +462,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'lines+markers',
           hovertemplate: 'Value: %{text}<br>Smoothed: %{y}',
-          marker: { opacity: 0 },
+          marker: { opacity: 0 }
         },
         {
           metricName: 'metric_2',
@@ -461,7 +475,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
+          marker: { opacity: 1 }
         },
         {
           metricName: 'metric_3',
@@ -474,15 +488,17 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
-        },
+          marker: { opacity: 1 }
+        }
       ],
-      layout: { ...emptyAnnotationsMock },
+      layout: { ...emptyAnnotationsMock }
     });
   });
 
   test('getPlotPropsForLineChart(lineSmoothness = 50) with NaNs', () => {
-    wrapper = shallow(<MetricsPlotView {...minimalPropsForSmoothedLineChartWithNaNs} />);
+    wrapper = shallow(
+      <MetricsPlotView {...minimalPropsForSmoothedLineChartWithNaNs} />
+    );
     instance = wrapper.instance();
     expect(instance.getPlotPropsForLineChart()).toEqual({
       data: [
@@ -497,7 +513,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'lines+markers',
           hovertemplate: 'Value: %{text}<br>Smoothed: %{y}',
-          marker: { opacity: 0 },
+          marker: { opacity: 0 }
         },
         {
           metricName: 'metric_1',
@@ -510,7 +526,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
+          marker: { opacity: 1 }
         },
         {
           metricName: 'metric_2',
@@ -523,7 +539,7 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
+          marker: { opacity: 1 }
         },
         {
           metricName: 'metric_3',
@@ -536,10 +552,10 @@ describe('unit tests', () => {
           visible: true,
           mode: 'markers',
           hovertemplate: '%{y}',
-          marker: { opacity: 1 },
-        },
+          marker: { opacity: 1 }
+        }
       ],
-      layout: { ...emptyAnnotationsMock },
+      layout: { ...emptyAnnotationsMock }
     });
   });
 
@@ -553,19 +569,19 @@ describe('unit tests', () => {
           x: ['metric_0'],
           y: [100],
           type: 'bar',
-          runId: 'runUuid1',
+          runId: 'runUuid1'
         },
         {
           name: 'RunDisplayName2',
           x: ['metric_0'],
           y: [300],
           type: 'bar',
-          runId: 'runUuid2',
-        },
+          runId: 'runUuid2'
+        }
       ],
       layout: {
-        barmode: 'group',
-      },
+        barmode: 'group'
+      }
     });
   });
 
@@ -579,27 +595,31 @@ describe('unit tests', () => {
           x: ['metric_0'],
           y: ['NaN'],
           type: 'bar',
-          runId: 'runUuid1',
+          runId: 'runUuid1'
         },
         {
           name: 'RunDisplayName2',
           x: ['metric_0'],
           y: [NaN],
           type: 'bar',
-          runId: 'runUuid2',
-        },
+          runId: 'runUuid2'
+        }
       ],
       layout: {
-        barmode: 'group',
-      },
+        barmode: 'group'
+      }
     });
   });
 
   test('getLineLegend()', () => {
     // how both metric and run name when comparing multiple runs
-    expect(MetricsPlotView.getLineLegend('metric_1', 'Run abc', true)).toBe('metric_1, Run abc');
+    expect(MetricsPlotView.getLineLegend('metric_1', 'Run abc', true)).toBe(
+      'metric_1, Run abc'
+    );
     // only show metric name when there
-    expect(MetricsPlotView.getLineLegend('metric_1', 'Run abc', false)).toBe('metric_1');
+    expect(MetricsPlotView.getLineLegend('metric_1', 'Run abc', false)).toBe(
+      'metric_1'
+    );
   });
 
   test('getXValuesForLineChart()', () => {
@@ -609,22 +629,27 @@ describe('unit tests', () => {
     const anotherTimestampStr = Utils.formatTimestamp(anotherTimestamp);
     const history = [
       { step: 0, timestamp },
-      { step: 1, timestamp: anotherTimestamp },
+      { step: 1, timestamp: anotherTimestamp }
     ];
     // convert to step when axis is Step
-    expect(MetricsPlotView.getXValuesForLineChart(history, X_AXIS_STEP)).toEqual([0, 1]);
+    expect(
+      MetricsPlotView.getXValuesForLineChart(history, X_AXIS_STEP)
+    ).toEqual([0, 1]);
     // convert to relative time in seconds when axis is Time (Relative)
-    expect(MetricsPlotView.getXValuesForLineChart(history, X_AXIS_RELATIVE)).toEqual([0, 5]);
+    expect(
+      MetricsPlotView.getXValuesForLineChart(history, X_AXIS_RELATIVE)
+    ).toEqual([0, 5]);
     // convert to date time string when axis is Time (Wall)
-    expect(MetricsPlotView.getXValuesForLineChart(history, X_AXIS_WALL)).toEqual([
-      timestampStr,
-      anotherTimestampStr,
-    ]);
+    expect(
+      MetricsPlotView.getXValuesForLineChart(history, X_AXIS_WALL)
+    ).toEqual([timestampStr, anotherTimestampStr]);
   });
   test('should disable both plotly logo and the link to plotly studio', () => {
     wrapper = shallow(<MetricsPlotView {...minimalPropsForBarChart} />);
     const plot = wrapper.find(LazyPlot);
     expect(plot.props().config.displaylogo).toBe(false);
-    expect(plot.props().config.modeBarButtonsToRemove).toContain('sendDataToCloud');
+    expect(plot.props().config.modeBarButtonsToRemove).toContain(
+      'sendDataToCloud'
+    );
   });
 });

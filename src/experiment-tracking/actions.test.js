@@ -2,7 +2,7 @@ import {
   fetchMissingParents,
   getParentRunIdsToFetch,
   getParentRunTagName,
-  searchRunsPayload,
+  searchRunsPayload
 } from './actions';
 import { MlflowService } from './sdk/MlflowService';
 
@@ -12,10 +12,10 @@ const a = {
     tags: [
       {
         key: getParentRunTagName(),
-        value: 'aParent',
-      },
-    ],
-  },
+        value: 'aParent'
+      }
+    ]
+  }
 };
 const b = {
   info: { run_id: 'b' },
@@ -23,10 +23,10 @@ const b = {
     tags: [
       {
         key: getParentRunTagName(),
-        value: 'bParent',
-      },
-    ],
-  },
+        value: 'bParent'
+      }
+    ]
+  }
 };
 const aParent = { info: { run_id: 'aParent' } };
 const bParent = { info: { run_id: 'bParent' } };
@@ -38,7 +38,9 @@ beforeEach(() => {
 
   jest
     .spyOn(MlflowService, 'getRun')
-    .mockImplementation((data) => Promise.resolve({ run: { info: { run_id: data.run_id } } }));
+    .mockImplementation(data =>
+      Promise.resolve({ run: { info: { run_id: data.run_id } } })
+    );
 });
 
 afterEach(() => {
@@ -55,21 +57,21 @@ describe('fetchMissingParents', () => {
   it('should return res if runs empty', () => {
     const res = {
       runs: [],
-      nextPageToken: 'something',
+      nextPageToken: 'something'
     };
     expect(fetchMissingParents(res)).toEqual(res);
   });
 
   it('should merge received parent runs', () => {
     const res = { runs: [a, b] };
-    return fetchMissingParents(res).then((runs) => {
+    return fetchMissingParents(res).then(runs => {
       expect(runs).toEqual({ runs: [a, b, aParent, bParent] });
     });
   });
 
   it('should return given runs even if no parent runs', () => {
     const res = { runs: [a, b, aParent, bParent] };
-    return fetchMissingParents(res).then((runs) => {
+    return fetchMissingParents(res).then(runs => {
       expect(runs).toEqual({ runs: [a, b, aParent, bParent] });
     });
   });
@@ -78,10 +80,10 @@ describe('fetchMissingParents', () => {
     const mockParentRunDeletedError = {
       getErrorCode() {
         return 'RESOURCE_DOES_NOT_EXIST';
-      },
+      }
     };
 
-    jest.spyOn(MlflowService, 'getRun').mockImplementation((data) => {
+    jest.spyOn(MlflowService, 'getRun').mockImplementation(data => {
       if (data.run_id === 'aParent') {
         return Promise.resolve({ run: { info: { run_id: data.run_id } } });
       } else {
@@ -90,7 +92,7 @@ describe('fetchMissingParents', () => {
     });
 
     const res = { runs: [a, b] };
-    return fetchMissingParents(res).then((runs) => {
+    return fetchMissingParents(res).then(runs => {
       expect(runs).toEqual({ runs: [a, b, aParent] });
     });
   });
@@ -99,7 +101,7 @@ describe('fetchMissingParents', () => {
     const mockUnexpectedGetRunError = {
       getErrorCode() {
         return 'INTERNAL_ERROR';
-      },
+      }
     };
 
     jest
@@ -107,7 +109,9 @@ describe('fetchMissingParents', () => {
       .mockImplementation(() => Promise.reject(mockUnexpectedGetRunError));
 
     const res = { runs: [a, b] };
-    await expect(fetchMissingParents(res)).rejects.toEqual(mockUnexpectedGetRunError);
+    await expect(fetchMissingParents(res)).rejects.toEqual(
+      mockUnexpectedGetRunError
+    );
   });
 });
 
@@ -126,15 +130,15 @@ describe('getParentRunIdsToFetch', () => {
 
 describe('searchRunsPayload', () => {
   it('should fetch parents only if shouldFetchParents is true', async () => {
-    await searchRunsPayload({}).then((res) => {
+    await searchRunsPayload({}).then(res => {
       expect(res).toEqual({ runs: [a, b, aParent] });
     });
 
-    await searchRunsPayload({ shouldFetchParents: false }).then((res) => {
+    await searchRunsPayload({ shouldFetchParents: false }).then(res => {
       expect(res).toEqual({ runs: [a, b, aParent] });
     });
 
-    await searchRunsPayload({ shouldFetchParents: true }).then((res) => {
+    await searchRunsPayload({ shouldFetchParents: true }).then(res => {
       expect(res).toEqual({ runs: [a, b, aParent, bParent] });
     });
   });

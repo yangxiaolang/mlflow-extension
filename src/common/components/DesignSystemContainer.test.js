@@ -10,7 +10,7 @@ jest.mock('@databricks/design-system', () => ({
   DesignSystemProvider: ({ getPopupContainer, children }) => {
     mockGetPopupContainerFn = getPopupContainer;
     return children;
-  },
+  }
 }));
 
 describe('DesignSystemContainer', () => {
@@ -27,11 +27,11 @@ describe('DesignSystemContainer', () => {
             <span>hello in shadow dom</span>
           </DesignSystemContainer>,
           {
-            attachTo: this._shadowRoot,
-          },
+            attachTo: this._shadowRoot
+          }
         );
       }
-    },
+    }
   );
 
   test('should not attach additional container while in document.body', () => {
@@ -41,7 +41,7 @@ describe('DesignSystemContainer', () => {
           <span>hello</span>
         </DesignSystemContainer>
       </body>,
-      { attachTo: document.documentElement },
+      { attachTo: document.documentElement }
     );
     expect(message.config).toBeCalledTimes(0);
     expect(wrapper.length).toBe(1);

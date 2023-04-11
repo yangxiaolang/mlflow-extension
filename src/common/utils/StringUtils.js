@@ -2,12 +2,12 @@ import _ from 'lodash';
 
 export const truncateToFirstLineWithMaxLength = (str, maxLength) => {
   const truncated = _.truncate(str, {
-    length: maxLength,
+    length: maxLength
   });
-  return _.takeWhile(truncated, (char) => char !== '\n').join('');
+  return _.takeWhile(truncated, char => char !== '\n').join('');
 };
 
-export const capitalizeFirstChar = (str) => {
+export const capitalizeFirstChar = str => {
   if (!str || typeof str !== 'string' || str.length < 1) {
     return str;
   }
@@ -19,7 +19,9 @@ export const middleTruncateStr = (str, maxLen) => {
     const firstPartLen = Math.floor((maxLen - 3) / 2);
     const lastPartLen = maxLen - 3 - firstPartLen;
     return (
-      str.substring(0, firstPartLen) + '...' + str.substring(str.length - lastPartLen, str.length)
+      str.substring(0, firstPartLen) +
+      '...' +
+      str.substring(str.length - lastPartLen, str.length)
     );
   } else {
     return str;

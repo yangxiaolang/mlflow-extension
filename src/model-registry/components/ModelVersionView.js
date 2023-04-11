@@ -12,7 +12,7 @@ import {
   StageTagComponents,
   ModelVersionStatusIcons,
   DefaultModelVersionStatusMessages,
-  ACTIVE_STAGES,
+  ACTIVE_STAGES
 } from '../constants';
 import Routers from '../../experiment-tracking/routes';
 import { CollapsibleSection } from '../../common/components/CollapsibleSection';
@@ -21,7 +21,10 @@ import { EditableTagsTableView } from '../../common/components/EditableTagsTable
 import { getModelVersionTags } from '../reducers';
 import { setModelVersionTagApi, deleteModelVersionTagApi } from '../actions';
 import { connect } from 'react-redux';
-import { OverflowMenu, PageHeader } from '../../shared/building_blocks/PageHeader';
+import {
+  OverflowMenu,
+  PageHeader
+} from '../../shared/building_blocks/PageHeader';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 export class ModelVersionViewImpl extends React.Component {
@@ -38,14 +41,15 @@ export class ModelVersionViewImpl extends React.Component {
     tags: PropTypes.object.isRequired,
     setModelVersionTagApi: PropTypes.func.isRequired,
     deleteModelVersionTagApi: PropTypes.func.isRequired,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired
   };
 
   state = {
     isDeleteModalVisible: false,
     isDeleteModalConfirmLoading: false,
     showDescriptionEditor: false,
-    isTagsRequestPending: false,
+    isTagsRequestPending: false
   };
 
   formRef = React.createRef();
@@ -64,7 +68,7 @@ export class ModelVersionViewImpl extends React.Component {
       .then(() => {
         history.push(getModelPageRoute(modelName));
       })
-      .catch((e) => {
+      .catch(e => {
         this.hideConfirmLoading();
         Utils.logErrorAndNotifyUser(e);
       });
@@ -90,18 +94,18 @@ export class ModelVersionViewImpl extends React.Component {
     this.setState({ showDescriptionEditor: false });
   };
 
-  handleSubmitEditDescription = (description) => {
+  handleSubmitEditDescription = description => {
     return this.props.handleEditDescription(description).then(() => {
       this.setState({ showDescriptionEditor: false });
     });
   };
 
-  startEditingDescription = (e) => {
+  startEditingDescription = e => {
     e.stopPropagation();
     this.setState({ showDescriptionEditor: true });
   };
 
-  handleAddTag = (values) => {
+  handleAddTag = values => {
     const form = this.formRef.current;
     const { modelName } = this.props;
     const { version } = this.props.modelVersion;
@@ -112,19 +116,20 @@ export class ModelVersionViewImpl extends React.Component {
         this.setState({ isTagsRequestPending: false });
         form.resetFields();
       })
-      .catch((ex) => {
+      .catch(ex => {
         this.setState({ isTagsRequestPending: false });
         console.error(ex);
         message.error(
           this.props.intl.formatMessage(
             {
               defaultMessage: 'Failed to add tag. Error: {userVisibleError}',
-              description: 'Text for user visible error when adding tag in model version view',
+              description:
+                'Text for user visible error when adding tag in model version view'
             },
             {
-              userVisibleError: ex.getUserVisibleError(),
-            },
-          ),
+              userVisibleError: ex.getUserVisibleError()
+            }
+          )
         );
       });
   };
@@ -132,39 +137,45 @@ export class ModelVersionViewImpl extends React.Component {
   handleSaveEdit = ({ name, value }) => {
     const { modelName } = this.props;
     const { version } = this.props.modelVersion;
-    return this.props.setModelVersionTagApi(modelName, version, name, value).catch((ex) => {
-      console.error(ex);
-      message.error(
-        this.props.intl.formatMessage(
-          {
-            defaultMessage: 'Failed to set tag. Error: {userVisibleError}',
-            description: 'Text for user visible error when setting tag in model version view',
-          },
-          {
-            userVisibleError: ex.getUserVisibleError(),
-          },
-        ),
-      );
-    });
+    return this.props
+      .setModelVersionTagApi(modelName, version, name, value)
+      .catch(ex => {
+        console.error(ex);
+        message.error(
+          this.props.intl.formatMessage(
+            {
+              defaultMessage: 'Failed to set tag. Error: {userVisibleError}',
+              description:
+                'Text for user visible error when setting tag in model version view'
+            },
+            {
+              userVisibleError: ex.getUserVisibleError()
+            }
+          )
+        );
+      });
   };
 
   handleDeleteTag = ({ name }) => {
     const { modelName } = this.props;
     const { version } = this.props.modelVersion;
-    return this.props.deleteModelVersionTagApi(modelName, version, name).catch((ex) => {
-      console.error(ex);
-      message.error(
-        this.props.intl.formatMessage(
-          {
-            defaultMessage: 'Failed to delete tag. Error: {userVisibleError}',
-            description: 'Text for user visible error when deleting tag in model version view',
-          },
-          {
-            userVisibleError: ex.getUserVisibleError(),
-          },
-        ),
-      );
-    });
+    return this.props
+      .deleteModelVersionTagApi(modelName, version, name)
+      .catch(ex => {
+        console.error(ex);
+        message.error(
+          this.props.intl.formatMessage(
+            {
+              defaultMessage: 'Failed to delete tag. Error: {userVisibleError}',
+              description:
+                'Text for user visible error when deleting tag in model version view'
+            },
+            {
+              userVisibleError: ex.getUserVisibleError()
+            }
+          )
+        );
+      });
   };
 
   shouldHideDeleteOption() {
@@ -175,10 +186,10 @@ export class ModelVersionViewImpl extends React.Component {
     const { handleStageTransitionDropdownSelect } = this.props;
     return (
       <Descriptions.Item
-        key='description-key-stage'
+        key="description-key-stage"
         label={this.props.intl.formatMessage({
           defaultMessage: 'Stage',
-          description: 'Label name for stage metadata in model version page',
+          description: 'Label name for stage metadata in model version page'
         })}
       >
         {modelVersion.status === ModelVersionStatus.READY ? (
@@ -197,10 +208,11 @@ export class ModelVersionViewImpl extends React.Component {
   renderRegisteredTimestampDescription(creation_timestamp) {
     return (
       <Descriptions.Item
-        key='description-key-register'
+        key="description-key-register"
         label={this.props.intl.formatMessage({
           defaultMessage: 'Registered At',
-          description: 'Label name for registered timestamp metadata in model version page',
+          description:
+            'Label name for registered timestamp metadata in model version page'
         })}
       >
         {Utils.formatTimestamp(creation_timestamp)}
@@ -212,10 +224,10 @@ export class ModelVersionViewImpl extends React.Component {
     return (
       user_id && (
         <Descriptions.Item
-          key='description-key-creator'
+          key="description-key-creator"
           label={this.props.intl.formatMessage({
             defaultMessage: 'Creator',
-            description: 'Label name for creator metadata in model version page',
+            description: 'Label name for creator metadata in model version page'
           })}
         >
           {user_id}
@@ -227,10 +239,11 @@ export class ModelVersionViewImpl extends React.Component {
   renderLastModifiedDescription(last_updated_timestamp) {
     return (
       <Descriptions.Item
-        key='description-key-modified'
+        key="description-key-modified"
         label={this.props.intl.formatMessage({
           defaultMessage: 'Last Modified',
-          description: 'Label name for last modified timestamp metadata in model version page',
+          description:
+            'Label name for last modified timestamp metadata in model version page'
         })}
       >
         {Utils.formatTimestamp(last_updated_timestamp)}
@@ -241,12 +254,13 @@ export class ModelVersionViewImpl extends React.Component {
   renderSourceRunDescription() {
     return (
       <Descriptions.Item
-        key='description-key-source-run'
+        key="description-key-source-run"
         label={this.props.intl.formatMessage({
           defaultMessage: 'Source Run',
-          description: 'Label name for source run metadata in model version page',
+          description:
+            'Label name for source run metadata in model version page'
         })}
-        className='linked-run'
+        className="linked-run"
       >
         {this.resolveRunLink()}
       </Descriptions.Item>
@@ -255,18 +269,22 @@ export class ModelVersionViewImpl extends React.Component {
 
   getDescriptions(modelVersion) {
     const defaultOrder = [
-      this.renderRegisteredTimestampDescription(modelVersion.creation_timestamp),
+      this.renderRegisteredTimestampDescription(
+        modelVersion.creation_timestamp
+      ),
       this.renderCreatorDescription(modelVersion.user_id),
       this.renderStageDropdown(modelVersion),
       this.renderLastModifiedDescription(modelVersion.last_updated_timestamp),
-      this.renderSourceRunDescription(),
+      this.renderSourceRunDescription()
     ];
-    return defaultOrder.filter((x) => x !== null);
+    return defaultOrder.filter(x => x !== null);
   }
 
   renderMetadata(modelVersion) {
     return (
-      <Descriptions className='metadata-list'>{this.getDescriptions(modelVersion)}</Descriptions>
+      <Descriptions className="metadata-list">
+        {this.getDescriptions(modelVersion)}
+      </Descriptions>
     );
   }
 
@@ -274,7 +292,8 @@ export class ModelVersionViewImpl extends React.Component {
     const { status, status_message } = this.props.modelVersion;
     if (status !== ModelVersionStatus.READY) {
       const defaultMessage = DefaultModelVersionStatusMessages[status];
-      const type = status === ModelVersionStatus.FAILED_REGISTRATION ? 'error' : 'info';
+      const type =
+        status === ModelVersionStatus.FAILED_REGISTRATION ? 'error' : 'info';
       return (
         <Alert
           type={type}
@@ -291,14 +310,15 @@ export class ModelVersionViewImpl extends React.Component {
   renderDescriptionEditIcon() {
     return (
       <Button
-        data-test-id='descriptionEditButton'
-        type='link'
+        data-test-id="descriptionEditButton"
+        type="link"
         onClick={this.startEditingDescription}
       >
         <FormattedMessage
-          defaultMessage='Edit'
-          description='Text for the edit button next to the description section title on
-             the model version view page'
+          defaultMessage="Edit"
+          id="Ik96R6"
+          description="Text for the edit button next to the description section title on
+             the model version view page"
         />{' '}
       </Button>
     );
@@ -310,13 +330,18 @@ export class ModelVersionViewImpl extends React.Component {
       return (
         // Reported during ESLint upgrade
         // eslint-disable-next-line react/jsx-no-target-blank
-        <a target='_blank' href={modelVersion.run_link}>
+        <a target="_blank" href={modelVersion.run_link}>
           {this.resolveRunName()}
         </a>
       );
     } else if (runInfo) {
       return (
-        <Link to={Routers.getRunPageRoute(runInfo.getExperimentId(), runInfo.getRunUuid())}>
+        <Link
+          to={Routers.getRunPageRoute(
+            runInfo.getExperimentId(),
+            runInfo.getRunUuid()
+          )}
+        >
           {this.resolveRunName()}
         </Link>
       );
@@ -343,13 +368,14 @@ export class ModelVersionViewImpl extends React.Component {
         id: 'delete',
         itemName: (
           <FormattedMessage
-            defaultMessage='Delete'
-            description='Text for delete button on model version view page header'
+            defaultMessage="Delete"
+            id="4+RPaz"
+            description="Text for delete button on model version view page header"
           />
         ),
         onClick: this.showDeleteModal,
-        disabled: ACTIVE_STAGES.includes(this.props.modelVersion.current_stage),
-      },
+        disabled: ACTIVE_STAGES.includes(this.props.modelVersion.current_stage)
+      }
     ];
     return (
       <PageHeader title={title} breadcrumbs={breadcrumbs}>
@@ -365,33 +391,39 @@ export class ModelVersionViewImpl extends React.Component {
       isDeleteModalVisible,
       isDeleteModalConfirmLoading,
       showDescriptionEditor,
-      isTagsRequestPending,
+      isTagsRequestPending
     } = this.state;
     const title = (
       <FormattedMessage
-        defaultMessage='Version {versionNum}'
-        description='Title text for model version page'
+        defaultMessage="Version {versionNum}"
+        id="F16DNA"
+        description="Title text for model version page"
         values={{ versionNum: modelVersion.version }}
       />
     );
     const breadcrumbs = [
       <Link to={modelListPageRoute}>
         <FormattedMessage
-          defaultMessage='Registered Models'
-          description='Text for link back to models page under the header on the model version
-             view page'
+          defaultMessage="Registered Models"
+          id="pl1bdY"
+          description="Text for link back to models page under the header on the model version
+             view page"
         />
       </Link>,
-      <Link data-test-id='breadcrumbRegisteredModel' to={getModelPageRoute(modelName)}>
+      <Link
+        data-test-id="breadcrumbRegisteredModel"
+        to={getModelPageRoute(modelName)}
+      >
         {modelName}
       </Link>,
-      <span data-test-id='breadcrumbModelVersion'>
+      <span data-test-id="breadcrumbModelVersion">
         <FormattedMessage
-          defaultMessage='Version {versionNum}'
-          description='Text for current version under the header on the model version view page'
+          defaultMessage="Version {versionNum}"
+          id="XIOnOe"
+          description="Text for current version under the header on the model version view page"
           values={{ versionNum: modelVersion.version }}
         />
-      </span>,
+      </span>
     ];
     return (
       <div>
@@ -406,15 +438,16 @@ export class ModelVersionViewImpl extends React.Component {
           title={
             <span>
               <FormattedMessage
-                defaultMessage='Description'
-                description='Title text for the description section on the model version view page'
+                defaultMessage="Description"
+                id="z9UqPZ"
+                description="Title text for the description section on the model version view page"
               />{' '}
               {!showDescriptionEditor ? this.renderDescriptionEditIcon() : null}
             </span>
           }
           forceOpen={showDescriptionEditor}
           defaultCollapsed={!description}
-          data-test-id='model-version-description-section'
+          data-test-id="model-version-description-section"
         >
           <EditableNote
             defaultMarkdown={description}
@@ -423,16 +456,17 @@ export class ModelVersionViewImpl extends React.Component {
             showEditor={showDescriptionEditor}
           />
         </CollapsibleSection>
-        <div data-test-id='tags-section'>
+        <div data-test-id="tags-section">
           <CollapsibleSection
             title={
               <FormattedMessage
-                defaultMessage='Tags'
-                description='Title text for the tags section on the model versions view page'
+                defaultMessage="Tags"
+                id="TlFUsN"
+                description="Title text for the tags section on the model versions view page"
               />
             }
             defaultCollapsed={Utils.getVisibleTagValues(tags).length === 0}
-            data-test-id='model-version-tags-section'
+            data-test-id="model-version-tags-section"
           >
             <EditableTagsTableView
               innerRef={this.formRef}
@@ -447,18 +481,20 @@ export class ModelVersionViewImpl extends React.Component {
         <CollapsibleSection
           title={
             <FormattedMessage
-              defaultMessage='Schema'
-              description='Title text for the schema section on the model versions view page'
+              defaultMessage="Schema"
+              id="gUdmaJ"
+              description="Title text for the schema section on the model versions view page"
             />
           }
-          data-test-id='model-version-schema-section'
+          data-test-id="model-version-schema-section"
         >
           <SchemaTable schema={schema} />
         </CollapsibleSection>
         <Modal
           title={this.props.intl.formatMessage({
             defaultMessage: 'Delete Model Version',
-            description: 'Title text for model version deletion modal in model versions view page',
+            description:
+              'Title text for model version deletion modal in model versions view page'
           })}
           visible={isDeleteModalVisible}
           confirmLoading={isDeleteModalConfirmLoading}
@@ -466,23 +502,24 @@ export class ModelVersionViewImpl extends React.Component {
           okText={this.props.intl.formatMessage({
             defaultMessage: 'Delete',
             description:
-              'OK button text for model version deletion modal in model versions view page',
+              'OK button text for model version deletion modal in model versions view page'
           })}
-          okType='danger'
+          okType="danger"
           onCancel={this.hideDeleteModal}
           cancelText={this.props.intl.formatMessage({
             defaultMessage: 'Cancel',
             description:
               'Cancel button text for model version deletion modal in model versions' +
-              ' view page',
+              ' view page'
           })}
         >
           <span>
             <FormattedMessage
-              defaultMessage='Are you sure you want to delete model version {versionNum}? This
-                 cannot be undone.'
-              description='Comment text for model version deletion modal in model versions view
-                 page'
+              defaultMessage="Are you sure you want to delete model version {versionNum}? This
+                 cannot be undone."
+              id="VmbXoQ"
+              description="Comment text for model version deletion modal in model versions view
+                 page"
               values={{ versionNum: modelVersion.version }}
             />
           </span>
@@ -502,5 +539,5 @@ const mapDispatchToProps = { setModelVersionTagApi, deleteModelVersionTagApi };
 
 export const ModelVersionView = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(injectIntl(ModelVersionViewImpl));

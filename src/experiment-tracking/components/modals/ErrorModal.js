@@ -11,7 +11,8 @@ export class ErrorModalImpl extends Component {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     text: PropTypes.string.isRequired,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired
   };
 
   render() {
@@ -19,18 +20,18 @@ export class ErrorModalImpl extends Component {
       <Modal
         title={this.props.intl.formatMessage({
           defaultMessage: 'Oops!',
-          description: 'Error modal title to rendering errors',
+          description: 'Error modal title to rendering errors'
         })}
         visible={this.props.isOpen}
         onCancel={this.props.onClose}
         okButtonProps={{
           style: {
-            display: 'none',
-          },
+            display: 'none'
+          }
         }}
         cancelText={this.props.intl.formatMessage({
           defaultMessage: 'Close',
-          description: 'Error modal close button text',
+          description: 'Error modal close button text'
         })}
         centered
       >
@@ -40,20 +41,20 @@ export class ErrorModalImpl extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const isOpen = isErrorModalOpen(state);
   const text = getErrorModalText(state);
   return {
     isOpen,
-    text,
+    text
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     onClose: () => {
       dispatch(closeErrorModal());
-    },
+    }
   };
 };
 

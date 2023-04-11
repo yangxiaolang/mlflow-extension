@@ -1,5 +1,10 @@
 import React from 'react';
-import { Dropdown, Menu, Button, ChevronDownIcon } from '@databricks/design-system';
+import {
+  Dropdown,
+  Menu,
+  Button,
+  ChevronDownIcon
+} from '@databricks/design-system';
 import { SearchTree } from '../../common/components/SearchTree';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -13,17 +18,17 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
     metricKeyList: PropTypes.array,
     visibleTagKeyList: PropTypes.array,
     onCheck: PropTypes.func,
-    categorizedUncheckedKeys: PropTypes.object.isRequired,
+    categorizedUncheckedKeys: PropTypes.object.isRequired
   };
 
   static defaultProps = {
     paramKeyList: [],
     metricKeyList: [],
-    visibleTagKeyList: [],
+    visibleTagKeyList: []
   };
 
   state = {
-    menuVisible: false,
+    menuVisible: false
   };
 
   handleCheck = (checkedKeys, allKeys) => {
@@ -38,10 +43,10 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
 
     // Attributes
     const data = [
-      ...Object.values(ATTRIBUTE_COLUMN_LABELS).map((text) => ({
+      ...Object.values(ATTRIBUTE_COLUMN_LABELS).map(text => ({
         key: `${COLUMN_TYPES.ATTRIBUTES}-${text}`,
-        title: text,
-      })),
+        title: text
+      }))
     ];
 
     // Parameters
@@ -49,7 +54,10 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
       data.push({
         title: 'Parameters',
         key: COLUMN_TYPES.PARAMS,
-        children: paramKeyList.map((key) => ({ key: `${COLUMN_TYPES.PARAMS}-${key}`, title: key })),
+        children: paramKeyList.map(key => ({
+          key: `${COLUMN_TYPES.PARAMS}-${key}`,
+          title: key
+        }))
       });
     }
 
@@ -58,10 +66,10 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
       data.push({
         title: 'Metrics',
         key: COLUMN_TYPES.METRICS,
-        children: metricKeyList.map((key) => ({
+        children: metricKeyList.map(key => ({
           key: `${COLUMN_TYPES.METRICS}-${key}`,
-          title: key,
-        })),
+          title: key
+        }))
       });
     }
 
@@ -70,10 +78,10 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
       data.push({
         title: 'Tags',
         key: COLUMN_TYPES.TAGS,
-        children: visibleTagKeyList.map((key) => ({
+        children: visibleTagKeyList.map(key => ({
           key: `${COLUMN_TYPES.TAGS}-${key}`,
-          title: key,
-        })),
+          title: key
+        }))
       });
     }
 
@@ -81,21 +89,29 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
   }
 
   getCheckedKeys() {
-    const { paramKeyList, metricKeyList, visibleTagKeyList, categorizedUncheckedKeys } = this.props;
+    const {
+      paramKeyList,
+      metricKeyList,
+      visibleTagKeyList,
+      categorizedUncheckedKeys
+    } = this.props;
     return [
       ..._.difference(
         Object.values(ATTRIBUTE_COLUMN_LABELS),
-        categorizedUncheckedKeys[COLUMN_TYPES.ATTRIBUTES],
-      ).map((key) => `${COLUMN_TYPES.ATTRIBUTES}-${key}`),
-      ..._.difference(paramKeyList, categorizedUncheckedKeys[COLUMN_TYPES.PARAMS]).map(
-        (key) => `${COLUMN_TYPES.PARAMS}-${key}`,
-      ),
-      ..._.difference(metricKeyList, categorizedUncheckedKeys[COLUMN_TYPES.METRICS]).map(
-        (key) => `${COLUMN_TYPES.METRICS}-${key}`,
-      ),
-      ..._.difference(visibleTagKeyList, categorizedUncheckedKeys[COLUMN_TYPES.TAGS]).map(
-        (key) => `${COLUMN_TYPES.TAGS}-${key}`,
-      ),
+        categorizedUncheckedKeys[COLUMN_TYPES.ATTRIBUTES]
+      ).map(key => `${COLUMN_TYPES.ATTRIBUTES}-${key}`),
+      ..._.difference(
+        paramKeyList,
+        categorizedUncheckedKeys[COLUMN_TYPES.PARAMS]
+      ).map(key => `${COLUMN_TYPES.PARAMS}-${key}`),
+      ..._.difference(
+        metricKeyList,
+        categorizedUncheckedKeys[COLUMN_TYPES.METRICS]
+      ).map(key => `${COLUMN_TYPES.METRICS}-${key}`),
+      ..._.difference(
+        visibleTagKeyList,
+        categorizedUncheckedKeys[COLUMN_TYPES.TAGS]
+      ).map(key => `${COLUMN_TYPES.TAGS}-${key}`)
     ];
   }
 
@@ -103,7 +119,7 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
     this.setState({ menuVisible: false });
   };
 
-  handleVisibleChange = (menuVisible) => {
+  handleVisibleChange = menuVisible => {
     this.setState({ menuVisible });
   };
 
@@ -111,7 +127,10 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
     const { menuVisible } = this.state;
     const content = (
       <Menu style={{ maxHeight: 480, overflowY: 'scroll' }}>
-        <Menu.Item css={styles.menuItem} key='this-menu-needs-at-least-1-menu-item'>
+        <Menu.Item
+          css={styles.menuItem}
+          key="this-menu-needs-at-least-1-menu-item"
+        >
           <SearchTree
             data={this.getData()}
             onCheck={this.handleCheck}
@@ -130,12 +149,13 @@ export class RunsTableColumnSelectionDropdown extends React.Component {
       >
         <Button
           style={{ display: 'flex', alignItems: 'center' }}
-          dataTestId='column-selection-dropdown'
+          dataTestId="column-selection-dropdown"
         >
           <FormattedMessage
-            defaultMessage='Columns'
+            defaultMessage="Columns"
+            id="ny+fBZ"
             // eslint-disable-next-line max-len
-            description='Dropdown text to display columns names that could to be rendered for the experiment runs table'
+            description="Dropdown text to display columns names that could to be rendered for the experiment runs table"
           />{' '}
           <ChevronDownIcon css={styles.buttonIcon} />
         </Button>
@@ -150,9 +170,9 @@ export function getCategorizedUncheckedKeys(checkedKeys, allKeys) {
     [COLUMN_TYPES.ATTRIBUTES]: [],
     [COLUMN_TYPES.PARAMS]: [],
     [COLUMN_TYPES.METRICS]: [],
-    [COLUMN_TYPES.TAGS]: [],
+    [COLUMN_TYPES.TAGS]: []
   };
-  uncheckedKeys.forEach((key) => {
+  uncheckedKeys.forEach(key => {
     // split on first instance of '-' in case there are keys with '-'
     const [columnType, rawKey] = key.split(/-(.+)/);
     if (rawKey) {
@@ -171,9 +191,9 @@ export function getCategorizedUncheckedKeys(checkedKeys, allKeys) {
 const styles = {
   menuItem: {
     '&:hover': {
-      backgroundColor: 'inherit !important;',
-    },
+      backgroundColor: 'inherit !important;'
+    }
   },
   // TODO: remove icon style override when DuBois will fix icon sizes
-  buttonIcon: { verticalAlign: 'bottom', svg: { width: 18, height: 18 } },
+  buttonIcon: { verticalAlign: 'bottom', svg: { width: 18, height: 18 } }
 };

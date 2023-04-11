@@ -12,7 +12,7 @@ class CompareRunPage extends Component {
   static propTypes = {
     experimentIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     runUuids: PropTypes.arrayOf(PropTypes.string).isRequired,
-    dispatch: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -21,7 +21,7 @@ class CompareRunPage extends Component {
   }
 
   fetchExperiments() {
-    return this.props.experimentIds.map((experimentId) => {
+    return this.props.experimentIds.map(experimentId => {
       const experimentRequestId = getUUID();
       this.props.dispatch(getExperimentApi(experimentId, experimentRequestId));
       return experimentRequestId;
@@ -30,7 +30,7 @@ class CompareRunPage extends Component {
 
   componentDidMount() {
     this.requestIds.push(...this.fetchExperiments());
-    this.props.runUuids.forEach((runUuid) => {
+    this.props.runUuids.forEach(runUuid => {
       const requestId = getUUID();
       this.requestIds.push(requestId);
       this.props.dispatch(getRunApi(runUuid, requestId));
@@ -44,7 +44,10 @@ class CompareRunPage extends Component {
           requestIds={this.requestIds}
           // eslint-disable-next-line no-trailing-spaces
         >
-          <CompareRunView runUuids={this.props.runUuids} experimentIds={this.props.experimentIds} />
+          <CompareRunView
+            runUuids={this.props.runUuids}
+            experimentIds={this.props.experimentIds}
+          />
         </RequestStateWrapper>
       </PageContainer>
     );

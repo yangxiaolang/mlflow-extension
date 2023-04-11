@@ -13,7 +13,7 @@ export function getArtifactContent(artifactLocation, isBinary = false) {
       const getArtifactRequest = new Request(artifactLocation, {
         method: HTTPMethods.GET,
         redirect: 'follow',
-        headers: new Headers(getDefaultHeaders(document.cookie)),
+        headers: new Headers(getDefaultHeaders(document.cookie))
       });
       const response = await fetch(getArtifactRequest);
 
@@ -24,11 +24,11 @@ export function getArtifactContent(artifactLocation, isBinary = false) {
       const blob = await response.blob();
 
       const fileReader = new FileReader();
-      fileReader.onload = (event) => {
+      fileReader.onload = event => {
         // Resolve promise with artifact contents
         resolve(event.target.result);
       };
-      fileReader.onerror = (error) => {
+      fileReader.onerror = error => {
         reject(error);
       };
       if (isBinary) {

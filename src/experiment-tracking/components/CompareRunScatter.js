@@ -21,9 +21,11 @@ export class CompareRunScatterImpl extends Component {
   static propTypes = {
     runUuids: PropTypes.arrayOf(PropTypes.string).isRequired,
     runInfos: PropTypes.arrayOf(PropTypes.instanceOf(RunInfo)).isRequired,
-    metricLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
-    paramLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
-    runDisplayNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    metricLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object))
+      .isRequired,
+    paramLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object))
+      .isRequired,
+    runDisplayNames: PropTypes.arrayOf(PropTypes.string).isRequired
   };
 
   // Size limits for displaying keys and values in our plot axes and tooltips
@@ -47,22 +49,22 @@ export class CompareRunScatterImpl extends Component {
           this.paramKeys.length > 0
             ? {
                 key: this.paramKeys[0],
-                isMetric: false,
+                isMetric: false
               }
             : {
                 key: this.metricKeys[1],
-                isMetric: true,
+                isMetric: true
               },
         y:
           this.metricKeys.length > 0
             ? {
                 key: this.metricKeys[0],
-                isMetric: true,
+                isMetric: true
               }
             : {
                 key: this.paramKeys[1],
-                isMetric: false,
-              },
+                isMetric: false
+              }
       };
     }
   }
@@ -73,7 +75,7 @@ export class CompareRunScatterImpl extends Component {
   getValue(i, { key, isMetric }) {
     const value = CompareRunUtil.findInList(
       (isMetric ? this.props.metricLists : this.props.paramLists)[i],
-      key,
+      key
     );
     return value === undefined ? value : value.value;
   }
@@ -112,21 +114,23 @@ export class CompareRunScatterImpl extends Component {
         controls={
           <>
             <div>
-              <label htmlFor='x-axis-selector'>
+              <label htmlFor="x-axis-selector">
                 <FormattedMessage
-                  defaultMessage='X-axis:'
-                  description='Label text for x-axis in scatter plot comparison in MLflow'
+                  defaultMessage="X-axis:"
+                  id="1/M8+x"
+                  description="Label text for x-axis in scatter plot comparison in MLflow"
                 />
               </label>
               {this.renderSelect('x')}
             </div>
-            <Spacer size='medium' />
+            <Spacer size="medium" />
             <div>
               {' '}
-              <label htmlFor='y-axis-selector'>
+              <label htmlFor="y-axis-selector">
                 <FormattedMessage
-                  defaultMessage='Y-axis:'
-                  description='Label text for y-axis in scatter plot comparison in MLflow'
+                  defaultMessage="Y-axis:"
+                  id="eNUbaN"
+                  description="Label text for y-axis in scatter plot comparison in MLflow"
                 />
               </label>
               {this.renderSelect('y')}
@@ -145,21 +149,25 @@ export class CompareRunScatterImpl extends Component {
               mode: 'markers',
               marker: {
                 size: 10,
-                color: 'rgba(200, 50, 100, .75)',
-              },
-            },
+                color: 'rgba(200, 50, 100, .75)'
+              }
+            }
           ]}
           layout={{
             margin: {
-              t: 30,
+              t: 30
             },
             hovermode: 'closest',
             xaxis: {
-              title: this.encodeHtml(Utils.truncateString(this.state['x'].key, keyLength)),
+              title: this.encodeHtml(
+                Utils.truncateString(this.state['x'].key, keyLength)
+              )
             },
             yaxis: {
-              title: this.encodeHtml(Utils.truncateString(this.state['y'].key, keyLength)),
-            },
+              title: this.encodeHtml(
+                Utils.truncateString(this.state['y'].key, keyLength)
+              )
+            }
           }}
           css={styles.plot}
           config={{
@@ -172,8 +180,8 @@ export class CompareRunScatterImpl extends Component {
               'lasso2d',
               'resetScale2d',
               'hoverClosestCartesian',
-              'hoverCompareCartesian',
-            ],
+              'hoverCompareCartesian'
+            ]
           }}
           useResizeHandler
         />
@@ -188,23 +196,26 @@ export class CompareRunScatterImpl extends Component {
           css={styles.select}
           id={axis + '-axis-selector'}
           aria-label={`${axis} axis`}
-          onChange={(value) => {
+          onChange={value => {
             const [prefix, ...keyParts] = value.split('-');
             const key = keyParts.join('-');
             const isMetric = prefix === 'metric';
             this.setState({ [axis]: { isMetric, key } });
           }}
-          value={(this.state[axis].isMetric ? 'metric-' : 'param-') + this.state[axis].key}
+          value={
+            (this.state[axis].isMetric ? 'metric-' : 'param-') +
+            this.state[axis].key
+          }
         >
-          <OptGroup label='Parameter'>
-            {this.paramKeys.map((p) => (
+          <OptGroup label="Parameter">
+            {this.paramKeys.map(p => (
               <Option key={'param-' + p} value={'param-' + p}>
                 {p}
               </Option>
             ))}
           </OptGroup>
-          <OptGroup label='Metric'>
-            {this.metricKeys.map((m) => (
+          <OptGroup label="Metric">
+            {this.metricKeys.map(m => (
               <Option key={'metric-' + m} value={'metric-' + m}>
                 {m}
               </Option>
@@ -221,7 +232,7 @@ export class CompareRunScatterImpl extends Component {
     const runName = this.props.runDisplayNames[index];
     let result = `<b>${this.encodeHtml(runName)}</b><br>`;
     const paramList = this.props.paramLists[index];
-    paramList.forEach((p) => {
+    paramList.forEach(p => {
       result +=
         this.encodeHtml(Utils.truncateString(p.key, keyLength)) +
         ': ' +
@@ -231,7 +242,7 @@ export class CompareRunScatterImpl extends Component {
     const metricList = this.props.metricLists[index];
     if (metricList.length > 0) {
       result += paramList.length > 0 ? '<br>' : '';
-      metricList.forEach((m) => {
+      metricList.forEach(m => {
         result +=
           this.encodeHtml(Utils.truncateString(m.key, keyLength)) +
           ': ' +
@@ -245,11 +256,11 @@ export class CompareRunScatterImpl extends Component {
 
 const styles = {
   select: {
-    width: '100%',
+    width: '100%'
   },
   plot: {
-    width: '100%',
-  },
+    width: '100%'
+  }
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -257,7 +268,7 @@ const mapStateToProps = (state, ownProps) => {
   const metricLists = [];
   const paramLists = [];
   const { runUuids } = ownProps;
-  runUuids.forEach((runUuid) => {
+  runUuids.forEach(runUuid => {
     runInfos.push(getRunInfo(runUuid, state));
     metricLists.push(Object.values(getLatestMetrics(runUuid, state)));
     paramLists.push(Object.values(getParams(runUuid, state)));
@@ -265,4 +276,6 @@ const mapStateToProps = (state, ownProps) => {
   return { runInfos, metricLists, paramLists };
 };
 
-export const CompareRunScatter = connect(mapStateToProps)(CompareRunScatterImpl);
+export const CompareRunScatter = connect(mapStateToProps)(
+  CompareRunScatterImpl
+);

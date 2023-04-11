@@ -9,7 +9,7 @@ export const Stages = {
   NONE: 'None',
   STAGING: 'Staging',
   PRODUCTION: 'Production',
-  ARCHIVED: 'Archived',
+  ARCHIVED: 'Archived'
 };
 
 export const ACTIVE_STAGES = [Stages.STAGING, Stages.PRODUCTION];
@@ -18,14 +18,14 @@ export const StageLabels = {
   [Stages.NONE]: 'None',
   [Stages.STAGING]: 'Staging',
   [Stages.PRODUCTION]: 'Production',
-  [Stages.ARCHIVED]: 'Archived',
+  [Stages.ARCHIVED]: 'Archived'
 };
 
 export const StageTagComponents = {
   [Stages.NONE]: <Tag>{StageLabels[Stages.NONE]}</Tag>,
-  [Stages.STAGING]: <Tag color='lemon'>{StageLabels[Stages.STAGING]}</Tag>,
-  [Stages.PRODUCTION]: <Tag color='lime'>{StageLabels[Stages.PRODUCTION]}</Tag>,
-  [Stages.ARCHIVED]: <Tag color='charcoal'>{StageLabels[Stages.ARCHIVED]}</Tag>,
+  [Stages.STAGING]: <Tag color="lemon">{StageLabels[Stages.STAGING]}</Tag>,
+  [Stages.PRODUCTION]: <Tag color="lime">{StageLabels[Stages.PRODUCTION]}</Tag>,
+  [Stages.ARCHIVED]: <Tag color="charcoal">{StageLabels[Stages.ARCHIVED]}</Tag>
 };
 
 export const ActivityTypes = {
@@ -35,35 +35,37 @@ export const ActivityTypes = {
   CANCELLED_REQUEST: 'CANCELLED_REQUEST',
   APPROVED_REQUEST: 'APPROVED_REQUEST',
   REJECTED_REQUEST: 'REJECTED_REQUEST',
-  NEW_COMMENT: 'NEW_COMMENT',
+  NEW_COMMENT: 'NEW_COMMENT'
 };
 
 export const EMPTY_CELL_PLACEHOLDER = <div style={{ marginTop: -12 }}>_</div>;
 
 export const ModelVersionStatus = {
-  READY: 'READY',
+  READY: 'READY'
 };
 
 export const DefaultModelVersionStatusMessages = {
   [ModelVersionStatus.READY]: (
     <FormattedMessage
-      defaultMessage='Ready.'
-      description='Default status message for model versions that are ready'
+      defaultMessage="Ready."
+      id="f/An1W"
+      description="Default status message for model versions that are ready"
     />
-  ),
+  )
 };
 
 export const modelVersionStatusIconTooltips = {
   [ModelVersionStatus.READY]: (
     <FormattedMessage
-      defaultMessage='Ready'
-      description='Tooltip text for ready model version status icon in model view page'
+      defaultMessage="Ready"
+      id="zAvilr"
+      description="Tooltip text for ready model version status icon in model view page"
     />
-  ),
+  )
 };
 
 export const ModelVersionStatusIcons = {
-  [ModelVersionStatus.READY]: <ReadyIcon />,
+  [ModelVersionStatus.READY]: <ReadyIcon />
 };
 
 export const MODEL_VERSION_STATUS_POLL_INTERVAL = 10000;
@@ -80,7 +82,7 @@ export const MODEL_SCHEMA_TENSOR_TYPE = 'tensor';
 
 export const AntdTableSortOrder = {
   ASC: 'ascend',
-  DESC: 'descend',
+  DESC: 'descend'
 };
 
 export const MODEL_VERSION_DELETE_MENU_ITEM_DISABLED_TOOLTIP_TEXT = `You cannot delete a model
@@ -90,12 +92,13 @@ export const REGISTERED_MODEL_DELETE_MENU_ITEM_DISABLED_TOOLTIP_TEXT = `You cann
 registered model with versions in active stages ('Staging' or 'Production'). To delete this
 registered model, transition versions in active stages to the 'Archived' stage.`;
 
-export const archiveExistingVersionToolTipText = (currentStage) => (
+export const archiveExistingVersionToolTipText = currentStage => (
   <FormattedMessage
-    defaultMessage='Model versions in the `{currentStage}` stage will be moved to the
-       `Archived` stage.'
-    description='Tooltip text for transitioning existing model versions in stage to archived
-       in the model versions page'
+    defaultMessage="Model versions in the `{currentStage}` stage will be moved to the
+       `Archived` stage."
+    id="tX0WJ/"
+    description="Tooltip text for transitioning existing model versions in stage to archived
+       in the model versions page"
     values={{ currentStage: currentStage }}
   />
 );

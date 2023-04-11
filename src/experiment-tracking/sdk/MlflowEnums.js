@@ -12,7 +12,7 @@ export const SourceType = {
   JOB: 'JOB',
   PROJECT: 'PROJECT',
   LOCAL: 'LOCAL',
-  UNKNOWN: 'UNKNOWN',
+  UNKNOWN: 'UNKNOWN'
 };
 
 export const RunStatus = {
@@ -20,11 +20,11 @@ export const RunStatus = {
   SCHEDULED: 'SCHEDULED',
   FINISHED: 'FINISHED',
   FAILED: 'FAILED',
-  KILLED: 'KILLED',
+  KILLED: 'KILLED'
 };
 
 export const ViewType = {
   ACTIVE_ONLY: 'ACTIVE_ONLY',
   DELETED_ONLY: 'DELETED_ONLY',
-  ALL: 'ALL',
+  ALL: 'ALL'
 };

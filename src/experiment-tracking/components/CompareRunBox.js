@@ -8,12 +8,21 @@ import { LazyPlot } from './LazyPlot';
 
 const { Option, OptGroup } = Select;
 
-export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) => {
+export const CompareRunBox = ({
+  runUuids,
+  runInfos,
+  metricLists,
+  paramLists
+}) => {
   const [xAxis, setXAxis] = useState({ key: undefined, isParam: undefined });
   const [yAxis, setYAxis] = useState({ key: undefined, isParam: undefined });
 
-  const paramKeys = Array.from(new Set(paramLists.flat().map(({ key }) => key))).sort();
-  const metricKeys = Array.from(new Set(metricLists.flat().map(({ key }) => key))).sort();
+  const paramKeys = Array.from(
+    new Set(paramLists.flat().map(({ key }) => key))
+  ).sort();
+  const metricKeys = Array.from(
+    new Set(metricLists.flat().map(({ key }) => key))
+  ).sort();
 
   const paramOptionPrefix = 'param-';
   const metricOptionPrefix = 'metric-';
@@ -31,21 +40,21 @@ export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) =
   const renderSelector = (onChange, selectedValue) => (
     <Select
       css={{ width: '100%', marginBottom: '16px' }}
-      placeholder='Select'
+      placeholder="Select"
       onChange={onChange}
       value={selectedValue}
     >
-      <OptGroup label='Parameters' key='parameters'>
-        {paramKeys.map((key) => (
+      <OptGroup label="Parameters" key="parameters">
+        {paramKeys.map(key => (
           <Option key={key} value={paramOptionPrefix + key}>
-            <div data-test-id='axis-option'>{key}</div>
+            <div data-test-id="axis-option">{key}</div>
           </Option>
         ))}
       </OptGroup>
-      <OptGroup label='Metrics'>
-        {metricKeys.map((key) => (
+      <OptGroup label="Metrics">
+        {metricKeys.map(key => (
           <Option key={key} value={metricOptionPrefix + key}>
-            <div data-test-id='axis-option'>{key}</div>
+            <div data-test-id="axis-option">{key}</div>
           </Option>
         ))}
       </OptGroup>
@@ -57,8 +66,12 @@ export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) =
     runInfos.forEach((_, index) => {
       const params = paramLists[index];
       const metrics = metricLists[index];
-      const x = (xAxis.isParam ? params : metrics).find(({ key }) => key === xAxis.key);
-      const y = (yAxis.isParam ? params : metrics).find(({ key }) => key === yAxis.key);
+      const x = (xAxis.isParam ? params : metrics).find(
+        ({ key }) => key === xAxis.key
+      );
+      const y = (yAxis.isParam ? params : metrics).find(
+        ({ key }) => key === yAxis.key
+      );
       if (x === undefined || y === undefined) {
         return;
       }
@@ -76,7 +89,7 @@ export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) =
       name: key,
       jitter: 0.3,
       pointpos: -1.5,
-      boxpoints: 'all',
+      boxpoints: 'all'
     }));
   };
 
@@ -89,13 +102,14 @@ export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) =
             width: '100%',
             height: '100%',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'center'
           }}
         >
-          <Typography.Text size='xl'>
+          <Typography.Text size="xl">
             <FormattedMessage
-              defaultMessage='Select parameters/metrics to plot.'
-              description='Text to show when x or y axis is not selected on box plot'
+              defaultMessage="Select parameters/metrics to plot."
+              id="XaD7FM"
+              description="Text to show when x or y axis is not selected on box plot"
             />
           </Typography.Text>
         </div>
@@ -107,20 +121,20 @@ export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) =
         css={{
           width: '100%',
           height: '100%',
-          minHeight: '35vw',
+          minHeight: '35vw'
         }}
         data={getBoxPlotData()}
         layout={{
           margin: {
-            t: 30,
+            t: 30
           },
           hovermode: 'closest',
           xaxis: {
-            title: xAxis.key,
+            title: xAxis.key
           },
           yaxis: {
-            title: yAxis.key,
-          },
+            title: yAxis.key
+          }
         }}
         config={{
           responsive: true,
@@ -132,8 +146,8 @@ export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) =
             'lasso2d',
             'resetScale2d',
             'hoverClosestCartesian',
-            'hoverCompareCartesian',
-          ],
+            'hoverCompareCartesian'
+          ]
         }}
         useResizeHandler
       />
@@ -144,20 +158,22 @@ export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) =
     <Row>
       <Col span={6}>
         <div>
-          <label htmlFor='x-axis-selector'>
+          <label htmlFor="x-axis-selector">
             <FormattedMessage
-              defaultMessage='X-axis:'
-              description='Label text for X-axis in box plot comparison in MLflow'
+              defaultMessage="X-axis:"
+              id="8xji5J"
+              description="Label text for X-axis in box plot comparison in MLflow"
             />
           </label>
         </div>
         {renderSelector(handleXAxisChange, xAxis.value)}
 
         <div>
-          <label htmlFor='y-axis-selector'>
+          <label htmlFor="y-axis-selector">
             <FormattedMessage
-              defaultMessage='Y-axis:'
-              description='Label text for Y-axis in box plot comparison in MLflow'
+              defaultMessage="Y-axis:"
+              id="Hk0RSH"
+              description="Label text for Y-axis in box plot comparison in MLflow"
             />
           </label>
         </div>
@@ -171,6 +187,7 @@ export const CompareRunBox = ({ runUuids, runInfos, metricLists, paramLists }) =
 CompareRunBox.propTypes = {
   runUuids: PropTypes.arrayOf(PropTypes.string).isRequired,
   runInfos: PropTypes.arrayOf(PropTypes.instanceOf(RunInfo)).isRequired,
-  metricLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
-  paramLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
+  metricLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object))
+    .isRequired,
+  paramLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired
 };

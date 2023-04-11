@@ -16,7 +16,7 @@ import { ErrorWrapper } from './ErrorWrapper';
 
 message.config({
   maxCount: 1,
-  duration: 5,
+  duration: 5
 });
 
 class Utils {
@@ -30,11 +30,11 @@ class Utils {
     const ret = {};
     keyValueList.forEach((keyValueObj, i) => {
       const curRunUuid = runUuids[i];
-      Object.keys(keyValueObj).forEach((key) => {
+      Object.keys(keyValueObj).forEach(key => {
         const cur = ret[key] || {};
         ret[key] = {
           ...cur,
-          [curRunUuid]: keyValueObj[key],
+          [curRunUuid]: keyValueObj[key]
         };
       });
     });
@@ -83,10 +83,10 @@ class Utils {
    * @returns Same list but all of the timestamps casted to numbers.
    */
   static convertTimestampToInt(metrics) {
-    return metrics.map((metric) => {
+    return metrics.map(metric => {
       return {
         ...metric,
-        timestamp: Number.parseFloat(metric.timestamp),
+        timestamp: Number.parseFloat(metric.timestamp)
       };
     });
   }
@@ -111,8 +111,9 @@ class Utils {
     if (interval >= 1) {
       return (
         <FormattedMessage
-          defaultMessage='{timeSince, plural, =1 {1 year} other {# years}} ago'
-          description='Text for time in years since given date for MLflow views'
+          defaultMessage="{timeSince, plural, =1 {1 year} other {# years}} ago"
+          id="16BvfJ"
+          description="Text for time in years since given date for MLflow views"
           values={{ timeSince: interval }}
         />
       );
@@ -121,8 +122,9 @@ class Utils {
     if (interval >= 1) {
       return (
         <FormattedMessage
-          defaultMessage='{timeSince, plural, =1 {1 month} other {# months}} ago'
-          description='Text for time in months since given date for MLflow views'
+          defaultMessage="{timeSince, plural, =1 {1 month} other {# months}} ago"
+          id="5ZAXeS"
+          description="Text for time in months since given date for MLflow views"
           values={{ timeSince: interval }}
         />
       );
@@ -131,8 +133,9 @@ class Utils {
     if (interval >= 1) {
       return (
         <FormattedMessage
-          defaultMessage='{timeSince, plural, =1 {1 day} other {# days}} ago'
-          description='Text for time in days since given date for MLflow views'
+          defaultMessage="{timeSince, plural, =1 {1 day} other {# days}} ago"
+          id="tLb7+M"
+          description="Text for time in days since given date for MLflow views"
           values={{ timeSince: interval }}
         />
       );
@@ -141,8 +144,9 @@ class Utils {
     if (interval >= 1) {
       return (
         <FormattedMessage
-          defaultMessage='{timeSince, plural, =1 {1 hour} other {# hours}} ago'
-          description='Text for time in hours since given date for MLflow views'
+          defaultMessage="{timeSince, plural, =1 {1 hour} other {# hours}} ago"
+          id="aOW396"
+          description="Text for time in hours since given date for MLflow views"
           values={{ timeSince: interval }}
         />
       );
@@ -151,16 +155,18 @@ class Utils {
     if (interval >= 1) {
       return (
         <FormattedMessage
-          defaultMessage='{timeSince, plural, =1 {1 minute} other {# minutes}} ago'
-          description='Text for time in minutes since given date for MLflow views'
+          defaultMessage="{timeSince, plural, =1 {1 minute} other {# minutes}} ago"
+          id="7jsqqe"
+          description="Text for time in minutes since given date for MLflow views"
           values={{ timeSince: interval }}
         />
       );
     }
     return (
       <FormattedMessage
-        defaultMessage='{timeSince, plural, =1 {1 second} other {# seconds}} ago'
-        description='Text for time in seconds since given date for MLflow views'
+        defaultMessage="{timeSince, plural, =1 {1 second} other {# seconds}} ago"
+        id="93iLUV"
+        description="Text for time in seconds since given date for MLflow views"
         values={{ timeSince: seconds }}
       />
     );
@@ -192,7 +198,9 @@ class Utils {
    * @param endTime in milliseconds
    */
   static getDuration(startTime, endTime) {
-    return startTime && endTime ? this.formatDuration(endTime - startTime) : null;
+    return startTime && endTime
+      ? this.formatDuration(endTime - startTime)
+      : null;
   }
 
   static baseName(path) {
@@ -213,7 +221,10 @@ class Utils {
     const withNormalizedAuthority = uri.replace(/[:]\/\/\/+/, ':/');
     // Remove redundant slashes while ensuring that double slashes immediately following
     // the scheme component are preserved
-    const withoutRedundantSlashes = withNormalizedAuthority.replace(/(^\/|[^:]\/)\/+/g, '$1');
+    const withoutRedundantSlashes = withNormalizedAuthority.replace(
+      /(^\/|[^:]\/)\/+/g,
+      '$1'
+    );
     const withoutTrailingSlash = withoutRedundantSlashes.replace(/\/$/, '');
     return withoutTrailingSlash;
   }
@@ -236,7 +247,9 @@ class Utils {
     const bitbucketMatch = sourceName.match(Utils.getBitbucketRegex());
     let url = null;
     if (gitHubMatch || gitLabMatch) {
-      const baseUrl = gitHubMatch ? 'https://github.com/' : 'https://gitlab.com/';
+      const baseUrl = gitHubMatch
+        ? 'https://github.com/'
+        : 'https://gitlab.com/';
       const match = gitHubMatch || gitLabMatch;
       url = baseUrl + match[1] + '/' + match[2].replace(/.git/, '');
       if (match[3]) {
@@ -244,7 +257,11 @@ class Utils {
       }
     } else if (bitbucketMatch) {
       const baseUrl = 'https://bitbucket.org/';
-      url = baseUrl + bitbucketMatch[1] + '/' + bitbucketMatch[2].replace(/.git/, '');
+      url =
+        baseUrl +
+        bitbucketMatch[1] +
+        '/' +
+        bitbucketMatch[2].replace(/.git/, '');
       if (bitbucketMatch[3]) {
         url = url + '/src/master/' + bitbucketMatch[3];
       }
@@ -258,7 +275,9 @@ class Utils {
     const bitbucketMatch = sourceName.match(Utils.getBitbucketRegex());
     let url = null;
     if (gitHubMatch || gitLabMatch) {
-      const baseUrl = gitHubMatch ? 'https://github.com/' : 'https://gitlab.com/';
+      const baseUrl = gitHubMatch
+        ? 'https://github.com/'
+        : 'https://gitlab.com/';
       const match = gitHubMatch || gitLabMatch;
       url =
         baseUrl +
@@ -285,7 +304,9 @@ class Utils {
   }
 
   static getQueryParams = () => {
-    return window.location && window.location.search ? window.location.search : '';
+    return window.location && window.location.search
+      ? window.location.search
+      : '';
   };
 
   /**
@@ -299,7 +320,9 @@ class Utils {
    */
   static ensureUrlScheme(url, defaultScheme = 'https') {
     // Falsy values should yield itself
-    if (!url) return url;
+    if (!url) {
+      return url;
+    }
 
     // Scheme-less URL with colon and dashes
     if (url.match(/^:\/\//i)) {
@@ -340,7 +363,7 @@ class Utils {
     }
     const urlSearchParams = new URLSearchParams(currentQueryParams);
     Object.entries(newQueryParams).forEach(
-      ([key, value]) => !!key && !!value && urlSearchParams.set(key, value),
+      ([key, value]) => !!key && !!value && urlSearchParams.set(key, value)
     );
     const queryParams = urlSearchParams.toString();
     if (queryParams !== '' && !queryParams.includes('?')) {
@@ -363,7 +386,11 @@ class Utils {
     return name;
   }
 
-  static getDefaultNotebookRevisionName(notebookId, revisionId, workspaceId = null) {
+  static getDefaultNotebookRevisionName(
+    notebookId,
+    revisionId,
+    workspaceId = null
+  ) {
     if (!notebookId) {
       return '-';
     }
@@ -389,7 +416,11 @@ class Utils {
 
   static getClusterLibrariesJson(tags) {
     const clusterLibrariesJsonTag = 'mlflow.databricks.cluster.libraries';
-    return tags && tags[clusterLibrariesJsonTag] && tags[clusterLibrariesJsonTag].value;
+    return (
+      tags &&
+      tags[clusterLibrariesJsonTag] &&
+      tags[clusterLibrariesJsonTag].value
+    );
   }
 
   static getClusterId(tags) {
@@ -414,7 +445,7 @@ class Utils {
     const gitRepoUrlOrNull = Utils.getGitRepoUrl(sourceName);
     if (gitRepoUrlOrNull) {
       res = (
-        <a target='_top' href={gitRepoUrlOrNull}>
+        <a target="_top" href={gitRepoUrlOrNull}>
           {res}
         </a>
       );
@@ -432,7 +463,7 @@ class Utils {
     runUuid,
     sourceName,
     workspaceUrl = null,
-    nameOverride = null,
+    nameOverride = null
   ) {
     // sourceName may not be present when rendering feature table notebook consumers from remote
     // workspaces or when notebook fetcher failed to fetch the sourceName. Always provide a default
@@ -443,7 +474,10 @@ class Utils {
     const name = nameOverride || baseName;
 
     if (notebookId) {
-      let url = Utils.setQueryParams(workspaceUrl || window.location.origin, queryParams);
+      let url = Utils.setQueryParams(
+        workspaceUrl || window.location.origin,
+        queryParams
+      );
       url += `#notebook/${notebookId}`;
       if (revisionId) {
         url += `/revision/${revisionId}`;
@@ -453,9 +487,12 @@ class Utils {
       }
       return (
         <a
-          title={sourceName || Utils.getDefaultNotebookRevisionName(notebookId, revisionId)}
+          title={
+            sourceName ||
+            Utils.getDefaultNotebookRevisionName(notebookId, revisionId)
+          }
           href={url}
-          target='_top'
+          target="_top"
         >
           {name}
         </a>
@@ -474,22 +511,26 @@ class Utils {
     jobRunId,
     jobName,
     workspaceUrl = null,
-    nameOverride = null,
+    nameOverride = null
   ) {
     // jobName may not be present when rendering feature table job consumers from remote
     // workspaces or when getJob API failed to fetch the jobName. Always provide a default
     // job name in such case.
-    const reformatJobName = jobName || Utils.getDefaultJobRunName(jobId, jobRunId);
+    const reformatJobName =
+      jobName || Utils.getDefaultJobRunName(jobId, jobRunId);
     const name = nameOverride || reformatJobName;
 
     if (jobId) {
-      let url = Utils.setQueryParams(workspaceUrl || window.location.origin, queryParams);
+      let url = Utils.setQueryParams(
+        workspaceUrl || window.location.origin,
+        queryParams
+      );
       url += `#job/${jobId}`;
       if (jobRunId) {
         url += `/run/${jobRunId}`;
       }
       return (
-        <a title={reformatJobName} href={url} target='_top'>
+        <a title={reformatJobName} href={url} target="_top">
           {name}
         </a>
       );
@@ -504,7 +545,7 @@ class Utils {
   static renderSourceTypeIcon(tags) {
     const imageStyle = {
       height: '20px',
-      marginRight: '4px',
+      marginRight: '4px'
     };
 
     const sourceType = this.getSourceType(tags);
@@ -512,25 +553,44 @@ class Utils {
       if (Utils.getNotebookRevisionId(tags)) {
         return (
           <img
-            alt='Notebook Revision Icon'
-            title='Notebook Revision'
+            alt="Notebook Revision Icon"
+            title="Notebook Revision"
             style={imageStyle}
             src={revisionSvg}
           />
         );
       } else {
-        return <img alt='Notebook Icon' title='Notebook' style={imageStyle} src={notebookSvg} />;
+        return (
+          <img
+            alt="Notebook Icon"
+            title="Notebook"
+            style={imageStyle}
+            src={notebookSvg}
+          />
+        );
       }
     } else if (sourceType === 'LOCAL') {
       return (
-        <img alt='Local Source Icon' title='Local Source' style={imageStyle} src={laptopSvg} />
+        <img
+          alt="Local Source Icon"
+          title="Local Source"
+          style={imageStyle}
+          src={laptopSvg}
+        />
       );
     } else if (sourceType === 'PROJECT') {
-      return <img alt='Project Icon' title='Project' style={imageStyle} src={projectSvg} />;
+      return (
+        <img
+          alt="Project Icon"
+          title="Project"
+          style={imageStyle}
+          src={projectSvg}
+        />
+      );
     } else if (sourceType === 'JOB') {
-      return <img alt='Job Icon' title='Job' style={imageStyle} src={jobSvg} />;
+      return <img alt="Job Icon" title="Job" style={imageStyle} src={jobSvg} />;
     }
-    return <img alt='No icon' style={imageStyle} src={emptySvg} />;
+    return <img alt="No icon" style={imageStyle} src={emptySvg} />;
   }
 
   /**
@@ -683,7 +743,7 @@ class Utils {
   }
 
   static getRequestWithId(requests, requestId) {
-    return requests.find((r) => r.id === requestId);
+    return requests.find(r => r.id === requestId);
   }
 
   static getCurveKey(runId, metricName) {
@@ -692,7 +752,10 @@ class Utils {
 
   static getCurveInfoFromKey(curvePair) {
     const splitPair = curvePair.split('-');
-    return { runId: splitPair[0], metricName: splitPair.slice(1, splitPair.length).join('-') };
+    return {
+      runId: splitPair[0],
+      metricName: splitPair.slice(1, splitPair.length).join('-')
+    };
   }
 
   /**
@@ -714,7 +777,7 @@ class Utils {
       showPoint: false,
       yAxisLogScale: false,
       lineSmoothness: 1,
-      layout: {},
+      layout: {}
     };
     const params = qs.parse(search.slice(1, search.length));
     if (!params) {
@@ -726,8 +789,12 @@ class Utils {
       JSON.parse(params['plot_metric_keys']) || defaultState.selectedMetricKeys;
     const showPoint = params['show_point'] === 'true';
     const yAxisLogScale = params['y_axis_scale'] === 'log';
-    const lineSmoothness = params['line_smoothness'] ? parseFloat(params['line_smoothness']) : 0;
-    const layout = params['plot_layout'] ? JSON.parse(params['plot_layout']) : { autosize: true };
+    const lineSmoothness = params['line_smoothness']
+      ? parseFloat(params['line_smoothness'])
+      : 0;
+    const layout = params['plot_layout']
+      ? JSON.parse(params['plot_layout'])
+      : { autosize: true };
     // Default to displaying all runs, i.e. to deselectedCurves being empty
     const deselectedCurves = params['deselected_curves']
       ? JSON.parse(params['deselected_curves'])
@@ -743,7 +810,7 @@ class Utils {
       lineSmoothness,
       layout,
       deselectedCurves,
-      lastLinearYAxisRange,
+      lastLinearYAxisRange
     };
   }
 
@@ -770,7 +837,7 @@ class Utils {
           return defaultDecoder(str);
         }
         return defaultDecoder(str);
-      },
+      }
     });
   }
 
@@ -783,7 +850,10 @@ class Utils {
         replaced[key] = state[key];
       }
     }
-    return qs.stringify(replaced, { arrayFormat: 'comma', encodeValuesOnly: true });
+    return qs.stringify(replaced, {
+      arrayFormat: 'comma',
+      encodeValuesOnly: true
+    });
   }
 
   static compareByTimestamp(history1, history2) {
@@ -792,19 +862,23 @@ class Utils {
 
   static compareByStepAndTimestamp(history1, history2) {
     const stepResult = history1.step - history2.step;
-    return stepResult === 0 ? history1.timestamp - history2.timestamp : stepResult;
+    return stepResult === 0
+      ? history1.timestamp - history2.timestamp
+      : stepResult;
   }
 
   static getVisibleTagValues(tags) {
     // Collate tag objects into list of [key, value] lists and filter MLflow-internal tags
     return Object.values(tags)
-      .map((t) => [t.key || t.getKey(), t.value || t.getValue()])
-      .filter((t) => !t[0].startsWith(MLFLOW_INTERNAL_PREFIX));
+      .map(t => [t.key || t.getKey(), t.value || t.getValue()])
+      .filter(t => !t[0].startsWith(MLFLOW_INTERNAL_PREFIX));
   }
 
   static getVisibleTagKeyList(tagsList) {
     return _.uniq(
-      _.flatMap(tagsList, (tags) => Utils.getVisibleTagValues(tags).map(([key]) => key)),
+      _.flatMap(tagsList, tags =>
+        Utils.getVisibleTagValues(tags).map(([key]) => key)
+      )
     );
   }
 
@@ -841,18 +915,20 @@ class Utils {
       if (models) {
         // extract artifact path, flavors and creation time from tag.
         // 'python_function' should be interpreted as pyfunc flavor
-        const filtered = models.map((model) => {
-          const removeFunc = Object.keys(_.omit(model.flavors, 'python_function'));
+        const filtered = models.map(model => {
+          const removeFunc = Object.keys(
+            _.omit(model.flavors, 'python_function')
+          );
           const flavors = removeFunc.length ? removeFunc : ['pyfunc'];
           return {
             artifactPath: model.artifact_path,
             flavors: flavors,
-            utcTimeCreated: new Date(model.utc_time_created).getTime() / 1000,
+            utcTimeCreated: new Date(model.utc_time_created).getTime() / 1000
           };
         });
         // sort in descending order of creation time
         const sorted = filtered.sort(
-          (a, b) => parseFloat(b.utcTimeCreated) - parseFloat(a.utcTimeCreated),
+          (a, b) => parseFloat(b.utcTimeCreated) - parseFloat(a.utcTimeCreated)
         );
         return _.uniqWith(sorted, (a, b) => a.artifactPath === b.artifactPath);
       }
@@ -870,21 +946,21 @@ class Utils {
    */
   static mergeLoggedAndRegisteredModels(loggedModels, registeredModels) {
     // use artifactPath for grouping while merging lists
-    const registeredModelsWithNormalizedPath = registeredModels.map((model) => {
+    const registeredModelsWithNormalizedPath = registeredModels.map(model => {
       return {
         registeredModelName: model.name,
         artifactPath: this.normalize(model.source).split('/artifacts/')[1],
         registeredModelVersion: model.version,
-        registeredModelCreationTimestamp: model.creation_timestamp,
+        registeredModelCreationTimestamp: model.creation_timestamp
       };
     });
-    const loggedModelsWithNormalizedPath = loggedModels.map((model) => {
+    const loggedModelsWithNormalizedPath = loggedModels.map(model => {
       return { ...model, artifactPath: this.normalize(model.artifactPath) };
     });
     const models = this.concatAndGroupArraysById(
       loggedModelsWithNormalizedPath,
       registeredModelsWithNormalizedPath,
-      'artifactPath',
+      'artifactPath'
     );
     return models.sort((a, b) => {
       if (a.registeredModelVersion && b.registeredModelVersion) {
@@ -911,7 +987,7 @@ class Utils {
     // Prevent formatting after edge block removal
     // prettier-ignore
     e,
-    passErrorToParentFrame = false,
+    passErrorToParentFrame = false
   ) {
     console.error(e);
     if (typeof e === 'string') {
@@ -928,12 +1004,14 @@ class Utils {
     const errorMessages = {
       404: intl.formatMessage({
         defaultMessage: '404: Resource not found',
-        description: 'Generic 404 user-friendly error for the MLFlow UI',
+        id: '4hOOuV',
+        description: 'Generic 404 user-friendly error for the MLFlow UI'
       }),
       500: intl.formatMessage({
         defaultMessage: '500: Internal server error',
-        description: 'Generic 500 user-friendly error for the MLFlow UI',
-      }),
+        id: '5Zui9s',
+        description: 'Generic 500 user-friendly error for the MLFlow UI'
+      })
     };
 
     if (
@@ -947,11 +1025,11 @@ class Utils {
     return Utils.logErrorAndNotifyUser(e);
   }
 
-  static sortExperimentsById = (experiments) => {
+  static sortExperimentsById = experiments => {
     return _.sortBy(experiments, [({ experiment_id }) => experiment_id]);
   };
 
-  static getExperimentNameMap = (experiments) => {
+  static getExperimentNameMap = experiments => {
     // Input:
     // [
     //  { experiment_id: 1, name: '/1/bar' },
@@ -966,10 +1044,13 @@ class Utils {
     //   3: {name: '/3/bar', basename: 'bar (2)'},
     // }
     const experimentsByBasename = {};
-    experiments.forEach((experiment) => {
+    experiments.forEach(experiment => {
       const { name } = experiment;
       const basename = name.split('/').pop();
-      experimentsByBasename[basename] = [...(experimentsByBasename[basename] || []), experiment];
+      experimentsByBasename[basename] = [
+        ...(experimentsByBasename[basename] || []),
+        experiment
+      ];
     });
 
     const idToNames = {};
@@ -978,7 +1059,7 @@ class Utils {
       exps.forEach(({ experiment_id, name }, index) => {
         idToNames[experiment_id] = {
           name,
-          basename: isUnique ? basename : `${basename} (${index + 1})`,
+          basename: isUnique ? basename : `${basename} (${index + 1})`
         };
       });
     });
@@ -1005,16 +1086,26 @@ class Utils {
   }
 
   static shouldRender404(requests, requestIdsToCheck) {
-    const requestsToCheck = requests.filter((request) => requestIdsToCheck.includes(request.id));
-    return requestsToCheck.some((request) => {
+    const requestsToCheck = requests.filter(request =>
+      requestIdsToCheck.includes(request.id)
+    );
+    return requestsToCheck.some(request => {
       const { error } = request;
-      return error && error.getErrorCode() === ErrorCodes.RESOURCE_DOES_NOT_EXIST;
+      return (
+        error && error.getErrorCode() === ErrorCodes.RESOURCE_DOES_NOT_EXIST
+      );
     });
   }
 
   static compareExperiments(a, b) {
-    const aId = typeof a.getExperimentId === 'function' ? a.getExperimentId() : a.experiment_id;
-    const bId = typeof b.getExperimentId === 'function' ? b.getExperimentId() : b.experiment_id;
+    const aId =
+      typeof a.getExperimentId === 'function'
+        ? a.getExperimentId()
+        : a.experiment_id;
+    const bId =
+      typeof b.getExperimentId === 'function'
+        ? b.getExperimentId()
+        : b.experiment_id;
 
     const aIntId = parseInt(aId, 10);
     const bIntId = parseInt(bId, 10);

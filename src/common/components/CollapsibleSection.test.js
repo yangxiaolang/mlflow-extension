@@ -10,7 +10,7 @@ describe('CollapsibleSection', () => {
   beforeEach(() => {
     minimalProps = {
       title: 'testTitle',
-      children: 'testChild',
+      children: 'testChild'
     };
   });
 
@@ -24,7 +24,7 @@ describe('CollapsibleSection', () => {
     minimalProps = {
       title: 'testTitle',
       children: 'testChild',
-      forceOpen: true,
+      forceOpen: true
     };
     wrapper = shallow(<CollapsibleSection {...minimalProps} />);
     expect(wrapper.prop('activeKey')).toEqual(['1']);

@@ -25,7 +25,7 @@ export class SearchBox extends React.Component {
     value: PropTypes.string,
     onChange: PropTypes.func,
     onSearch: PropTypes.func.isRequired,
-    placeholder: PropTypes.string,
+    placeholder: PropTypes.string
   };
 
   componentDidUpdate(prevProps) {
@@ -55,21 +55,24 @@ export class SearchBox extends React.Component {
   render() {
     const { placeholder } = this.props;
     return (
-      <Spacer direction='horizontal' size='small'>
+      <Spacer direction="horizontal" size="small">
         <Input
           value={this.state.searchInput}
           onChange={this.triggerChange}
-          prefix={<i className='fas fa-search' style={{ fontStyle: 'normal' }} />}
+          prefix={
+            <i className="fas fa-search" style={{ fontStyle: 'normal' }} />
+          }
           onPressEnter={this.triggerSearch}
           onBlur={this.props.onChange}
           placeholder={placeholder}
-          data-test-id='search-box'
+          data-test-id="search-box"
         />
-        <span data-test-id='search-button'>
-          <Button onClick={this.triggerSearch} data-test-id='search-button'>
+        <span data-test-id="search-button">
+          <Button onClick={this.triggerSearch} data-test-id="search-button">
             <FormattedMessage
-              defaultMessage='Search'
-              description='String for the search button to search objects in MLflow'
+              defaultMessage="Search"
+              id="yV9Slo"
+              description="String for the search button to search objects in MLflow"
             />
           </Button>
         </span>

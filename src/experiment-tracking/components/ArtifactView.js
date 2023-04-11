@@ -6,18 +6,23 @@ import {
   getBasename,
   getExtension,
   IMAGE_EXTENSIONS,
-  TEXT_EXTENSIONS,
+  TEXT_EXTENSIONS
 } from '../../common/utils/FileUtils';
-import { ArtifactNode as ArtifactUtils, ArtifactNode } from '../utils/ArtifactUtils';
+import {
+  ArtifactNode as ArtifactUtils,
+  ArtifactNode
+} from '../utils/ArtifactUtils';
 import { decorators, Treebeard } from 'react-treebeard';
 import bytes from 'bytes';
 import { RegisterModelButton } from '../../model-registry/components/RegisterModelButton';
-import ShowArtifactPage, { getSrc } from './artifact-view-components/ShowArtifactPage';
+import ShowArtifactPage, {
+  getSrc
+} from './artifact-view-components/ShowArtifactPage';
 import {
   ModelVersionStatus,
   ModelVersionStatusIcons,
   DefaultModelVersionStatusMessages,
-  modelVersionStatusIconTooltips,
+  modelVersionStatusIconTooltips
 } from '../../model-registry/constants';
 import Utils from '../../common/utils/Utils';
 import _ from 'lodash';
@@ -44,13 +49,14 @@ export class ArtifactViewImpl extends Component {
     handleActiveNodeChange: PropTypes.func.isRequired,
     runTags: PropTypes.object,
     modelVersions: PropTypes.arrayOf(PropTypes.object),
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired
   };
 
   state = {
     activeNodeId: undefined,
     toggledNodeIds: {},
-    requestedNodeIds: new Set(),
+    requestedNodeIds: new Set()
   };
 
   getExistingModelVersions() {
@@ -73,34 +79,41 @@ export class ArtifactViewImpl extends Component {
   }
 
   renderModelVersionInfoSection(existingModelVersions) {
-    return <ModelVersionInfoSection modelVersion={_.last(existingModelVersions)} />;
+    return (
+      <ModelVersionInfoSection modelVersion={_.last(existingModelVersions)} />
+    );
   }
 
   renderPathAndSizeInfo() {
     // We will only be in this function if this.state.activeNodeId is defined
-    const node = ArtifactUtils.findChild(this.props.artifactNode, this.state.activeNodeId);
+    const node = ArtifactUtils.findChild(
+      this.props.artifactNode,
+      this.state.activeNodeId
+    );
     const activeNodeRealPath = this.getActiveNodeRealPath();
 
     return (
-      <div className='artifact-info-left'>
-        <div className='artifact-info-path'>
+      <div className="artifact-info-left">
+        <div className="artifact-info-path">
           <label>
             <FormattedMessage
-              defaultMessage='Full Path:'
+              defaultMessage="Full Path:"
+              id="axF2gD"
               // eslint-disable-next-line max-len
-              description='Label to display the full path of where the artifact of the experiment runs is located'
+              description="Label to display the full path of where the artifact of the experiment runs is located"
             />
           </label>{' '}
-          <Text className='artifact-info-text' ellipsis copyable>
+          <Text className="artifact-info-text" ellipsis copyable>
             {activeNodeRealPath}
           </Text>
         </div>
         {node.fileInfo.is_dir === false ? (
-          <div className='artifact-info-size'>
+          <div className="artifact-info-size">
             <label>
               <FormattedMessage
-                defaultMessage='Size:'
-                description='Label to display the size of the artifact of the experiment'
+                defaultMessage="Size:"
+                id="mpHsCg"
+                description="Label to display the size of the artifact of the experiment"
               />
             </label>{' '}
             {bytes(this.getActiveNodeSize())}
@@ -118,16 +131,16 @@ export class ArtifactViewImpl extends Component {
     const { runUuid } = this.props;
     const { activeNodeId } = this.state;
     return (
-      <div className='artifact-info-link'>
+      <div className="artifact-info-link">
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <a
           onClick={() => this.onDownloadClick(runUuid, activeNodeId)}
           title={this.props.intl.formatMessage({
             defaultMessage: 'Download artifact',
-            description: 'Link to download the artifact of the experiment',
+            description: 'Link to download the artifact of the experiment'
           })}
         >
-          <i className='fas fa-download' />
+          <i className="fas fa-download" />
         </a>
       </div>
     );
@@ -140,7 +153,10 @@ export class ArtifactViewImpl extends Component {
       // note that this case won't trigger for files inside a registered model/model version folder
       // React searches for existing model versions under the path of the file, which won't exist.
       toRender = this.renderModelVersionInfoSection(existingModelVersions);
-    } else if (this.activeNodeCanBeRegistered() && Utils.isModelRegistryEnabled()) {
+    } else if (
+      this.activeNodeCanBeRegistered() &&
+      Utils.isModelRegistryEnabled()
+    ) {
       toRender = this.renderRegisterModelButton();
     } else if (this.activeNodeIsDirectory()) {
       toRender = null;
@@ -148,9 +164,9 @@ export class ArtifactViewImpl extends Component {
       toRender = this.renderDownloadLink();
     }
     return (
-      <div className='artifact-info'>
+      <div className="artifact-info">
         {this.renderPathAndSizeInfo()}
-        <div className='artifact-info-right'>{toRender}</div>
+        <div className="artifact-info-right">{toRender}</div>
       </div>
     );
   }
@@ -167,17 +183,19 @@ export class ArtifactViewImpl extends Component {
       activeNodeId: id,
       toggledNodeIds: {
         ...this.state.toggledNodeIds,
-        [id]: toggled,
+        [id]: toggled
       },
-      requestedNodeIds: newRequestedNodeIds,
+      requestedNodeIds: newRequestedNodeIds
     });
   };
 
-  getTreebeardData = (artifactNode) => {
+  getTreebeardData = artifactNode => {
     const { isRoot } = artifactNode;
     if (isRoot) {
       if (artifactNode.children) {
-        return Object.values(artifactNode.children).map((c) => this.getTreebeardData(c));
+        return Object.values(artifactNode.children).map(c =>
+          this.getTreebeardData(c)
+        );
       }
       // This case should never happen since we should never call this function on an empty root.
       throw Error('unreachable code.');
@@ -201,14 +219,17 @@ export class ArtifactViewImpl extends Component {
     }
 
     if (artifactNode.children) {
-      children = Object.values(artifactNode.children).map((c) => this.getTreebeardData(c));
+      children = Object.values(artifactNode.children).map(c =>
+        this.getTreebeardData(c)
+      );
     }
 
     if (this.state.activeNodeId === id) {
       active = true;
     }
 
-    const loading = artifactNode.children !== undefined && !artifactNode.isLoaded;
+    const loading =
+      artifactNode.children !== undefined && !artifactNode.isLoaded;
 
     return {
       id,
@@ -216,7 +237,7 @@ export class ArtifactViewImpl extends Component {
       toggled,
       children,
       active,
-      loading,
+      loading
     };
   };
 
@@ -229,7 +250,10 @@ export class ArtifactViewImpl extends Component {
 
   getActiveNodeSize() {
     if (this.state.activeNodeId) {
-      const node = ArtifactUtils.findChild(this.props.artifactNode, this.state.activeNodeId);
+      const node = ArtifactUtils.findChild(
+        this.props.artifactNode,
+        this.state.activeNodeId
+      );
       const size = node.fileInfo.file_size || '0';
       return parseInt(size, 10);
     }
@@ -238,7 +262,10 @@ export class ArtifactViewImpl extends Component {
 
   activeNodeIsDirectory() {
     if (this.state.activeNodeId) {
-      const node = ArtifactUtils.findChild(this.props.artifactNode, this.state.activeNodeId);
+      const node = ArtifactUtils.findChild(
+        this.props.artifactNode,
+        this.state.activeNodeId
+      );
       return node.fileInfo.is_dir;
     } else {
       // No node is highlighted so we're displaying the root, which is a directory.
@@ -248,7 +275,10 @@ export class ArtifactViewImpl extends Component {
 
   activeNodeCanBeRegistered() {
     if (this.state.activeNodeId) {
-      const node = ArtifactUtils.findChild(this.props.artifactNode, this.state.activeNodeId);
+      const node = ArtifactUtils.findChild(
+        this.props.artifactNode,
+        this.state.activeNodeId
+      );
       if (node && node.children && MLMODEL_FILE_NAME in node.children) {
         return true;
       }
@@ -265,12 +295,16 @@ export class ArtifactViewImpl extends Component {
 
   componentDidMount() {
     if (this.props.initialSelectedArtifactPath) {
-      const artifactPathParts = this.props.initialSelectedArtifactPath.split('/');
+      const artifactPathParts =
+        this.props.initialSelectedArtifactPath.split('/');
       if (artifactPathParts) {
         try {
           // Check if valid artifactId was supplied in URL. If not, don't select
           // or expand anything.
-          ArtifactUtils.findChild(this.props.artifactNode, this.props.initialSelectedArtifactPath);
+          ArtifactUtils.findChild(
+            this.props.artifactNode,
+            this.props.initialSelectedArtifactPath
+          );
         } catch (err) {
           console.error(err);
           return;
@@ -279,9 +313,9 @@ export class ArtifactViewImpl extends Component {
       let pathSoFar = '';
       const toggledArtifactState = {
         activeNodeId: this.props.initialSelectedArtifactPath,
-        toggledNodeIds: {},
+        toggledNodeIds: {}
       };
-      artifactPathParts.forEach((part) => {
+      artifactPathParts.forEach(part => {
         pathSoFar += part;
         toggledArtifactState['toggledNodeIds'][pathSoFar] = true;
         pathSoFar += '/';
@@ -300,8 +334,8 @@ export class ArtifactViewImpl extends Component {
     }
     return (
       <div>
-        <div className='artifact-view'>
-          <div className='artifact-left'>
+        <div className="artifact-view">
+          <div className="artifact-left">
             <Treebeard
               data={this.getTreebeardData(this.props.artifactNode)}
               onToggle={this.onToggleTreebeard}
@@ -309,7 +343,7 @@ export class ArtifactViewImpl extends Component {
               decorators={decorators}
             />
           </div>
-          <div className='artifact-right'>
+          <div className="artifact-right">
             {this.state.activeNodeId ? this.renderArtifactInfo() : null}
             <ShowArtifactPage
               runUuid={this.props.runUuid}
@@ -331,20 +365,26 @@ const mapStateToProps = (state, ownProps) => {
   const { apis } = state;
   const artifactNode = getArtifacts(runUuid, state);
   const artifactRootUri = getArtifactRootUri(runUuid, state);
-  const modelVersionsWithNormalizedSource = _.flatMap(getAllModelVersions(state), (version) => {
-    return { ...version, source: Utils.normalize(version.source) };
-  });
-  const modelVersionsBySource = _.groupBy(modelVersionsWithNormalizedSource, 'source');
+  const modelVersionsWithNormalizedSource = _.flatMap(
+    getAllModelVersions(state),
+    version => {
+      return { ...version, source: Utils.normalize(version.source) };
+    }
+  );
+  const modelVersionsBySource = _.groupBy(
+    modelVersionsWithNormalizedSource,
+    'source'
+  );
   return { artifactNode, artifactRootUri, modelVersionsBySource, apis };
 };
 
 const mapDispatchToProps = {
-  listArtifactsApi,
+  listArtifactsApi
 };
 
 export const ArtifactView = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(injectIntl(ArtifactViewImpl));
 
 function ModelVersionInfoSection(props) {
@@ -355,36 +395,41 @@ function ModelVersionInfoSection(props) {
     // Reported during ESLint upgrade
     // eslint-disable-next-line react/jsx-no-target-blank
     <a
-      href={Utils.getIframeCorrectedRoute(getModelVersionPageRoute(name, version))}
-      className='model-version-link'
+      href={Utils.getIframeCorrectedRoute(
+        getModelVersionPageRoute(name, version)
+      )}
+      className="model-version-link"
       title={`${name}, v${version}`}
-      target='_blank'
+      target="_blank"
     >
-      <span className='model-name'>{name}</span>
+      <span className="model-name">{name}</span>
       <span>,&nbsp;v{version}&nbsp;</span>
-      <i className='fas fa-external-link-o' />
+      <i className="fas fa-external-link-o" />
     </a>
   );
 
   return (
-    <div className='model-version-info'>
-      <div className='model-version-link-section'>
-        <Tooltip title={status_message || modelVersionStatusIconTooltips[status]}>
+    <div className="model-version-info">
+      <div className="model-version-link-section">
+        <Tooltip
+          title={status_message || modelVersionStatusIconTooltips[status]}
+        >
           {ModelVersionStatusIcons[status]}
         </Tooltip>
         {modelVersionLink}
       </div>
-      <div className='model-version-status-text'>
+      <div className="model-version-status-text">
         {status === ModelVersionStatus.READY ? (
           <React.Fragment>
             <FormattedMessage
-              defaultMessage='Registered on {registeredDate}'
-              description='Label to display at what date the model was registered'
+              defaultMessage="Registered on {registeredDate}"
+              id="nVndit"
+              description="Label to display at what date the model was registered"
               values={{
                 registeredDate: Utils.formatTimestamp(
                   modelVersion.creation_timestamp,
-                  'yyyy/mm/dd',
-                ),
+                  'yyyy/mm/dd'
+                )
               }}
             />
           </React.Fragment>
@@ -396,25 +441,29 @@ function ModelVersionInfoSection(props) {
   );
 }
 
-ModelVersionInfoSection.propTypes = { modelVersion: PropTypes.object.isRequired };
+ModelVersionInfoSection.propTypes = {
+  modelVersion: PropTypes.object.isRequired
+};
 
 function NoArtifactView() {
   return (
-    <div className='empty-artifact-outer-container'>
-      <div className='empty-artifact-container'>
+    <div className="empty-artifact-outer-container">
+      <div className="empty-artifact-container">
         <div>{/* TODO: put a nice image here */}</div>
         <div>
-          <div className='no-artifacts'>
+          <div className="no-artifacts">
             <FormattedMessage
-              defaultMessage='No Artifacts Recorded'
-              description='Empty state string when there are no artifacts record for the experiment'
+              defaultMessage="No Artifacts Recorded"
+              id="X3F7x3"
+              description="Empty state string when there are no artifacts record for the experiment"
             />
           </div>
-          <div className='no-artifacts-info'>
+          <div className="no-artifacts-info">
             <FormattedMessage
-              defaultMessage='Use the log artifact APIs to store file outputs from MLflow runs.'
+              defaultMessage="Use the log artifact APIs to store file outputs from MLflow runs."
+              id="3geT+I"
               // eslint-disable-next-line max-len
-              description='Information in the empty state explaining how one could log artifacts output files for the experiment runs'
+              description="Information in the empty state explaining how one could log artifacts output files for the experiment runs"
             />
           </div>
         </div>
@@ -433,20 +482,20 @@ const TREEBEARD_STYLE = {
       fontSize: '13px',
       maxWidth: '500px',
       height: '100%',
-      overflow: 'scroll',
+      overflow: 'scroll'
     },
     node: {
       base: {
-        position: 'relative',
+        position: 'relative'
       },
       link: {
         cursor: 'pointer',
         position: 'relative',
         padding: '0px 5px',
-        display: 'block',
+        display: 'block'
       },
       activeLink: {
-        background: '#c7c2d0',
+        background: '#c7c2d0'
       },
       toggle: {
         base: {
@@ -455,27 +504,27 @@ const TREEBEARD_STYLE = {
           verticalAlign: 'top',
           marginLeft: '-5px',
           height: '24px',
-          width: '24px',
+          width: '24px'
         },
         wrapper: {
           position: 'absolute',
           top: '50%',
           left: '50%',
           margin: '-12px 0 0 -4px',
-          height: '14px',
+          height: '14px'
         },
         height: 7,
         width: 7,
         arrow: {
           fill: '#7a7a7a',
-          strokeWidth: 0,
-        },
+          strokeWidth: 0
+        }
       },
       header: {
         base: {
           display: 'inline-block',
           verticalAlign: 'top',
-          color: '#333',
+          color: '#333'
         },
         connector: {
           width: '2px',
@@ -484,19 +533,19 @@ const TREEBEARD_STYLE = {
           borderBottom: 'solid 2px black',
           position: 'absolute',
           top: '0px',
-          left: '-21px',
+          left: '-21px'
         },
         title: {
           lineHeight: '24px',
-          verticalAlign: 'middle',
-        },
+          verticalAlign: 'middle'
+        }
       },
       subtree: {
         listStyle: 'none',
-        paddingLeft: '19px',
-      },
-    },
-  },
+        paddingLeft: '19px'
+      }
+    }
+  }
 };
 
 // eslint-disable-next-line react/prop-types
@@ -530,7 +579,11 @@ decorators.Header = ({ style, node }) => {
   return (
     // Reported during ESLint upgrade
     // eslint-disable-next-line react/prop-types
-    <div style={style.base} data-test-id='artifact-tree-node' artifact-name={node.name}>
+    <div
+      style={style.base}
+      data-test-id="artifact-tree-node"
+      artifact-name={node.name}
+    >
       {/* Reported during ESLint upgrade */}
       {/* eslint-disable-next-line react/prop-types */}
       <div style={style.title}>
@@ -547,10 +600,11 @@ decorators.Header = ({ style, node }) => {
 decorators.Loading = ({ style }) => {
   return (
     <div style={style}>
-      <img alt='' className='loading-spinner' src={spinner} />
+      <img alt="" className="loading-spinner" src={spinner} />
       <FormattedMessage
-        defaultMessage='loading...'
-        description='Loading spinner text to show that the artifact loading is in progress'
+        defaultMessage="loading..."
+        id="RlRsah"
+        description="Loading spinner text to show that the artifact loading is in progress"
       />
     </div>
   );

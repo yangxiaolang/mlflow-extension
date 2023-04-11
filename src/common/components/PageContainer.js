@@ -14,6 +14,6 @@ const styles = {
   container: {
     width: '100%',
     flexGrow: 1,
-    paddingBottom: 24,
-  },
+    paddingBottom: 24
+  }
 };

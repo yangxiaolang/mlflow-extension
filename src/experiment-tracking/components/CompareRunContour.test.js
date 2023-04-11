@@ -11,13 +11,13 @@ describe('unit tests', () => {
   const runUuids = ['run_uuid_0', 'run_uuid_1', 'run_uuid_2'];
   const commonProps = {
     runUuids,
-    runInfos: runUuids.map((run_uuid) =>
+    runInfos: runUuids.map(run_uuid =>
       RunInfo.fromJs({
         run_uuid,
-        experiment_id: '1',
-      }),
+        experiment_id: '1'
+      })
     ),
-    runDisplayNames: runUuids,
+    runDisplayNames: runUuids
   };
 
   beforeEach(() => {});
@@ -27,22 +27,22 @@ describe('unit tests', () => {
       paramLists: [
         [
           { key: 'p1', value: 1 },
-          { key: 'p2', value: 2 },
+          { key: 'p2', value: 2 }
         ],
         [
           { key: 'p1', value: 3 },
-          { key: 'p2', value: 4 },
+          { key: 'p2', value: 4 }
         ],
         [
           { key: 'p1', value: 5 },
-          { key: 'p2', value: 6 },
-        ],
+          { key: 'p2', value: 6 }
+        ]
       ],
       metricLists: [
         [{ key: 'm1', value: 7 }],
         [{ key: 'm1', value: 8 }],
-        [{ key: 'm1', value: 9 }],
-      ],
+        [{ key: 'm1', value: 9 }]
+      ]
     };
     wrapper = shallow(<CompareRunContour {...props} />);
     expect(wrapper.length).toBe(1);
@@ -55,19 +55,23 @@ describe('unit tests', () => {
       reverseColor: false,
       xaxis: { key: 'p1', isMetric: false },
       yaxis: { key: 'p2', isMetric: false },
-      zaxis: { key: 'm1', isMetric: true },
+      zaxis: { key: 'm1', isMetric: true }
     });
   });
 
   test('should render a div with a message when the number of unique params/metrics is less than three', () => {
     const props = {
       ...commonProps,
-      paramLists: [[{ key: 'p1', value: 1 }], [{ key: 'p1', value: 2 }], [{ key: 'p1', value: 3 }]],
+      paramLists: [
+        [{ key: 'p1', value: 1 }],
+        [{ key: 'p1', value: 2 }],
+        [{ key: 'p1', value: 3 }]
+      ],
       metricLists: [
         [{ key: 'm1', value: 4 }],
         [{ key: 'm1', value: 5 }],
-        [{ key: 'm1', value: 6 }],
-      ],
+        [{ key: 'm1', value: 6 }]
+      ]
     };
     wrapper = shallow(<CompareRunContour {...props} />);
     expect(wrapper.length).toBe(1);
@@ -84,24 +88,24 @@ describe('unit tests', () => {
         [
           { key: 'p1', value: 1 },
           { key: 'p2', value: 'a' },
-          { key: 'p3', value: 2 },
+          { key: 'p3', value: 2 }
         ],
         [
           { key: 'p1', value: 3 },
           { key: 'p2', value: 'b' },
-          { key: 'p3', value: 3 },
+          { key: 'p3', value: 3 }
         ],
         [
           { key: 'p1', value: 5 },
           { key: 'p2', value: 'c' },
-          { key: 'p3', value: 6 },
-        ],
+          { key: 'p3', value: 6 }
+        ]
       ],
       metricLists: [
         [{ key: 'm1', value: 7 }],
         [{ key: 'm1', value: 8 }],
-        [{ key: 'm1', value: 9 }],
-      ],
+        [{ key: 'm1', value: 9 }]
+      ]
     };
     wrapper = shallow(<CompareRunContour {...props} />);
     expect(wrapper.length).toBe(1);
@@ -115,7 +119,7 @@ describe('unit tests', () => {
       reverseColor: false,
       xaxis: { key: 'p1', isMetric: false },
       yaxis: { key: 'p3', isMetric: false },
-      zaxis: { key: 'm1', isMetric: true },
+      zaxis: { key: 'm1', isMetric: true }
     });
   });
 
@@ -126,20 +130,20 @@ describe('unit tests', () => {
         [
           { key: 'p1', value: 1 },
           { key: 'p2', value: 2 },
-          { key: 'p3', value: 3 },
+          { key: 'p3', value: 3 }
         ],
         [
           { key: 'p1', value: 4 },
           { key: 'p2', value: 5 },
-          { key: 'p3', value: 6 },
+          { key: 'p3', value: 6 }
         ],
         [
           { key: 'p1', value: 7 },
           { key: 'p2', value: 8 },
-          { key: 'p3', value: 9 },
-        ],
+          { key: 'p3', value: 9 }
+        ]
       ],
-      metricLists: [[], [], []],
+      metricLists: [[], [], []]
     };
     wrapper = shallow(<CompareRunContour {...props} />);
     expect(wrapper.length).toBe(1);
@@ -152,7 +156,7 @@ describe('unit tests', () => {
       reverseColor: false,
       xaxis: { key: 'p1', isMetric: false },
       yaxis: { key: 'p2', isMetric: false },
-      zaxis: { key: 'p3', isMetric: false },
+      zaxis: { key: 'p3', isMetric: false }
     });
   });
 
@@ -164,19 +168,19 @@ describe('unit tests', () => {
         [
           { key: 'm1', value: 1 },
           { key: 'm2', value: 2 },
-          { key: 'm3', value: 3 },
+          { key: 'm3', value: 3 }
         ],
         [
           { key: 'm1', value: 4 },
           { key: 'm2', value: 5 },
-          { key: 'm3', value: 6 },
+          { key: 'm3', value: 6 }
         ],
         [
           { key: 'm1', value: 7 },
           { key: 'm2', value: 8 },
-          { key: 'm3', value: 9 },
-        ],
-      ],
+          { key: 'm3', value: 9 }
+        ]
+      ]
     };
     wrapper = shallow(<CompareRunContour {...props} />);
     expect(wrapper.length).toBe(1);
@@ -189,7 +193,7 @@ describe('unit tests', () => {
       reverseColor: false,
       xaxis: { key: 'm1', isMetric: true },
       yaxis: { key: 'm2', isMetric: true },
-      zaxis: { key: 'm3', isMetric: true },
+      zaxis: { key: 'm3', isMetric: true }
     });
   });
 
@@ -199,20 +203,20 @@ describe('unit tests', () => {
       paramLists: [
         [
           { key: 'p1', value: 1 },
-          { key: 'p2', value: 2 },
+          { key: 'p2', value: 2 }
         ],
         [
           { key: 'p1', value: 3 },
-          { key: 'p2', value: 4 },
+          { key: 'p2', value: 4 }
         ],
         // this run does not contain 'b'.
-        [{ key: 'p1', value: 5 }],
+        [{ key: 'p1', value: 5 }]
       ],
       metricLists: [
         [{ key: 'm1', value: 6 }],
         [{ key: 'm1', value: 7 }],
-        [{ key: 'm1', value: 8 }],
-      ],
+        [{ key: 'm1', value: 8 }]
+      ]
     };
     wrapper = shallow(<CompareRunContour {...props} />);
     expect(wrapper.length).toBe(1);
@@ -225,7 +229,7 @@ describe('unit tests', () => {
       reverseColor: false,
       xaxis: { key: 'p1', isMetric: false },
       yaxis: { key: 'p2', isMetric: false },
-      zaxis: { key: 'm1', isMetric: true },
+      zaxis: { key: 'm1', isMetric: true }
     });
   });
 
@@ -235,22 +239,22 @@ describe('unit tests', () => {
       paramLists: [
         [
           { key: 'p1', value: 0 },
-          { key: 'p2', value: 1 },
+          { key: 'p2', value: 1 }
         ],
         [
           { key: 'p1', value: 0 },
-          { key: 'p2', value: 2 },
+          { key: 'p2', value: 2 }
         ],
         [
           { key: 'p1', value: 0 },
-          { key: 'p2', value: 3 },
-        ],
+          { key: 'p2', value: 3 }
+        ]
       ],
       metricLists: [
         [{ key: 'm1', value: 4 }],
         [{ key: 'm1', value: 5 }],
-        [{ key: 'm1', value: 6 }],
-      ],
+        [{ key: 'm1', value: 6 }]
+      ]
     };
     wrapper = shallowWithIntl(<CompareRunContour {...props} />).dive();
 
@@ -258,17 +262,21 @@ describe('unit tests', () => {
 
     // X axis: p1 | Y axis: p2
     expect(
-      renderControlsElement().text().includes("The X axis doesn't have enough unique data points"),
+      renderControlsElement()
+        .text()
+        .includes("The X axis doesn't have enough unique data points")
     ).toBe(true);
 
     // X axis: p2 | Y axis: p1
     wrapper.setState({
       xaxis: { key: 'p2', isMetric: false },
-      yaxis: { key: 'p1', isMetric: false },
+      yaxis: { key: 'p1', isMetric: false }
     });
 
     expect(
-      renderControlsElement().text().includes("The Y axis doesn't have enough unique data points"),
+      renderControlsElement()
+        .text()
+        .includes("The Y axis doesn't have enough unique data points")
     ).toBe(true);
 
     // X axis: p1 | Y axis: p1
@@ -276,14 +284,16 @@ describe('unit tests', () => {
     expect(
       renderControlsElement()
         .text()
-        .includes("The X and Y axes don't have enough unique data points"),
+        .includes("The X and Y axes don't have enough unique data points")
     ).toBe(true);
 
     // X axis: p2 | Y axis: p2
     wrapper.setState({
       xaxis: { key: 'p2', isMetric: false },
-      yaxis: { key: 'p2', isMetric: false },
+      yaxis: { key: 'p2', isMetric: false }
     });
-    expect(renderControlsElement().text().includes('have enough unique data points')).toBe(false);
+    expect(
+      renderControlsElement().text().includes('have enough unique data points')
+    ).toBe(false);
   });
 });

@@ -22,7 +22,7 @@ describe('CreateModelButton', () => {
         <BrowserRouter>
           <CreateModelButton {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
   });
 
@@ -36,7 +36,7 @@ describe('CreateModelButton', () => {
         <BrowserRouter>
           <CreateModelButton buttonType={'link'} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find('.ant-btn-link').length).toBe(1);
   });

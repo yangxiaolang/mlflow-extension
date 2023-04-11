@@ -9,21 +9,21 @@ describe('unit tests', () => {
       {
         title: 'Name',
         dataIndex: 'name',
-        width: 200,
+        width: 200
       },
       {
         title: 'Value',
         dataIndex: 'value',
         width: 200,
-        editable: true,
-      },
+        editable: true
+      }
     ],
     data: [
       { key: 'tag1', name: 'tag1', value: 'value1' },
-      { key: 'tag2', name: 'tag2', value: 'value2' },
+      { key: 'tag2', name: 'tag2', value: 'value2' }
     ],
     onSaveEdit: () => {},
-    onDelete: () => {},
+    onDelete: () => {}
   };
 
   test('should render with minimal props without exploding', () => {
@@ -34,13 +34,14 @@ describe('unit tests', () => {
   test('should display only one modal when deleting a tag', () => {
     // Prep
     wrapper = shallow(<EditableTable {...minimalProps} />);
-    const getModal = () => wrapper.find('[data-testid="editable-form-table-remove-modal"]');
+    const getModal = () =>
+      wrapper.find('[data-testid="editable-form-table-remove-modal"]');
 
     // Assert
     expect(getModal().props().visible).toBeFalsy();
 
     // Update
-    wrapper.setState((state) => ({ ...state, deletingKey: 'tag1' }));
+    wrapper.setState(state => ({ ...state, deletingKey: 'tag1' }));
 
     // Assert
     expect(getModal().props().visible).toBeTruthy();

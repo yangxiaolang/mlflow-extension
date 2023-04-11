@@ -1,24 +1,24 @@
-export const isPendingApi = (action) => {
+export const isPendingApi = action => {
   return action.type.endsWith('_PENDING');
 };
 
-export const pending = (apiActionType) => {
+export const pending = apiActionType => {
   return `${apiActionType}_PENDING`;
 };
 
-export const isFulfilledApi = (action) => {
+export const isFulfilledApi = action => {
   return action.type.endsWith('_FULFILLED');
 };
 
-export const fulfilled = (apiActionType) => {
+export const fulfilled = apiActionType => {
   return `${apiActionType}_FULFILLED`;
 };
 
-export const isRejectedApi = (action) => {
+export const isRejectedApi = action => {
   return action.type.endsWith('_REJECTED');
 };
 
-export const rejected = (apiActionType) => {
+export const rejected = apiActionType => {
   return `${apiActionType}_REJECTED`;
 };
 

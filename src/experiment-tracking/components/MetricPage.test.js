@@ -21,29 +21,33 @@ describe('MetricPage', () => {
   beforeEach(() => {
     // TODO: remove global fetch mock by explicitly mocking all the service API calls
     global.fetch = jest.fn(() =>
-      Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('') }),
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('')
+      })
     );
     minimalProps = {
       dispatch: jest.fn(),
       location: {
-        search: '?runs=[]',
+        search: '?runs=[]'
       },
       match: {
         params: {
-          metricKey: 'metricKey',
-        },
-      },
+          metricKey: 'metricKey'
+        }
+      }
     };
     commonProps = {
       ...minimalProps,
-      experimentIds: [0],
+      experimentIds: [0]
     };
 
     minimalStore = mockStore({
       entities: {},
-      apis: jest.fn((key) => {
+      apis: jest.fn(key => {
         return {};
-      }),
+      })
     });
   });
 
@@ -53,7 +57,7 @@ describe('MetricPage', () => {
         <BrowserRouter>
           <MetricPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     ).find(MetricPage);
     expect(wrapper.length).toBe(1);
   });
@@ -64,7 +68,7 @@ describe('MetricPage', () => {
         <BrowserRouter>
           <MetricPage {...commonProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     ).find(MetricPage);
 
     instance = wrapper.find(MetricPageImpl).instance();
@@ -75,15 +79,16 @@ describe('MetricPage', () => {
     const props = {
       ...commonProps,
       location: {
-        search: '?runs=["a"]&experiment=0&plot_metric_keys=["metric_1","metric_2"]&plot_layout={}',
-      },
+        search:
+          '?runs=["a"]&experiment=0&plot_metric_keys=["metric_1","metric_2"]&plot_layout={}'
+      }
     };
     wrapper = mount(
       <Provider store={minimalStore}>
         <BrowserRouter>
           <MetricPage {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     ).find(MetricPage);
 
     instance = wrapper.find(MetricPageImpl).instance();

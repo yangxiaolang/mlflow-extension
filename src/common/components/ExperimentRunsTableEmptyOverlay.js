@@ -12,22 +12,26 @@ export class ExperimentRunsTableEmptyOverlay extends Component {
   render() {
     const learnMoreLinkUrl = this.getLearnMoreLinkUrl();
     return (
-      <div className='experiment-runs-table-empty-overlay' css={classNames.wrapper}>
+      <div
+        className="experiment-runs-table-empty-overlay"
+        css={classNames.wrapper}
+      >
         <span>
           <FormattedMessage
             // eslint-disable-next-line max-len
-            defaultMessage='No runs yet. <link>Learn more</link> about how to create ML model training {newLine} runs in this experiment.'
+            defaultMessage="No runs yet. <link>Learn more</link> about how to create ML model training {newLine} runs in this experiment."
+            id="bq+LYL"
             // eslint-disable-next-line max-len
-            description='Empty state text for experiment runs page'
+            description="Empty state text for experiment runs page"
             values={{
-              link: (chunks) => (
+              link: chunks => (
                 // Reported during ESLint upgrade
                 // eslint-disable-next-line react/jsx-no-target-blank
-                <a target='_blank' href={learnMoreLinkUrl}>
+                <a target="_blank" href={learnMoreLinkUrl}>
                   {chunks}
                 </a>
               ),
-              newLine: <br />,
+              newLine: <br />
             }}
           />
         </span>
@@ -43,6 +47,6 @@ const classNames = {
     fontSize: '13px',
     padding: '30px',
     width: '100 %',
-    pointerEvents: 'all',
-  },
+    pointerEvents: 'all'
+  }
 };

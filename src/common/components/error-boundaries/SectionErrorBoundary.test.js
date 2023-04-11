@@ -27,7 +27,9 @@ describe('SectionErrorBoundary', () => {
   });
 
   test('should show error if showServerError prop passed in', () => {
-    const withShowServerError = shallow(<SectionErrorBoundary {...minimalProps} showServerError />);
+    const withShowServerError = shallow(
+      <SectionErrorBoundary {...minimalProps} showServerError />
+    );
     const instance = withShowServerError.instance();
     instance.componentDidCatch(new Error('some error message'));
     instance.forceUpdate();

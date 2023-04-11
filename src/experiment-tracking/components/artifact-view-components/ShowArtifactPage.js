@@ -6,7 +6,7 @@ import {
   TEXT_EXTENSIONS,
   MAP_EXTENSIONS,
   HTML_EXTENSIONS,
-  PDF_EXTENSIONS,
+  PDF_EXTENSIONS
 } from '../../../common/utils/FileUtils';
 import { getLoggedModelPathsFromTags } from '../../../common/utils/TagUtils';
 import { ONE_MB } from '../../constants';
@@ -34,7 +34,7 @@ class ShowArtifactPage extends Component {
     path: PropTypes.string,
     size: PropTypes.number,
     runTags: PropTypes.object,
-    modelVersions: PropTypes.arrayOf(PropTypes.object),
+    modelVersions: PropTypes.arrayOf(PropTypes.object)
   };
 
   render() {
@@ -43,13 +43,13 @@ class ShowArtifactPage extends Component {
       let registeredModelLink;
       const { modelVersions } = this.props;
       if (modelVersions) {
-        const [registeredModel] = modelVersions.filter((model) =>
-          model.source.endsWith(`artifacts/${normalizedExtension}`),
+        const [registeredModel] = modelVersions.filter(model =>
+          model.source.endsWith(`artifacts/${normalizedExtension}`)
         );
         if (registeredModel) {
           const { name: registeredModelName, version } = registeredModel;
           registeredModelLink = Utils.getIframeCorrectedRoute(
-            getModelVersionPageRoute(registeredModelName, version),
+            getModelVersionPageRoute(registeredModelName, version)
           );
         }
       }
@@ -57,18 +57,45 @@ class ShowArtifactPage extends Component {
         return getFileTooLargeView();
       } else if (normalizedExtension) {
         if (IMAGE_EXTENSIONS.has(normalizedExtension.toLowerCase())) {
-          return <ShowArtifactImageView runUuid={this.props.runUuid} path={this.props.path} />;
+          return (
+            <ShowArtifactImageView
+              runUuid={this.props.runUuid}
+              path={this.props.path}
+            />
+          );
         } else if (TEXT_EXTENSIONS.has(normalizedExtension.toLowerCase())) {
-          return <ShowArtifactTextView runUuid={this.props.runUuid} path={this.props.path} />;
+          return (
+            <ShowArtifactTextView
+              runUuid={this.props.runUuid}
+              path={this.props.path}
+            />
+          );
         } else if (MAP_EXTENSIONS.has(normalizedExtension.toLowerCase())) {
-          return <ShowArtifactMapView runUuid={this.props.runUuid} path={this.props.path} />;
+          return (
+            <ShowArtifactMapView
+              runUuid={this.props.runUuid}
+              path={this.props.path}
+            />
+          );
         } else if (HTML_EXTENSIONS.has(normalizedExtension.toLowerCase())) {
-          return <ShowArtifactHtmlView runUuid={this.props.runUuid} path={this.props.path} />;
+          return (
+            <ShowArtifactHtmlView
+              runUuid={this.props.runUuid}
+              path={this.props.path}
+            />
+          );
         } else if (PDF_EXTENSIONS.has(normalizedExtension.toLowerCase())) {
-          return <ShowArtifactPdfView runUuid={this.props.runUuid} path={this.props.path} />;
+          return (
+            <ShowArtifactPdfView
+              runUuid={this.props.runUuid}
+              path={this.props.path}
+            />
+          );
         } else if (
           this.props.runTags &&
-          getLoggedModelPathsFromTags(this.props.runTags).includes(normalizedExtension)
+          getLoggedModelPathsFromTags(this.props.runTags).includes(
+            normalizedExtension
+          )
         ) {
           return (
             <ShowArtifactLoggedModelView
@@ -87,23 +114,29 @@ class ShowArtifactPage extends Component {
 
 const getSelectFileView = () => {
   return (
-    <div className='preview-outer-container'>
-      <div className='preview-container'>
-        <div className='preview-image-container'>
-          <img className='preview-image' alt='Preview icon.' src={previewIcon} />
+    <div className="preview-outer-container">
+      <div className="preview-container">
+        <div className="preview-image-container">
+          <img
+            className="preview-image"
+            alt="Preview icon."
+            src={previewIcon}
+          />
         </div>
-        <div className='preview-text'>
-          <span className='preview-header'>
+        <div className="preview-text">
+          <span className="preview-header">
             <FormattedMessage
-              defaultMessage='Select a file to preview'
-              description='Label to suggests users to select a file to preview the output'
+              defaultMessage="Select a file to preview"
+              id="6b6fTN"
+              description="Label to suggests users to select a file to preview the output"
             />
           </span>
-          <span className='preview-supported-formats'>
+          <span className="preview-supported-formats">
             <FormattedMessage
-              defaultMessage='Supported formats: image, text, html, pdf, geojson files'
+              defaultMessage="Supported formats: image, text, html, pdf, geojson files"
+              id="2Exf7S"
               // eslint-disable-next-line max-len
-              description='Text to explain users which formats are supported to display the artifacts'
+              description="Text to explain users which formats are supported to display the artifacts"
             />
           </span>
         </div>
@@ -114,23 +147,24 @@ const getSelectFileView = () => {
 
 const getFileTooLargeView = () => {
   return (
-    <div className='preview-outer-container'>
-      <div className='preview-container'>
-        <div className='preview-image-container'>
-          <img className='preview-image' alt='Preview icon.' src={warningSvg} />
+    <div className="preview-outer-container">
+      <div className="preview-container">
+        <div className="preview-image-container">
+          <img className="preview-image" alt="Preview icon." src={warningSvg} />
         </div>
-        <div className='preview-text'>
-          <span className='preview-header'>
+        <div className="preview-text">
+          <span className="preview-header">
             <FormattedMessage
-              defaultMessage='File is too large to preview'
-              description='Label to indicate that the file is too large to preview'
+              defaultMessage="File is too large to preview"
+              id="9y+yUQ"
+              description="Label to indicate that the file is too large to preview"
             />
           </span>
-          <span className='preview-max-size'>
+          <span className="preview-max-size">
             <FormattedMessage
               defaultMessage={`Maximum file size for preview: ${MAX_PREVIEW_ARTIFACT_SIZE_MB}MB`}
               // eslint-disable-next-line max-len
-              description='Text to notify users of the maximum file size for which artifact previews are displayed'
+              description="Text to notify users of the maximum file size for which artifact previews are displayed"
             />
           </span>
         </div>
@@ -141,10 +175,10 @@ const getFileTooLargeView = () => {
 
 export const getSrc = (path, runUuid) => {
   const basePath = process.env.HOSTED_PATH || '';
-  const endpointPath = 'get-artifact';
-  return `${basePath}${endpointPath}?path=${encodeURIComponent(path)}&run_uuid=${encodeURIComponent(
-    runUuid,
-  )}`;
+  const endpointPath = '/mlflow/get-artifact';
+  return `${basePath}${endpointPath}?path=${encodeURIComponent(
+    path
+  )}&run_uuid=${encodeURIComponent(runUuid)}`;
 };
 
 export default ShowArtifactPage;

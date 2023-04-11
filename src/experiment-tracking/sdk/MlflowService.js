@@ -14,7 +14,7 @@ export class MlflowService {
    */
   static createExperiment = data =>
     postJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/experiments/create',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/experiments/create',
       data
     });
 
@@ -23,7 +23,7 @@ export class MlflowService {
    */
   static deleteExperiment = data =>
     postJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/experiments/delete',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/experiments/delete',
       data
     });
 
@@ -32,7 +32,7 @@ export class MlflowService {
    */
   static updateExperiment = data =>
     postJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/experiments/update',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/experiments/update',
       data
     });
 
@@ -41,7 +41,7 @@ export class MlflowService {
    */
   static listExperiments = data =>
     getBigIntJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/experiments/list',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/experiments/list',
       data
     });
 
@@ -50,7 +50,7 @@ export class MlflowService {
    */
   static getExperiment = data =>
     getBigIntJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/experiments/get',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/experiments/get',
       data
     });
 
@@ -59,7 +59,7 @@ export class MlflowService {
    */
   static getExperimentByName = data =>
     getBigIntJson({
-      relativeUrl: '/ajax-api/2.0/mlflow/experiments/get-by-name',
+      relativeUrl: '/mlflow/ajax-api/2.0/mlflow/experiments/get-by-name',
       data
     });
 
@@ -67,32 +67,35 @@ export class MlflowService {
    * Create a mlflow experiment run
    */
   static createRun = data =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/create', data });
+    postJson({ relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/create', data });
 
   /**
    * Delete a mlflow experiment run
    */
   static deleteRun = data =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/delete', data });
+    postJson({ relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/delete', data });
 
   /**
    * Restore a mlflow experiment run
    */
   static restoreRun = data =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/restore', data });
+    postJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/restore',
+      data
+    });
 
   /**
    * Update a mlflow experiment run
    */
   static updateRun = data =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/update', data });
+    postJson({ relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/update', data });
 
   /**
    * Log mlflow experiment run metric
    */
   static logMetric = data =>
     postJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/log-metric',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/log-metric',
       data
     });
 
@@ -101,7 +104,7 @@ export class MlflowService {
    */
   static logParam = data =>
     postJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/log-parameter',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/log-parameter',
       data
     });
 
@@ -110,7 +113,7 @@ export class MlflowService {
    */
   static getRun = data =>
     getBigIntJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/get',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/get',
       data
     });
 
@@ -118,14 +121,14 @@ export class MlflowService {
    * Search mlflow experiment runs
    */
   static searchRuns = data =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/search', data });
+    postJson({ relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/search', data });
 
   /**
    * List model artifacts
    */
   static listArtifacts = data =>
     getBigIntJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/artifacts/list',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/artifacts/list',
       data
     });
 
@@ -134,7 +137,7 @@ export class MlflowService {
    */
   static getMetricHistory = data =>
     getBigIntJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/metrics/get-history',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/metrics/get-history',
       data
     });
 
@@ -142,14 +145,17 @@ export class MlflowService {
    * Set mlflow experiment run tag
    */
   static setTag = data =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/set-tag', data });
+    postJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/set-tag',
+      data
+    });
 
   /**
    * Delete mlflow experiment run tag
    */
   static deleteTag = data =>
     postJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/runs/delete-tag',
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/runs/delete-tag',
       data
     });
 
@@ -158,7 +164,8 @@ export class MlflowService {
    */
   static setExperimentTag = data =>
     postJson({
-      relativeUrl: '/ajax-api/2.0/preview/mlflow/experiments/set-experiment-tag',
+      relativeUrl:
+        '/mlflow/ajax-api/2.0/preview/mlflow/experiments/set-experiment-tag',
       data
     });
 }

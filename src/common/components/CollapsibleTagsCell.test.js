@@ -1,6 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { CollapsibleTagsCell, NUM_TAGS_ON_COLLAPSED } from './CollapsibleTagsCell';
+import {
+  CollapsibleTagsCell,
+  NUM_TAGS_ON_COLLAPSED
+} from './CollapsibleTagsCell';
 import _ from 'lodash';
 
 describe('unit tests', () => {
@@ -8,10 +11,13 @@ describe('unit tests', () => {
   let instance;
   let minimalProps;
 
-  const setupProps = (numTags) => {
+  const setupProps = numTags => {
     const tags = {};
-    _.range(numTags).forEach((n) => {
-      tags[`tag${n}`] = { getKey: () => `tag${n}`, getValue: () => `value${n}` };
+    _.range(numTags).forEach(n => {
+      tags[`tag${n}`] = {
+        getKey: () => `tag${n}`,
+        getValue: () => `value${n}`
+      };
     });
     return { tags, onToggle: jest.fn() };
   };

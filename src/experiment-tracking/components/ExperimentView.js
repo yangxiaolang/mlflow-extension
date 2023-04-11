@@ -22,11 +22,16 @@ import {
   TableIcon,
   ListBorderIcon,
   DownloadIcon,
-  QuestionMarkFillIcon,
+  QuestionMarkFillIcon
 } from '@databricks/design-system';
 
 import './ExperimentView.css';
-import { getExperimentTags, getParams, getRunInfo, getRunTags } from '../reducers/Reducers';
+import {
+  getExperimentTags,
+  getParams,
+  getRunInfo,
+  getRunTags
+} from '../reducers/Reducers';
 import { setExperimentTagApi } from '../actions';
 import Routes from '../routes';
 import { Experiment, RunInfo } from '../sdk/MlflowMessages';
@@ -49,11 +54,18 @@ import { getUUID } from '../../common/utils/ActionUtils';
 import {
   ExperimentSearchSyntaxDocUrl,
   ExperimentTrackingDocUrl,
-  onboarding,
+  onboarding
 } from '../../common/constants';
 import { StyledDropdown } from '../../common/components/StyledDropdown';
-import { ExperimentNoteSection, ArtifactLocation } from './ExperimentViewHelpers';
-import { OverflowMenu, PageHeader, HeaderButton } from '../../shared/building_blocks/PageHeader';
+import {
+  ExperimentNoteSection,
+  ArtifactLocation
+} from './ExperimentViewHelpers';
+import {
+  OverflowMenu,
+  PageHeader,
+  HeaderButton
+} from '../../shared/building_blocks/PageHeader';
 import { FlexBar } from '../../shared/building_blocks/FlexBar';
 import { Spacer } from '../../shared/building_blocks/Spacer';
 import { SearchBox } from '../../shared/building_blocks/SearchBox';
@@ -67,7 +79,7 @@ import {
   ATTRIBUTE_COLUMN_SORT_KEY,
   COLUMN_SORT_BY_ASC,
   COLUMN_SORT_BY_DESC,
-  SORT_DELIMITER_SYMBOL,
+  SORT_DELIMITER_SYMBOL
 } from '../constants';
 
 function RefreshBadge({ children, count }) {
@@ -87,7 +99,7 @@ function RefreshBadge({ children, count }) {
 
 RefreshBadge.propTypes = {
   children: PropTypes.node.isRequired,
-  count: PropTypes.number.isRequired,
+  count: PropTypes.number.isRequired
 };
 
 export const DEFAULT_EXPANDED_VALUE = false;
@@ -101,8 +113,10 @@ export class ExperimentView extends Component {
     this.initiateSearch = this.initiateSearch.bind(this);
     this.onDeleteRun = this.onDeleteRun.bind(this);
     this.onRestoreRun = this.onRestoreRun.bind(this);
-    this.handleLifecycleFilterInput = this.handleLifecycleFilterInput.bind(this);
-    this.handleModelVersionFilterInput = this.handleModelVersionFilterInput.bind(this);
+    this.handleLifecycleFilterInput =
+      this.handleLifecycleFilterInput.bind(this);
+    this.handleModelVersionFilterInput =
+      this.handleModelVersionFilterInput.bind(this);
     this.onCloseDeleteRunModal = this.onCloseDeleteRunModal.bind(this);
     this.onCloseRestoreRunModal = this.onCloseRestoreRunModal.bind(this);
     this.onExpand = this.onExpand.bind(this);
@@ -110,13 +124,14 @@ export class ExperimentView extends Component {
     this.removeBagged = this.removeBagged.bind(this);
     this.handleSubmitEditNote = this.handleSubmitEditNote.bind(this);
     this.handleCancelEditNote = this.handleCancelEditNote.bind(this);
-    this.getStartTimeColumnDisplayName = this.getStartTimeColumnDisplayName.bind(this);
+    this.getStartTimeColumnDisplayName =
+      this.getStartTimeColumnDisplayName.bind(this);
     this.onHandleStartTimeDropdown = this.onHandleStartTimeDropdown.bind(this);
     this.handleDiffSwitchChange = this.handleDiffSwitchChange.bind(this);
     this.handleShareButtonClick = this.handleShareButtonClick.bind(this);
     const store = ExperimentView.getLocalStore(this.stringifyExperimentIds());
     const persistedState = new ExperimentViewPersistedState({
-      ...store.loadComponentState(),
+      ...store.loadComponentState()
     });
     const onboardingInformationStore = ExperimentView.getLocalStore(onboarding);
     this.state = {
@@ -125,10 +140,11 @@ export class ExperimentView extends Component {
       showNotesEditor: false,
       showNotes: true,
       showFilters: false,
-      showOnboardingHelper: onboardingInformationStore.getItem('showTrackingHelper') === null,
+      showOnboardingHelper:
+        onboardingInformationStore.getItem('showTrackingHelper') === null,
       searchInput: props.searchInput,
       lastExperimentIds: undefined,
-      showGetLinkModal: false,
+      showGetLinkModal: false
     };
   }
   static propTypes = {
@@ -148,9 +164,11 @@ export class ExperimentView extends Component {
     // List of all metric keys available in the runs we're viewing
     metricKeyList: PropTypes.arrayOf(PropTypes.string).isRequired,
     // List of list of params in all the visible runs
-    paramsList: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
+    paramsList: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object))
+      .isRequired,
     // List of list of metrics in all the visible runs
-    metricsList: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
+    metricsList: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object))
+      .isRequired,
     // List of tags dictionary in all the visible runs.
     tagsList: PropTypes.arrayOf(PropTypes.object).isRequired,
     // Object of experiment tags
@@ -183,11 +201,12 @@ export class ExperimentView extends Component {
     forceCompactTableView: PropTypes.bool,
     // The number of new runs since the last runs refresh
     numberOfNewRuns: PropTypes.number,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired
   };
 
   static defaultProps = {
-    compareExperiments: false,
+    compareExperiments: false
   };
 
   /** Returns default values for state attributes that aren't persisted in local storage. */
@@ -205,7 +224,7 @@ export class ExperimentView extends Component {
       // True if a model for deleting one or more runs should be displayed
       showDeleteRunModal: false,
       // True if a model for restoring one or more runs should be displayed
-      showRestoreRunModal: false,
+      showRestoreRunModal: false
     };
   }
 
@@ -220,8 +239,12 @@ export class ExperimentView extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     // Don't update the component if a modal is showing before and after the update try.
-    if (this.state.showDeleteRunModal && nextState.showDeleteRunModal) return false;
-    if (this.state.showRestoreRunModal && nextState.showRestoreRunModal) return false;
+    if (this.state.showDeleteRunModal && nextState.showDeleteRunModal) {
+      return false;
+    }
+    if (this.state.showRestoreRunModal && nextState.showRestoreRunModal) {
+      return false;
+    }
     return true;
   }
 
@@ -234,13 +257,17 @@ export class ExperimentView extends Component {
   }
 
   stringifyExperimentIds() {
-    return JSON.stringify(this.props.experiments.map(({ experiment_id }) => experiment_id).sort());
+    return JSON.stringify(
+      this.props.experiments.map(({ experiment_id }) => experiment_id).sort()
+    );
   }
 
   /** Snapshots desired attributes of the component's current state in local storage. */
   snapshotComponentState() {
     const store = ExperimentView.getLocalStore(this.stringifyExperimentIds());
-    store.saveComponentState(new ExperimentViewPersistedState(this.state.persistedState));
+    store.saveComponentState(
+      new ExperimentViewPersistedState(this.state.persistedState)
+    );
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -261,7 +288,8 @@ export class ExperimentView extends Component {
     let pageTitle = 'MLflow Experiment';
     if (!this.props.compareExperiments && this.props.experiments[0].name) {
       const experimentNameParts = this.props.experiments[0].name.split('/');
-      const experimentSuffix = experimentNameParts[experimentNameParts.length - 1];
+      const experimentSuffix =
+        experimentNameParts[experimentNameParts.length - 1];
       pageTitle = `${experimentSuffix} - MLflow Experiment`;
     }
     Utils.updatePageTitle(pageTitle);
@@ -270,7 +298,7 @@ export class ExperimentView extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     // Compute the actual runs selected. (A run cannot be selected if it is not passed in as a prop)
     const newRunsSelected = {};
-    nextProps.runInfos.forEach((rInfo) => {
+    nextProps.runInfos.forEach(rInfo => {
       const prevRunSelected = prevState.runsSelected[rInfo.run_uuid];
       if (prevRunSelected) {
         newRunsSelected[rInfo.run_uuid] = prevRunSelected;
@@ -294,7 +322,7 @@ export class ExperimentView extends Component {
     return {
       ...prevState,
       ...newPersistedState,
-      runsSelected: newRunsSelected,
+      runsSelected: newRunsSelected
     };
   }
 
@@ -331,13 +359,17 @@ export class ExperimentView extends Component {
       : this.state.persistedState.unbaggedMetrics;
     const idx = unbagged.indexOf(colName);
     const newUnbagged =
-      idx >= 0 ? unbagged.slice(0, idx).concat(unbagged.slice(idx + 1, unbagged.length)) : unbagged;
+      idx >= 0
+        ? unbagged
+            .slice(0, idx)
+            .concat(unbagged.slice(idx + 1, unbagged.length))
+        : unbagged;
     const stateKey = isParam ? 'unbaggedParams' : 'unbaggedMetrics';
     this.setState({
       persistedState: new ExperimentViewPersistedState({
         ...this.state.persistedState,
-        [stateKey]: newUnbagged,
-      }).toJSON(),
+        [stateKey]: newUnbagged
+      }).toJSON()
     });
   }
 
@@ -355,8 +387,8 @@ export class ExperimentView extends Component {
     this.setState({
       persistedState: new ExperimentViewPersistedState({
         ...this.state.persistedState,
-        [stateKey]: unbagged.concat([colName]),
-      }).toJSON(),
+        [stateKey]: unbagged.concat([colName])
+      }).toJSON()
     });
   }
 
@@ -371,13 +403,15 @@ export class ExperimentView extends Component {
     this.setState({ showNotesEditor: false });
   }
 
-  startEditingDescription = (e) => {
+  startEditingDescription = e => {
     e.stopPropagation();
     this.setState({ showNotesEditor: true });
   };
 
   handleFilterToggle = () => {
-    this.setState((previousState) => ({ showFilters: !previousState.showFilters }));
+    this.setState(previousState => ({
+      showFilters: !previousState.showFilters
+    }));
   };
 
   getFilteredKeys(keyList, columnType) {
@@ -391,20 +425,21 @@ export class ExperimentView extends Component {
       <div>
         <FormattedMessage
           // eslint-disable-next-line max-len
-          defaultMessage='Track machine learning training runs in experiments. <link>Learn more</link>'
+          defaultMessage="Track machine learning training runs in experiments. <link>Learn more</link>"
+          id="YLvpXM"
           // eslint-disable-next-line max-len
-          description='Information banner text to provide more information about experiments runs page'
+          description="Information banner text to provide more information about experiments runs page"
           values={{
-            link: (chunks) => (
+            link: chunks => (
               <a
                 href={learnMoreLinkUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='LinkColor'
+                target="_blank"
+                rel="noopener noreferrer"
+                className="LinkColor"
               >
                 {chunks}
               </a>
-            ),
+            )
           }}
         />
       </div>
@@ -413,7 +448,7 @@ export class ExperimentView extends Component {
       <Alert
         css={styles.alert}
         message={content}
-        type='info'
+        type="info"
         showIcon
         closable
         onClose={() => this.disableOnboardingHelper()}
@@ -445,13 +480,14 @@ export class ExperimentView extends Component {
   renderShareButton() {
     return (
       <HeaderButton
-        type='secondary'
+        type="secondary"
         onClick={this.handleShareButtonClick}
-        data-test-id='share-button'
+        data-test-id="share-button"
       >
         <FormattedMessage
-          defaultMessage='Share'
-          description='Text for share button on experiment view page header'
+          defaultMessage="Share"
+          id="2oFAO4"
+          description="Text for share button on experiment view page header"
         />
       </HeaderButton>
     );
@@ -476,28 +512,33 @@ export class ExperimentView extends Component {
     return {
       ALL: this.props.intl.formatMessage({
         defaultMessage: 'All time',
-        description: 'Option for the start select dropdown to render all runs',
+        description: 'Option for the start select dropdown to render all runs'
       }),
       LAST_HOUR: this.props.intl.formatMessage({
         defaultMessage: 'Last hour',
-        description: 'Option for the start select dropdown to filter runs from the last hour',
+        description:
+          'Option for the start select dropdown to filter runs from the last hour'
       }),
       LAST_24_HOURS: this.props.intl.formatMessage({
         defaultMessage: 'Last 24 hours',
-        description: 'Option for the start select dropdown to filter runs from the last 24 hours',
+        description:
+          'Option for the start select dropdown to filter runs from the last 24 hours'
       }),
       LAST_7_DAYS: this.props.intl.formatMessage({
         defaultMessage: 'Last 7 days',
-        description: 'Option for the start select dropdown to filter runs from the last 7 days',
+        description:
+          'Option for the start select dropdown to filter runs from the last 7 days'
       }),
       LAST_30_DAYS: this.props.intl.formatMessage({
         defaultMessage: 'Last 30 days',
-        description: 'Option for the start select dropdown to filter runs from the last 30 days',
+        description:
+          'Option for the start select dropdown to filter runs from the last 30 days'
       }),
       LAST_YEAR: this.props.intl.formatMessage({
         defaultMessage: 'Last year',
-        description: 'Option for the start select dropdown to filter runs since the last 1 year',
-      }),
+        description:
+          'Option for the start select dropdown to filter runs since the last 1 year'
+      })
     };
   }
 
@@ -510,11 +551,12 @@ export class ExperimentView extends Component {
     return this.props.intl.formatMessage(
       {
         defaultMessage: 'Displaying Runs from {numExperiments} Experiments',
-        description: 'Message shown when displaying runs from multiple experiments',
+        description:
+          'Message shown when displaying runs from multiple experiments'
       },
       {
-        numExperiments: this.props.experiments.length,
-      },
+        numExperiments: this.props.experiments.length
+      }
     );
   }
 
@@ -538,51 +580,74 @@ export class ExperimentView extends Component {
       categorizedUncheckedKeys,
       diffSwitchSelected,
       nestChildren,
-      numberOfNewRuns,
+      numberOfNewRuns
     } = this.props;
     const { experiment_id, name } = experiments[0];
     const { persistedState } = this.state;
     const { unbaggedParams, unbaggedMetrics } = persistedState;
-    const filteredParamKeys = this.getFilteredKeys(paramKeyList, COLUMN_TYPES.PARAMS);
-    const filteredMetricKeys = this.getFilteredKeys(metricKeyList, COLUMN_TYPES.METRICS);
+    const filteredParamKeys = this.getFilteredKeys(
+      paramKeyList,
+      COLUMN_TYPES.PARAMS
+    );
+    const filteredMetricKeys = this.getFilteredKeys(
+      metricKeyList,
+      COLUMN_TYPES.METRICS
+    );
     const visibleTagKeyList = Utils.getVisibleTagKeyList(tagsList);
-    const filteredVisibleTagKeyList = this.getFilteredKeys(visibleTagKeyList, COLUMN_TYPES.TAGS);
-    const filteredUnbaggedParamKeys = this.getFilteredKeys(unbaggedParams, COLUMN_TYPES.PARAMS);
-    const filteredUnbaggedMetricKeys = this.getFilteredKeys(unbaggedMetrics, COLUMN_TYPES.METRICS);
+    const filteredVisibleTagKeyList = this.getFilteredKeys(
+      visibleTagKeyList,
+      COLUMN_TYPES.TAGS
+    );
+    const filteredUnbaggedParamKeys = this.getFilteredKeys(
+      unbaggedParams,
+      COLUMN_TYPES.PARAMS
+    );
+    const filteredUnbaggedMetricKeys = this.getFilteredKeys(
+      unbaggedMetrics,
+      COLUMN_TYPES.METRICS
+    );
     const restoreDisabled = Object.keys(this.state.runsSelected).length < 1;
     const noteInfo = NoteInfo.fromTags(experimentTags);
     const startTimeColumnLabels = this.getStartTimeColumnDisplayName();
     const searchInputHelpTooltipContent = (
-      <div className='search-input-tooltip-content'>
+      <div className="search-input-tooltip-content">
         <FormattedMessage
-          defaultMessage='Search runs using a simplified version of the SQL {whereBold} clause'
-          description='Tooltip string to explain how to search runs from the experiments table'
+          defaultMessage="Search runs using a simplified version of the SQL {whereBold} clause"
+          id="sXjD3p"
+          description="Tooltip string to explain how to search runs from the experiments table"
           values={{ whereBold: <b>WHERE</b> }}
         />
         <br />
         <FormattedMessage
-          defaultMessage='<link>Learn more</link>'
+          defaultMessage="<link>Learn more</link>"
+          id="nYKZy4"
           // eslint-disable-next-line max-len
-          description='Learn more tooltip link to learn more on how to search in an experiments run table'
+          description="Learn more tooltip link to learn more on how to search in an experiments run table"
           values={{
-            link: (chunks) => (
-              <a href={ExperimentSearchSyntaxDocUrl} target='_blank' rel='noopener noreferrer'>
+            link: chunks => (
+              <a
+                href={ExperimentSearchSyntaxDocUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {chunks}
               </a>
-            ),
+            )
           }}
         />
       </div>
     );
-    const experimentRunsState = (lifecycleFilter) => {
+    const experimentRunsState = lifecycleFilter => {
       return lifecycleFilter === LIFECYCLE_FILTER.ACTIVE
         ? this.props.intl.formatMessage({
             defaultMessage: 'Active',
-            description: 'Linked model dropdown option to show active experiment runs',
+            description:
+              'Linked model dropdown option to show active experiment runs'
           })
         : this.props.intl.formatMessage({
             defaultMessage: 'Deleted',
-            description: 'Linked model dropdown option to show deleted experiment runs',
+            description:
+              'Linked model dropdown option to show deleted experiment runs'
           });
     };
     /* eslint-disable prefer-const */
@@ -590,7 +655,7 @@ export class ExperimentView extends Component {
 
     const artifactLocationProps = {
       experiment: this.props.experiments[0],
-      intl: this.props.intl,
+      intl: this.props.intl
     };
 
     const ColumnSortByOrder = [COLUMN_SORT_BY_ASC, COLUMN_SORT_BY_DESC];
@@ -598,43 +663,48 @@ export class ExperimentView extends Component {
     const attributesSortBy = Object.keys(ATTRIBUTE_COLUMN_SORT_LABEL).reduce(
       (options, sortLabelKey) => {
         const sortLabel = ATTRIBUTE_COLUMN_SORT_LABEL[sortLabelKey];
-        if (!categorizedUncheckedKeys[COLUMN_TYPES.ATTRIBUTES].includes(sortLabel)) {
-          ColumnSortByOrder.forEach((order) => {
+        if (
+          !categorizedUncheckedKeys[COLUMN_TYPES.ATTRIBUTES].includes(sortLabel)
+        ) {
+          ColumnSortByOrder.forEach(order => {
             options.push({
               label: sortLabel,
-              value: ATTRIBUTE_COLUMN_SORT_KEY[sortLabelKey] + SORT_DELIMITER_SYMBOL + order,
-              order,
+              value:
+                ATTRIBUTE_COLUMN_SORT_KEY[sortLabelKey] +
+                SORT_DELIMITER_SYMBOL +
+                order,
+              order
             });
           });
         }
 
         return options;
       },
-      [],
+      []
     );
     const metricsSortBy = filteredMetricKeys.reduce((options, sortLabelKey) => {
-      ColumnSortByOrder.forEach((order) => {
+      ColumnSortByOrder.forEach(order => {
         options.push({
           label: sortLabelKey,
           value: `${ExperimentViewUtil.makeCanonicalKey(
             COLUMN_TYPES.METRICS,
-            sortLabelKey,
+            sortLabelKey
           )}${SORT_DELIMITER_SYMBOL}${order}`,
-          order,
+          order
         });
       });
 
       return options;
     }, []);
     const paramsSortBy = filteredParamKeys.reduce((options, sortLabelKey) => {
-      ColumnSortByOrder.forEach((order) => {
+      ColumnSortByOrder.forEach(order => {
         options.push({
           label: sortLabelKey,
           value: `${ExperimentViewUtil.makeCanonicalKey(
             COLUMN_TYPES.PARAMS,
-            sortLabelKey,
+            sortLabelKey
           )}${SORT_DELIMITER_SYMBOL}${order}`,
-          order,
+          order
         });
       });
 
@@ -648,7 +718,7 @@ export class ExperimentView extends Component {
       <>
         {name}
         <Text
-          size='xl'
+          size="xl"
           dangerouslySetAntdProps={{
             copyable: {
               text: name,
@@ -656,17 +726,17 @@ export class ExperimentView extends Component {
                 this.props.intl.formatMessage({
                   defaultMessage: 'Copy',
                   description:
-                    'Copy tooltip to copy experiment name from experiment runs table header',
-                }),
-              ],
-            },
+                    'Copy tooltip to copy experiment name from experiment runs table header'
+                })
+              ]
+            }
           }}
         />
       </>
     );
 
     return (
-      <div className='ExperimentView runs-table-flex-container'>
+      <div className="ExperimentView runs-table-flex-container">
         <DeleteRunModal
           isOpen={this.state.showDeleteRunModal}
           onClose={this.onCloseDeleteRunModal}
@@ -681,7 +751,7 @@ export class ExperimentView extends Component {
         <PageHeader title={pageHeaderTitle} breadcrumbs={breadcrumbs}>
           {!this.props.compareExperiments && (
             <OverflowMenu
-              data-test-id='experiment-view-page-header'
+              data-test-id="experiment-view-page-header"
               menu={this.getExperimentOverflowItems()}
             />
           )}
@@ -690,18 +760,19 @@ export class ExperimentView extends Component {
         {this.renderOnboardingContent()}
         {!this.props.compareExperiments && (
           <>
-            <Descriptions className='metadata-list'>
+            <Descriptions className="metadata-list">
               <Descriptions.Item
                 label={this.props.intl.formatMessage({
                   defaultMessage: 'Experiment ID',
-                  description: 'Label for displaying the current experiment in view',
+                  description:
+                    'Label for displaying the current experiment in view'
                 })}
               >
                 {experiment_id}
               </Descriptions.Item>
               <ArtifactLocation {...artifactLocationProps} />
             </Descriptions>
-            <div className='ExperimentView-info'>
+            <div className="ExperimentView-info">
               <ExperimentNoteSection
                 noteInfo={noteInfo}
                 handleCancelEditNote={this.handleCancelEditNote}
@@ -712,26 +783,29 @@ export class ExperimentView extends Component {
             </div>
           </>
         )}
-        <div className='ExperimentView-runs runs-table-flex-container'>
+        <div className="ExperimentView-runs runs-table-flex-container">
           {this.props.searchRunsError ? (
-            <div className='error-message'>
-              <span className='error-message'>{this.props.searchRunsError}</span>
+            <div className="error-message">
+              <span className="error-message">
+                {this.props.searchRunsError}
+              </span>
             </div>
           ) : null}
-          <Spacer size='medium'>
+          <Spacer size="medium">
             <FlexBar
               left={
-                <Spacer size='small' direction='horizontal'>
+                <Spacer size="small" direction="horizontal">
                   <div css={styles.controlBar}>
                     <RefreshBadge count={numberOfNewRuns}>
                       <Button
                         onClick={this.initiateSearch}
-                        className='refresh-button'
+                        className="refresh-button"
                         icon={<SyncIcon />}
                       >
                         <FormattedMessage
-                          defaultMessage='Refresh'
-                          description='refresh button text to refresh the experiment runs'
+                          defaultMessage="Refresh"
+                          id="ag05Pe"
+                          description="refresh button text to refresh the experiment runs"
                         />
                       </Button>
                     </RefreshBadge>
@@ -740,58 +814,72 @@ export class ExperimentView extends Component {
                       onClick={this.onCompare}
                     >
                       <FormattedMessage
-                        defaultMessage='Compare'
+                        defaultMessage="Compare"
+                        id="RaGnOQ"
                         // eslint-disable-next-line max-len
-                        description='String for the compare button to compare experiment runs to find an ideal model'
+                        description="String for the compare button to compare experiment runs to find an ideal model"
                       />
                     </Button>
                     {this.props.lifecycleFilter === LIFECYCLE_FILTER.ACTIVE ? (
                       <Button
-                        disabled={Object.keys(this.state.runsSelected).length < 1}
+                        disabled={
+                          Object.keys(this.state.runsSelected).length < 1
+                        }
                         onClick={this.onDeleteRun}
                       >
                         <FormattedMessage
-                          defaultMessage='Delete'
+                          defaultMessage="Delete"
+                          id="3Rb4sG"
                           // eslint-disable-next-line max-len
-                          description='String for the delete button to delete a particular experiment run'
+                          description="String for the delete button to delete a particular experiment run"
                         />
                       </Button>
                     ) : null}
                     {this.props.lifecycleFilter === LIFECYCLE_FILTER.DELETED ? (
-                      <Button disabled={restoreDisabled} onClick={this.onRestoreRun}>
+                      <Button
+                        disabled={restoreDisabled}
+                        onClick={this.onRestoreRun}
+                      >
                         <FormattedMessage
-                          defaultMessage='Restore'
+                          defaultMessage="Restore"
+                          id="Potju2"
                           // eslint-disable-next-line max-len
-                          description='String for the restore button to undo the experiments that were deleted'
+                          description="String for the restore button to undo the experiments that were deleted"
                         />
                       </Button>
                     ) : null}
-                    <Button onClick={this.onDownloadCsv} icon={<DownloadIcon />}>
+                    <Button
+                      onClick={this.onDownloadCsv}
+                      icon={<DownloadIcon />}
+                    >
                       <FormattedMessage
-                        defaultMessage='Download CSV'
+                        defaultMessage="Download CSV"
+                        id="rOnjGB"
                         // eslint-disable-next-line max-len
-                        description='String for the download csv button to download experiments offline in a CSV format'
+                        description="String for the download csv button to download experiments offline in a CSV format"
                       />
                     </Button>
                     <Tooltip
                       title={this.props.intl.formatMessage({
                         defaultMessage: 'Sort by',
                         description:
-                          'Sort label for the sort select dropdown for experiment runs view',
+                          'Sort label for the sort select dropdown for experiment runs view'
                       })}
                     >
                       <Select
-                        className='sort-select'
+                        className="sort-select"
                         value={
                           orderByKey
                             ? `${orderByKey}${SORT_DELIMITER_SYMBOL}${
-                                orderByAsc ? COLUMN_SORT_BY_ASC : COLUMN_SORT_BY_DESC
+                                orderByAsc
+                                  ? COLUMN_SORT_BY_ASC
+                                  : COLUMN_SORT_BY_DESC
                               }`
                             : this.props.intl.formatMessage({
                                 defaultMessage: 'Sort by',
                                 description:
                                   // eslint-disable-next-line max-len
-                                  'Sort by default option for sort by select dropdown for experiment runs',
+                                  'Sort by default option for sort by select dropdown for experiment runs'
                               })
                         }
                         // Temporarily we're disabling virtualized list to maintain
@@ -799,10 +887,10 @@ export class ExperimentView extends Component {
                         // on non-virtualized values.
                         dangerouslySetAntdProps={{ virtual: false }}
                         onChange={this.onHandleSortByDropdown}
-                        data-test-id='sort-select-dropdown'
+                        data-test-id="sort-select-dropdown"
                         dropdownStyle={{ minWidth: '30%' }}
                       >
-                        {sortOptions.map((sortOption) => (
+                        {sortOptions.map(sortOption => (
                           <Option
                             key={sortOption.value}
                             title={sortOption.label}
@@ -823,29 +911,31 @@ export class ExperimentView extends Component {
                       title={this.props.intl.formatMessage({
                         defaultMessage: 'Started during',
                         description:
-                          'Label for the start time select dropdown for experiment runs view',
+                          'Label for the start time select dropdown for experiment runs view'
                       })}
                     >
                       <Select
-                        className='start-time-select'
+                        className="start-time-select"
                         value={startTime}
                         onChange={this.onHandleStartTimeDropdown}
-                        data-test-id='start-time-select-dropdown'
+                        data-test-id="start-time-select-dropdown"
                         // Temporarily we're disabling virtualized list to maintain
                         // backwards compatiblity. Functional unit tests rely heavily
                         // on non-virtualized values.
                         dangerouslySetAntdProps={{ virtual: false }}
                       >
-                        {Object.keys(startTimeColumnLabels).map((startTimeKey) => (
-                          <Option
-                            key={startTimeKey}
-                            title={startTimeColumnLabels[startTimeKey]}
-                            data-test-id={`start-time-select-${startTimeKey}`}
-                            value={startTimeKey}
-                          >
-                            {startTimeColumnLabels[startTimeKey]}
-                          </Option>
-                        ))}
+                        {Object.keys(startTimeColumnLabels).map(
+                          startTimeKey => (
+                            <Option
+                              key={startTimeKey}
+                              title={startTimeColumnLabels[startTimeKey]}
+                              data-test-id={`start-time-select-${startTimeKey}`}
+                              value={startTimeKey}
+                            >
+                              {startTimeColumnLabels[startTimeKey]}
+                            </Option>
+                          )
+                        )}
                       </Select>
                     </Tooltip>
                   </div>
@@ -853,24 +943,28 @@ export class ExperimentView extends Component {
               }
               right={
                 <div css={styles.controlBar}>
-                  <Spacer size='large' direction='horizontal'>
-                    <Spacer size='medium' direction='horizontal'>
+                  <Spacer size="large" direction="horizontal">
+                    <Spacer size="medium" direction="horizontal">
                       <SegmentedControlGroup
-                        defaultValue={showMultiColumns ? 'gridView' : 'compactView'}
+                        defaultValue={
+                          showMultiColumns ? 'gridView' : 'compactView'
+                        }
                         onChange={({ target }) => {
-                          this.props.setShowMultiColumns(target.value === 'gridView');
+                          this.props.setShowMultiColumns(
+                            target.value === 'gridView'
+                          );
                         }}
                         css={styles.displaySwitch}
                       >
                         <SegmentedControlButton
-                          value='compactView'
-                          data-test-id='compact-runs-table-view-button'
+                          value="compactView"
+                          data-test-id="compact-runs-table-view-button"
                         >
                           <ListBorderIcon />
                         </SegmentedControlButton>
                         <SegmentedControlButton
-                          value='gridView'
-                          data-test-id='detailed-runs-table-view-button'
+                          value="gridView"
+                          data-test-id="detailed-runs-table-view-button"
                         >
                           <TableIcon />
                         </SegmentedControlButton>
@@ -884,17 +978,17 @@ export class ExperimentView extends Component {
                         onCheck={this.props.handleColumnSelectionCheck}
                       />
                     </Spacer>
-                    <Spacer size='small' direction='horizontal'>
+                    <Spacer size="small" direction="horizontal">
                       {this.props.intl.formatMessage({
                         defaultMessage: 'Only show differences',
                         description:
-                          'Switch to select only columns with different values across runs',
+                          'Switch to select only columns with different values across runs'
                       })}
                       <Tooltip
                         title={this.props.intl.formatMessage({
                           defaultMessage: 'Only show columns with differences',
                           description:
-                            'Switch to select only columns with different values across runs',
+                            'Switch to select only columns with different values across runs'
                         })}
                       >
                         <Switch
@@ -905,13 +999,13 @@ export class ExperimentView extends Component {
                         />
                       </Tooltip>
                     </Spacer>
-                    <Spacer direction='horizontal' size='small'>
+                    <Spacer direction="horizontal" size="small">
                       <Popover
-                        overlayClassName='search-input-tooltip'
+                        overlayClassName="search-input-tooltip"
                         content={searchInputHelpTooltipContent}
-                        placement='bottom'
+                        placement="bottom"
                       >
-                        <QuestionMarkFillIcon className='ExperimentView-search-help' />
+                        <QuestionMarkFillIcon className="ExperimentView-search-help" />
                       </Popover>
                       <div css={styles.searchBox}>
                         <SearchBox
@@ -922,21 +1016,23 @@ export class ExperimentView extends Component {
                         />
                       </div>
                       <Button
-                        dataTestId='filter-button'
+                        dataTestId="filter-button"
                         onClick={this.handleFilterToggle}
                         icon={<FilterIcon />}
                       >
                         <FormattedMessage
-                          defaultMessage='Filter'
+                          defaultMessage="Filter"
+                          id="/738wy"
                           // eslint-disable-next-line max-len
-                          description='String for the filter button to filter experiment runs table which match the search criteria'
+                          description="String for the filter button to filter experiment runs table which match the search criteria"
                         />
                       </Button>
-                      <Button dataTestId='clear-button' onClick={this.onClear}>
+                      <Button dataTestId="clear-button" onClick={this.onClear}>
                         <FormattedMessage
-                          defaultMessage='Clear'
+                          defaultMessage="Clear"
+                          id="EwcVCu"
                           // eslint-disable-next-line max-len
-                          description='String for the clear button to clear any filters or sorting that we may have applied on the experiment table'
+                          description="String for the clear button to clear any filters or sorting that we may have applied on the experiment table"
                         />
                       </Button>
                     </Spacer>
@@ -947,30 +1043,40 @@ export class ExperimentView extends Component {
             <CSSTransition
               in={this.state.showFilters}
               timeout={300}
-              classNames='lifecycleButtons'
+              classNames="lifecycleButtons"
               unmountOnExit
             >
-              <div className='ExperimentView-lifecycle-input'>
-                <div className='filter-wrapper' css={styles.lifecycleButtonFilterWrapper}>
+              <div className="ExperimentView-lifecycle-input">
+                <div
+                  className="filter-wrapper"
+                  css={styles.lifecycleButtonFilterWrapper}
+                >
                   <FormattedMessage
-                    defaultMessage='State:'
+                    defaultMessage="State:"
+                    id="OGWg8l"
                     // eslint-disable-next-line max-len
-                    description='Filtering label to filter experiments based on state of active or deleted'
+                    description="Filtering label to filter experiments based on state of active or deleted"
                   />
                   <StyledDropdown
                     title={experimentRunsState(this.props.lifecycleFilter)}
                     dropdownOptions={
                       <Menu onClick={this.handleLifecycleFilterInput}>
                         <Menu.Item
-                          data-test-id='active-runs-menu-item'
-                          active={this.props.lifecycleFilter === LIFECYCLE_FILTER.ACTIVE}
+                          data-test-id="active-runs-menu-item"
+                          active={
+                            this.props.lifecycleFilter ===
+                            LIFECYCLE_FILTER.ACTIVE
+                          }
                           key={LIFECYCLE_FILTER.ACTIVE}
                         >
                           {experimentRunsState(LIFECYCLE_FILTER.ACTIVE)}
                         </Menu.Item>
                         <Menu.Item
-                          data-test-id='deleted-runs-menu-item'
-                          active={this.props.lifecycleFilter === LIFECYCLE_FILTER.DELETED}
+                          data-test-id="deleted-runs-menu-item"
+                          active={
+                            this.props.lifecycleFilter ===
+                            LIFECYCLE_FILTER.DELETED
+                          }
                           key={LIFECYCLE_FILTER.DELETED}
                         >
                           {experimentRunsState(LIFECYCLE_FILTER.DELETED)}
@@ -978,14 +1084,15 @@ export class ExperimentView extends Component {
                       </Menu>
                     }
                     triggers={['click']}
-                    id='ExperimentView-lifecycle-button-id'
-                    className='ExperimentView-lifecycle-button'
+                    id="ExperimentView-lifecycle-button-id"
+                    className="ExperimentView-lifecycle-button"
                   />
-                  <span className='model-versions-label'>
+                  <span className="model-versions-label">
                     <FormattedMessage
-                      defaultMessage='Linked Models:'
+                      defaultMessage="Linked Models:"
+                      id="Ux8CTl"
                       // eslint-disable-next-line max-len
-                      description='Filtering label for filtering experiments based on if the models are linked or not to the experiment'
+                      description="Filtering label for filtering experiments based on if the models are linked or not to the experiment"
                     />
                   </span>
                   <StyledDropdown
@@ -998,8 +1105,9 @@ export class ExperimentView extends Component {
                           'all-runs-menu-item',
                           this.props.intl.formatMessage({
                             defaultMessage: 'All Runs',
-                            description: 'Linked model dropdown option to show all experiment runs',
-                          }),
+                            description:
+                              'Linked model dropdown option to show all experiment runs'
+                          })
                         )}
                         {this.getModelVersionMenuItem(
                           MODEL_VERSION_FILTER.WITH_MODEL_VERSIONS,
@@ -1008,8 +1116,8 @@ export class ExperimentView extends Component {
                             defaultMessage: 'With Model Versions',
                             description:
                               // eslint-disable-next-line max-len
-                              'Linked model dropdown option to show experiment runs with model versions only',
-                          }),
+                              'Linked model dropdown option to show experiment runs with model versions only'
+                          })
                         )}
                         {this.getModelVersionMenuItem(
                           MODEL_VERSION_FILTER.WTIHOUT_MODEL_VERSIONS,
@@ -1018,14 +1126,14 @@ export class ExperimentView extends Component {
                             defaultMessage: 'Without Model Versions',
                             description:
                               // eslint-disable-next-line max-len
-                              'Linked model dropdown option to show experiment runs without model versions only',
-                          }),
+                              'Linked model dropdown option to show experiment runs without model versions only'
+                          })
                         )}
                       </Menu>
                     }
                     triggers={['click']}
-                    className='ExperimentView-linked-model-button'
-                    id='ExperimentView-linked-model-button-id'
+                    className="ExperimentView-linked-model-button"
+                    id="ExperimentView-linked-model-button-id"
                   />
                 </div>
               </div>
@@ -1033,9 +1141,10 @@ export class ExperimentView extends Component {
             <div>
               <FormattedMessage
                 // eslint-disable-next-line max-len
-                defaultMessage='Showing {length} matching {length, plural, =0 {runs} =1 {run} other {runs}}'
+                defaultMessage="Showing {length} matching {length, plural, =0 {runs} =1 {run} other {runs}}"
+                id="sHMQzu"
                 // eslint-disable-next-line max-len
-                description='Message for displaying how many runs match search criteria on experiment page'
+                description="Message for displaying how many runs match search criteria on experiment page"
                 values={{ length: runInfos.length }}
               />
             </div>
@@ -1133,7 +1242,7 @@ export class ExperimentView extends Component {
     }
   }
 
-  onCheckbox = (runUuid) => {
+  onCheckbox = runUuid => {
     const newState = Object.assign({}, this.state);
     if (this.state.runsSelected[runUuid]) {
       delete newState.runsSelected[runUuid];
@@ -1142,14 +1251,16 @@ export class ExperimentView extends Component {
       this.setState({
         runsSelected: {
           ...this.state.runsSelected,
-          [runUuid]: true,
-        },
+          [runUuid]: true
+        }
       });
     }
   };
 
   isAllChecked = () => {
-    return Object.keys(this.state.runsSelected).length === this.props.runInfos.length;
+    return (
+      Object.keys(this.state.runsSelected).length === this.props.runInfos.length
+    );
   };
 
   onCheckAll = () => {
@@ -1165,23 +1276,27 @@ export class ExperimentView extends Component {
   };
 
   // Special handler for ag-grid selection change event from multi-column view
-  handleMultiColumnViewSelectionChange = (selectedRunUuids) => {
+  handleMultiColumnViewSelectionChange = selectedRunUuids => {
     const runsSelected = {};
-    selectedRunUuids.forEach((runUuid) => (runsSelected[runUuid] = true));
+    selectedRunUuids.forEach(runUuid => (runsSelected[runUuid] = true));
     this.setState({ runsSelected });
   };
 
   onExpand(runId, childRunIds) {
-    const { runsSelected, hiddenChildRunsSelected, persistedState } = this.state;
+    const { runsSelected, hiddenChildRunsSelected, persistedState } =
+      this.state;
     const { runsExpanded } = persistedState;
-    const expandedAfterToggle = !ExperimentViewUtil.isExpanderOpen(runsExpanded, runId);
+    const expandedAfterToggle = !ExperimentViewUtil.isExpanderOpen(
+      runsExpanded,
+      runId
+    );
     const newRunsSelected = { ...runsSelected };
     const newHiddenChildRunsSelected = { ...hiddenChildRunsSelected };
 
     if (expandedAfterToggle) {
       // User expanded current run, to automatically select previous hidden child runs that were
       // selected, find them in `hiddenChildRunsSelected` and add them to `newRunsSelected`
-      childRunIds.forEach((childRunId) => {
+      childRunIds.forEach(childRunId => {
         if (hiddenChildRunsSelected[childRunId]) {
           delete newHiddenChildRunsSelected[childRunId];
           newRunsSelected[childRunId] = true;
@@ -1190,7 +1305,7 @@ export class ExperimentView extends Component {
     } else {
       // User collapsed current run, find all currently selected child runs from `runsSelected` and
       // save them to `newHiddenChildRunsSelected`
-      childRunIds.forEach((childRunId) => {
+      childRunIds.forEach(childRunId => {
         if (runsSelected[childRunId]) {
           delete newRunsSelected[childRunId];
           newHiddenChildRunsSelected[childRunId] = true;
@@ -1205,13 +1320,13 @@ export class ExperimentView extends Component {
         ...this.state.persistedState,
         runsExpanded: {
           ...this.state.persistedState.runsExpanded,
-          [runId]: expandedAfterToggle,
-        },
-      }).toJSON(),
+          [runId]: expandedAfterToggle
+        }
+      }).toJSON()
     });
   }
 
-  onSearchInput = (event) => {
+  onSearchInput = event => {
     this.setState({ searchInput: event.target.value });
   };
 
@@ -1229,32 +1344,34 @@ export class ExperimentView extends Component {
     if (!this.props.diffSwitchSelected) {
       // When turning on the diff switch
       const { categorizedUncheckedKeys } = this.props;
-      newCategorizedUncheckedKeys = ExperimentViewUtil.getCategorizedUncheckedKeysDiffView({
-        ...this.props,
-        categorizedUncheckedKeys,
-      });
+      newCategorizedUncheckedKeys =
+        ExperimentViewUtil.getCategorizedUncheckedKeysDiffView({
+          ...this.props,
+          categorizedUncheckedKeys
+        });
       switchPersistedState = {
         preSwitchCategorizedUncheckedKeys: categorizedUncheckedKeys,
-        postSwitchCategorizedUncheckedKeys: newCategorizedUncheckedKeys,
+        postSwitchCategorizedUncheckedKeys: newCategorizedUncheckedKeys
       };
     } else {
       // When turning off the diff switch
       const {
         preSwitchCategorizedUncheckedKeys,
         postSwitchCategorizedUncheckedKeys,
-        categorizedUncheckedKeys: currCategorizedUncheckedKeys,
+        categorizedUncheckedKeys: currCategorizedUncheckedKeys
       } = this.props;
-      newCategorizedUncheckedKeys = ExperimentViewUtil.getRestoredCategorizedUncheckedKeys({
-        preSwitchCategorizedUncheckedKeys,
-        postSwitchCategorizedUncheckedKeys,
-        currCategorizedUncheckedKeys,
-      });
+      newCategorizedUncheckedKeys =
+        ExperimentViewUtil.getRestoredCategorizedUncheckedKeys({
+          preSwitchCategorizedUncheckedKeys,
+          postSwitchCategorizedUncheckedKeys,
+          currCategorizedUncheckedKeys
+        });
       switchPersistedState = {};
     }
 
     this.props.handleDiffSwitchChange({
       categorizedUncheckedKeys: newCategorizedUncheckedKeys,
-      ...switchPersistedState,
+      ...switchPersistedState
     });
   };
 
@@ -1263,18 +1380,18 @@ export class ExperimentView extends Component {
       e.preventDefault();
     }
     this.initiateSearch({
-      searchInput: searchInput,
+      searchInput: searchInput
     });
   };
 
   onClear = () => {
     this.setState(
       {
-        searchInput: '',
+        searchInput: ''
       },
       () => {
         this.props.onClear();
-      },
+      }
     );
   };
 
@@ -1285,16 +1402,35 @@ export class ExperimentView extends Component {
       .filter(({ run_uuid }) => runsSelectedList.includes(run_uuid))
       .map(({ experiment_id }) => experiment_id);
     this.props.history.push(
-      Routes.getCompareRunPageRoute(runsSelectedList, [...new Set(experimentIds)].sort()),
+      Routes.getCompareRunPageRoute(
+        runsSelectedList,
+        [...new Set(experimentIds)].sort()
+      )
     );
   };
 
   onDownloadCsv = () => {
-    const { paramKeyList, metricKeyList, runInfos, paramsList, metricsList, tagsList } = this.props;
-    const filteredParamKeys = this.getFilteredKeys(paramKeyList, COLUMN_TYPES.PARAMS);
-    const filteredMetricKeys = this.getFilteredKeys(metricKeyList, COLUMN_TYPES.METRICS);
+    const {
+      paramKeyList,
+      metricKeyList,
+      runInfos,
+      paramsList,
+      metricsList,
+      tagsList
+    } = this.props;
+    const filteredParamKeys = this.getFilteredKeys(
+      paramKeyList,
+      COLUMN_TYPES.PARAMS
+    );
+    const filteredMetricKeys = this.getFilteredKeys(
+      metricKeyList,
+      COLUMN_TYPES.METRICS
+    );
     const visibleTagKeys = Utils.getVisibleTagKeyList(tagsList);
-    const filteredTagKeys = this.getFilteredKeys(visibleTagKeys, COLUMN_TYPES.TAGS);
+    const filteredTagKeys = this.getFilteredKeys(
+      visibleTagKeys,
+      COLUMN_TYPES.TAGS
+    );
     const csv = ExperimentViewUtil.runInfosToCsv(
       runInfos,
       filteredParamKeys,
@@ -1302,7 +1438,7 @@ export class ExperimentView extends Component {
       filteredTagKeys,
       paramsList,
       metricsList,
-      tagsList,
+      tagsList
     );
     const blob = new Blob([csv], { type: 'application/csv;charset=utf-8' });
     saveAs(blob, 'runs.csv');
@@ -1314,7 +1450,9 @@ export const mapStateToProps = (state, ownProps) => {
 
   // The runUuids we should serve.
   const { runInfosByUuid } = state.entities;
-  const experimentIds = ownProps.experiments.map(({ experiment_id }) => experiment_id.toString());
+  const experimentIds = ownProps.experiments.map(({ experiment_id }) =>
+    experiment_id.toString()
+  );
   const runUuids = Object.values(runInfosByUuid)
     .filter(({ experiment_id }) => experimentIds.includes(experiment_id))
     .map(({ run_uuid }) => run_uuid);
@@ -1322,48 +1460,57 @@ export const mapStateToProps = (state, ownProps) => {
   const { modelVersionsByRunUuid } = state.entities;
 
   const runInfos = runUuids
-    .map((run_id) => getRunInfo(run_id, state))
-    .filter((rInfo) => {
+    .map(run_id => getRunInfo(run_id, state))
+    .filter(rInfo => {
       if (lifecycleFilter === LIFECYCLE_FILTER.ACTIVE) {
         return rInfo.lifecycle_stage === 'active';
       } else {
         return rInfo.lifecycle_stage === 'deleted';
       }
     })
-    .filter((rInfo) => {
+    .filter(rInfo => {
       if (modelVersionFilter === MODEL_VERSION_FILTER.ALL_RUNS) {
         return true;
-      } else if (modelVersionFilter === MODEL_VERSION_FILTER.WITH_MODEL_VERSIONS) {
+      } else if (
+        modelVersionFilter === MODEL_VERSION_FILTER.WITH_MODEL_VERSIONS
+      ) {
         return rInfo.run_uuid in modelVersionsByRunUuid;
-      } else if (modelVersionFilter === MODEL_VERSION_FILTER.WTIHOUT_MODEL_VERSIONS) {
+      } else if (
+        modelVersionFilter === MODEL_VERSION_FILTER.WTIHOUT_MODEL_VERSIONS
+      ) {
         return !(rInfo.run_uuid in modelVersionsByRunUuid);
       } else {
-        console.warn('Invalid input to model version filter - defaulting to showing all runs.');
+        console.warn(
+          'Invalid input to model version filter - defaulting to showing all runs.'
+        );
         return true;
       }
     });
   const metricKeysSet = new Set();
   const paramKeysSet = new Set();
-  const metricsList = runInfos.map((runInfo) => {
+  const metricsList = runInfos.map(runInfo => {
     const metricsByRunUuid = getLatestMetrics(runInfo.getRunUuid(), state);
     const metrics = Object.values(metricsByRunUuid || {});
-    metrics.forEach((metric) => {
+    metrics.forEach(metric => {
       metricKeysSet.add(metric.key);
     });
     return metrics;
   });
-  const paramsList = runInfos.map((runInfo) => {
+  const paramsList = runInfos.map(runInfo => {
     const params = Object.values(getParams(runInfo.getRunUuid(), state));
-    params.forEach((param) => {
+    params.forEach(param => {
       paramKeysSet.add(param.key);
     });
     return params;
   });
 
-  const tagsList = runInfos.map((runInfo) => getRunTags(runInfo.getRunUuid(), state));
+  const tagsList = runInfos.map(runInfo =>
+    getRunTags(runInfo.getRunUuid(), state)
+  );
   // Only show description if we're viewing runs from a single experiment
   const experimentTags =
-    !ownProps.compareExperiments && getExperimentTags(ownProps.experiments[0].experiment_id, state);
+    !ownProps.compareExperiments &&
+    getExperimentTags(ownProps.experiments[0].experiment_id, state);
   return {
     runInfos,
     modelVersionsByRunUuid,
@@ -1372,24 +1519,24 @@ export const mapStateToProps = (state, ownProps) => {
     metricsList,
     paramsList,
     tagsList,
-    experimentTags,
+    experimentTags
   };
 };
 
 const mapDispatchToProps = {
-  setExperimentTagApi,
+  setExperimentTagApi
 };
 
 const styles = {
   lifecycleButtonFilterWrapper: {
-    marginLeft: '48px',
+    marginLeft: '48px'
   },
-  controlBar: (theme) => ({
+  controlBar: theme => ({
     display: 'flex',
-    gap: theme.spacing.sm,
+    gap: theme.spacing.sm
   }),
   searchBox: {
-    width: '446px',
+    width: '446px'
   },
   alert: {
     marginBottom: 16,
@@ -1397,12 +1544,16 @@ const styles = {
     background: '#edfafe' /* Gray-background */,
     border: '1px solid #eeeeee',
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.12)' /* Dropshadow */,
-    borderRadius: 4,
+    borderRadius: 4
   },
-  displaySwitch: (theme) => ({ svg: { width: theme.spacing.md, height: theme.spacing.md } }),
+  displaySwitch: theme => ({
+    svg: { width: theme.spacing.md, height: theme.spacing.md }
+  }),
   columnSwitch: { margin: '5px' },
-  filterButtonWrapper: { display: 'flex', alignItems: 'center' },
+  filterButtonWrapper: { display: 'flex', alignItems: 'center' }
 };
 
 export const ExperimentViewWithIntl = injectIntl(ExperimentView);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ExperimentViewWithIntl));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ExperimentViewWithIntl)
+);

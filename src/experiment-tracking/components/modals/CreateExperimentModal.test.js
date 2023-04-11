@@ -13,9 +13,9 @@ describe('CreateExperimentModal', () => {
   beforeEach(() => {
     location = { search: 'initialSearchValue' };
     const history = {
-      push: (url) => {
+      push: url => {
         location.search = url;
-      },
+      }
     };
     minimalProps = {
       isOpen: false,
@@ -26,7 +26,7 @@ describe('CreateExperimentModal', () => {
         return Promise.resolve(response);
       },
       listExperimentsApi: () => Promise.resolve([]),
-      history: history,
+      history: history
     };
     wrapper = shallow(<CreateExperimentModalImpl {...minimalProps} />);
   });
@@ -37,33 +37,43 @@ describe('CreateExperimentModal', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  test('handleCreateExperiment redirects user to newly-created experiment page', (done) => {
+  test('handleCreateExperiment redirects user to newly-created experiment page', done => {
     instance = wrapper.instance();
     instance
-      .handleCreateExperiment({ experimentName: 'myNewExp', artifactLocation: 'artifactLoc' })
+      .handleCreateExperiment({
+        experimentName: 'myNewExp',
+        artifactLocation: 'artifactLoc'
+      })
       .then(() => {
         expect(location.search).toEqual('/experiments/fakeExpId');
         done();
       });
   });
 
-  test('handleCreateExperiment does not perform redirection if API requests fail', (done) => {
+  test('handleCreateExperiment does not perform redirection if API requests fail', done => {
     const propsVals = [
       {
         ...minimalProps,
-        listExperimentsApi: () => Promise.reject(new Error('ListExperiments failed!')),
+        listExperimentsApi: () =>
+          Promise.reject(new Error('ListExperiments failed!'))
       },
       {
         ...minimalProps,
-        createExperimentApi: () => Promise.reject(new Error('CreateExperiment failed!')),
-      },
+        createExperimentApi: () =>
+          Promise.reject(new Error('CreateExperiment failed!'))
+      }
     ];
     const testPromises = [];
-    propsVals.forEach((props) => {
+    propsVals.forEach(props => {
       wrapper = shallow(<CreateExperimentModalImpl {...props} />);
       instance = wrapper.instance();
-      const payload = { experimentName: 'myNewExp', artifactLocation: 'artifactLoc' };
-      testPromises.push(expect(instance.handleCreateExperiment(payload)).rejects.toThrow());
+      const payload = {
+        experimentName: 'myNewExp',
+        artifactLocation: 'artifactLoc'
+      };
+      testPromises.push(
+        expect(instance.handleCreateExperiment(payload)).rejects.toThrow()
+      );
     });
     Promise.all(testPromises).then(() => {
       expect(location.search).toEqual('initialSearchValue');

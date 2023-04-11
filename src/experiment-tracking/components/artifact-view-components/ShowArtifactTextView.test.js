@@ -12,11 +12,11 @@ describe('ShowArtifactTextView', () => {
   beforeEach(() => {
     minimalProps = {
       path: 'fakepath',
-      runUuid: 'fakeUuid',
+      runUuid: 'fakeUuid'
     };
     // Mock the `getArtifact` function to avoid spurious network errors
     // during testing
-    const getArtifact = jest.fn((artifactLocation) => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('some content');
     });
     commonProps = { ...minimalProps, getArtifact };
@@ -28,8 +28,8 @@ describe('ShowArtifactTextView', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  test('should render error message when error occurs', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render error message when error occurs', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.reject(new Error('my error text'));
     });
     const props = { ...minimalProps, getArtifact };
@@ -49,8 +49,8 @@ describe('ShowArtifactTextView', () => {
     expect(wrapper.find('.artifact-text-view-loading').length).toBe(1);
   });
 
-  test('should render text content when available', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render text content when available', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('my text');
     });
     const props = { ...minimalProps, getArtifact };
@@ -64,41 +64,47 @@ describe('ShowArtifactTextView', () => {
     });
   });
 
-  test('SyntaxHighlighter has an appropriate language prop for a python script', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('SyntaxHighlighter has an appropriate language prop for a python script', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('print("foo")');
     });
     const props = { path: 'fake.py', runUuid: 'fakeUuid', getArtifact };
     wrapper = shallow(<ShowArtifactTextView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find(SyntaxHighlighter).first().props().language).toBe('py');
+      expect(wrapper.find(SyntaxHighlighter).first().props().language).toBe(
+        'py'
+      );
       done();
     });
   });
 
-  test('SyntaxHighlighter has an appropriate language prop for an MLproject file', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('SyntaxHighlighter has an appropriate language prop for an MLproject file', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('key: value');
     });
     const props = { path: 'MLproject', runUuid: 'fakeUuid', getArtifact };
     wrapper = shallow(<ShowArtifactTextView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find(SyntaxHighlighter).first().props().language).toBe('yaml');
+      expect(wrapper.find(SyntaxHighlighter).first().props().language).toBe(
+        'yaml'
+      );
       done();
     });
   });
 
-  test('SyntaxHighlighter has an appropriate language prop for an MLmodel file', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('SyntaxHighlighter has an appropriate language prop for an MLmodel file', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('key: value');
     });
     const props = { path: 'MLmodel', runUuid: 'fakeUuid', getArtifact };
     wrapper = shallow(<ShowArtifactTextView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find(SyntaxHighlighter).first().props().language).toBe('yaml');
+      expect(wrapper.find(SyntaxHighlighter).first().props().language).toBe(
+        'yaml'
+      );
       done();
     });
   });
@@ -111,8 +117,8 @@ describe('ShowArtifactTextView', () => {
     expect(instance.props.getArtifact).toBeCalled();
   });
 
-  test('should render prettified valid json', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render prettified valid json', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('{"key1": "val1", "key2": "val2"}');
     });
     const props = { path: 'fake.json', runUuid: 'fakeUuid', getArtifact };

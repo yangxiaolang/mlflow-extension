@@ -10,7 +10,7 @@ describe('GetLinkModal', () => {
     minimalProps = {
       visible: true,
       onCancel: () => {},
-      link: 'link',
+      link: 'link'
     };
   });
 

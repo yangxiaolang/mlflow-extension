@@ -28,7 +28,7 @@ export class ArtifactPageImpl extends Component {
     listArtifactsApi: PropTypes.func.isRequired,
     searchModelVersionsApi: PropTypes.func.isRequired,
     runTags: PropTypes.object,
-    modelVersions: PropTypes.arrayOf(PropTypes.object),
+    modelVersions: PropTypes.arrayOf(PropTypes.object)
   };
 
   getFailedtoListArtifactsMsg = () => {
@@ -37,8 +37,9 @@ export class ArtifactPageImpl extends Component {
         <FormattedMessage
           // eslint-disable-next-line max-len
           defaultMessage="Unable to list artifacts stored under <code>{artifactUri}</code> for the current run. Please contact your tracking server administrator to notify them of this error, which can happen when the tracking server lacks permission to list artifacts under the current run's root artifact directory."
+          id="oBpBjm"
           // eslint-disable-next-line max-len
-          description='Error message when the artifact is unable to load. This message is displayed in the open source ML flow only'
+          description="Error message when the artifact is unable to load. This message is displayed in the open source ML flow only"
           values={{ artifactUri: this.props.artifactRootUri }}
         />
       </span>
@@ -51,8 +52,8 @@ export class ArtifactPageImpl extends Component {
 
   listArtifactRequestIds = [getUUID()].concat(
     this.props.initialSelectedArtifactPath
-      ? this.props.initialSelectedArtifactPath.split('/').map((s) => getUUID())
-      : [],
+      ? this.props.initialSelectedArtifactPath.split('/').map(s => getUUID())
+      : []
   );
 
   pollModelVersionsForCurrentRun = async () => {
@@ -62,7 +63,10 @@ export class ArtifactPageImpl extends Component {
     if (activeNodeIsDirectory && !(searchRequest && searchRequest.active)) {
       try {
         // searchModelVersionsApi may be sync or async so we're not using <promise>.catch() syntax
-        await this.props.searchModelVersionsApi({ run_id: runUuid }, this.searchRequestId);
+        await this.props.searchModelVersionsApi(
+          { run_id: runUuid },
+          this.searchRequestId
+        );
       } catch (error) {
         // We're not reporting errors more than once when polling
         // in order to avoid flooding logs
@@ -74,13 +78,17 @@ export class ArtifactPageImpl extends Component {
     }
   };
 
-  handleActiveNodeChange = (activeNodeIsDirectory) => {
+  handleActiveNodeChange = activeNodeIsDirectory => {
     this.setState({ activeNodeIsDirectory });
   };
 
   pollArtifactsForCurrentRun = async () => {
     const { runUuid } = this.props;
-    await this.props.listArtifactsApi(runUuid, undefined, this.listArtifactRequestIds[0]);
+    await this.props.listArtifactsApi(
+      runUuid,
+      undefined,
+      this.listArtifactRequestIds[0]
+    );
     if (this.props.initialSelectedArtifactPath) {
       const parts = this.props.initialSelectedArtifactPath.split('/');
       let pathSoFar = '';
@@ -92,7 +100,11 @@ export class ArtifactPageImpl extends Component {
         // Index i + 1 because listArtifactRequestIds[0] would have been used up by
         // root-level artifact API call above.
         // eslint-disable-next-line no-await-in-loop
-        await this.props.listArtifactsApi(runUuid, pathSoFar, this.listArtifactRequestIds[i + 1]);
+        await this.props.listArtifactsApi(
+          runUuid,
+          pathSoFar,
+          this.listArtifactRequestIds[i + 1]
+        );
         pathSoFar += '/';
       }
     }
@@ -101,7 +113,10 @@ export class ArtifactPageImpl extends Component {
   componentDidMount() {
     if (Utils.isModelRegistryEnabled()) {
       this.pollModelVersionsForCurrentRun();
-      this.pollIntervalId = setInterval(this.pollModelVersionsForCurrentRun, POLL_INTERVAL);
+      this.pollIntervalId = setInterval(
+        this.pollModelVersionsForCurrentRun,
+        POLL_INTERVAL
+      );
     }
     this.pollArtifactsForCurrentRun();
   }
@@ -109,7 +124,7 @@ export class ArtifactPageImpl extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.runUuid !== this.props.runUuid) {
       this.setState({
-        errorThrown: false,
+        errorThrown: false
       });
     }
   }
@@ -130,19 +145,23 @@ export class ArtifactPageImpl extends Component {
         console.error(failedReq.error);
       }
       return (
-        <div className='mlflow-artifact-error'>
-          <div className='artifact-load-error-outer-container'>
-            <div className='artifact-load-error-container'>
+        <div className="mlflow-artifact-error">
+          <div className="artifact-load-error-outer-container">
+            <div className="artifact-load-error-container">
               <div>
-                <div className='artifact-load-error-header'>
+                <div className="artifact-load-error-header">
                   <FormattedMessage
-                    defaultMessage='Loading Artifacts Failed'
+                    defaultMessage="Loading Artifacts Failed"
+                    id="U6cPEB"
                     // eslint-disable-next-line max-len
-                    description='Error message rendered when loading the artifacts for the experiment fails'
+                    description="Error message rendered when loading the artifacts for the experiment fails"
                   />
                 </div>
-                <div className='artifact-load-error-info'>
-                  <i className='far fa-times-circle artifact-load-error-icon' aria-hidden='true' />
+                <div className="artifact-load-error-info">
+                  <i
+                    className="far fa-times-circle artifact-load-error-icon"
+                    aria-hidden="true"
+                  />
                   {this.getFailedtoListArtifactsMsg()}
                 </div>
               </div>
@@ -151,7 +170,12 @@ export class ArtifactPageImpl extends Component {
         </div>
       );
     }
-    return <ArtifactView {...this.props} handleActiveNodeChange={this.handleActiveNodeChange} />;
+    return (
+      <ArtifactView
+        {...this.props}
+        handleActiveNodeChange={this.handleActiveNodeChange}
+      />
+    );
   };
 
   render() {
@@ -185,8 +209,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   listArtifactsApi,
-  searchModelVersionsApi,
+  searchModelVersionsApi
 };
 
-export const ConnectedArtifactPage = connect(mapStateToProps, mapDispatchToProps)(ArtifactPageImpl);
+export const ConnectedArtifactPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ArtifactPageImpl);
 export default withRouter(ConnectedArtifactPage);

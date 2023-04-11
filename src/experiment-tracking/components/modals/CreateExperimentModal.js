@@ -6,7 +6,11 @@ import debounce from 'lodash/debounce';
 
 import Routes from '../../routes';
 import { GenericInputModal } from './GenericInputModal';
-import { CreateExperimentForm, EXP_NAME_FIELD, ARTIFACT_LOCATION } from './CreateExperimentForm';
+import {
+  CreateExperimentForm,
+  EXP_NAME_FIELD,
+  ARTIFACT_LOCATION
+} from './CreateExperimentForm';
 import { getExperimentNameValidator } from '../../../common/forms/validations';
 
 import { createExperimentApi, listExperimentsApi } from '../../actions';
@@ -19,21 +23,24 @@ export class CreateExperimentModalImpl extends Component {
     experimentNames: PropTypes.arrayOf(PropTypes.string).isRequired,
     createExperimentApi: PropTypes.func.isRequired,
     listExperimentsApi: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   };
 
-  handleCreateExperiment = async (values) => {
+  handleCreateExperiment = async values => {
     // get values of input fields
     const experimentName = values[EXP_NAME_FIELD];
     const artifactLocation = values[ARTIFACT_LOCATION];
 
     // Both createExperimentApi and listExperimentsApi calls need to be fulfilled sequentially
     // before redirecting the user to the newly created experiment page (history.push())
-    const response = await this.props.createExperimentApi(experimentName, artifactLocation);
+    const response = await this.props.createExperimentApi(
+      experimentName,
+      artifactLocation
+    );
     await this.props.listExperimentsApi();
 
     const {
-      value: { experiment_id: newExperimentId },
+      value: { experiment_id: newExperimentId }
     } = response;
     if (newExperimentId) {
       this.props.history.push(Routes.getExperimentPageRoute(newExperimentId));
@@ -42,36 +49,38 @@ export class CreateExperimentModalImpl extends Component {
 
   debouncedExperimentNameValidator = debounce(
     getExperimentNameValidator(() => this.props.experimentNames),
-    400,
+    400
   );
 
   render() {
     const { isOpen } = this.props;
     return (
       <GenericInputModal
-        title='Create Experiment'
-        okText='Create'
+        title="Create Experiment"
+        okText="Create"
         isOpen={isOpen}
         handleSubmit={this.handleCreateExperiment}
         onClose={this.props.onClose}
       >
-        <CreateExperimentForm validator={this.debouncedExperimentNameValidator} />
+        <CreateExperimentForm
+          validator={this.debouncedExperimentNameValidator}
+        />
       </GenericInputModal>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const experiments = getExperiments(state);
-  const experimentNames = experiments.map((e) => e.getName());
+  const experimentNames = experiments.map(e => e.getName());
   return { experimentNames };
 };
 
 const mapDispatchToProps = {
   createExperimentApi,
-  listExperimentsApi,
+  listExperimentsApi
 };
 
 export const CreateExperimentModal = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(CreateExperimentModalImpl),
+  connect(mapStateToProps, mapDispatchToProps)(CreateExperimentModalImpl)
 );

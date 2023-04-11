@@ -17,24 +17,28 @@ describe('CompareRunPage', () => {
   beforeEach(() => {
     // TODO: remove global fetch mock by explicitly mocking all the service API calls
     global.fetch = jest.fn(() =>
-      Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('') }),
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('')
+      })
     );
     minimalProps = {
       location: {
         search: {
           '?runs': '["runn-1234-5678-9012", "runn-1234-5678-9034"]',
-          experiments: '["12345"]',
-        },
+          experiments: '["12345"]'
+        }
       },
       experimentIds: ['12345'],
       runUuids: ['runn-1234-5678-9012', 'runn-1234-5678-9034'],
-      dispatch: jest.fn(),
+      dispatch: jest.fn()
     };
     minimalStore = mockStore({
       entities: {},
-      apis: jest.fn((key) => {
+      apis: jest.fn(key => {
         return {};
-      }),
+      })
     });
   });
 
@@ -44,7 +48,7 @@ describe('CompareRunPage', () => {
         <BrowserRouter>
           <CompareRunPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find(CompareRunPage).length).toBe(1);
   });

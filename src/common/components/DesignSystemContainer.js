@@ -3,7 +3,7 @@ import { DesignSystemProvider } from '@databricks/design-system';
 import { message } from 'antd';
 import PropTypes from 'prop-types';
 
-const isInsideShadowDOM = (element) =>
+const isInsideShadowDOM = element =>
   element instanceof window.Node && element.getRootNode() !== document;
 
 /**
@@ -11,14 +11,14 @@ const isInsideShadowDOM = (element) =>
  * in the context of the Shadow DOM and if true, provides dedicated
  * DOM element for the purpose of housing modals/popups there.
  */
-export const DesignSystemContainer = (props) => {
+export const DesignSystemContainer = props => {
   const modalContainerElement = useRef();
   const { children } = props;
 
   useEffect(() => {
     if (isInsideShadowDOM(modalContainerElement.current)) {
       message.config({
-        getContainer: () => modalContainerElement.current,
+        getContainer: () => modalContainerElement.current
       });
     }
   }, []);
@@ -39,5 +39,5 @@ export const DesignSystemContainer = (props) => {
 };
 
 DesignSystemContainer.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };

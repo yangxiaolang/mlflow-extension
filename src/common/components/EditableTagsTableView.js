@@ -13,42 +13,47 @@ export class EditableTagsTableViewImpl extends Component {
     handleSaveEdit: PropTypes.func.isRequired,
     handleDeleteTag: PropTypes.func.isRequired,
     isRequestPending: PropTypes.bool.isRequired,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
-    innerRef: PropTypes.any,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired,
+    innerRef: PropTypes.any
   };
 
   tableColumns = [
     {
       title: this.props.intl.formatMessage({
         defaultMessage: 'Name',
-        description: 'Column title for name column in editable tags table view in MLflow',
+        description:
+          'Column title for name column in editable tags table view in MLflow'
       }),
       dataIndex: 'name',
-      width: 200,
+      width: 200
     },
     {
       title: this.props.intl.formatMessage({
         defaultMessage: 'Value',
-        description: 'Column title for value column in editable tags table view in MLflow',
+        description:
+          'Column title for value column in editable tags table view in MLflow'
       }),
       dataIndex: 'value',
       width: 200,
-      editable: true,
-    },
+      editable: true
+    }
   ];
 
   getData = () =>
     _.sortBy(
-      Utils.getVisibleTagValues(this.props.tags).map((values) => ({
+      Utils.getVisibleTagValues(this.props.tags).map(values => ({
         key: values[0],
         name: values[0],
-        value: values[1],
+        value: values[1]
       })),
-      'name',
+      'name'
     );
 
   getTagNamesAsSet = () =>
-    new Set(Utils.getVisibleTagValues(this.props.tags).map((values) => values[0]));
+    new Set(
+      Utils.getVisibleTagValues(this.props.tags).map(values => values[0])
+    );
 
   tagNameValidator = (rule, value, callback) => {
     const tagNamesSet = this.getTagNamesAsSet();
@@ -57,19 +62,25 @@ export class EditableTagsTableViewImpl extends Component {
         ? this.props.intl.formatMessage(
             {
               defaultMessage: 'Tag "{value}" already exists.',
-              description: 'Validation message for tags that already exist in tags table in MLflow',
+              description:
+                'Validation message for tags that already exist in tags table in MLflow'
             },
             {
-              value: value,
-            },
+              value: value
+            }
           )
-        : undefined,
+        : undefined
     );
   };
 
   render() {
-    const { isRequestPending, handleSaveEdit, handleDeleteTag, handleAddTag, innerRef } =
-      this.props;
+    const {
+      isRequestPending,
+      handleSaveEdit,
+      handleDeleteTag,
+      handleAddTag,
+      innerRef
+    } = this.props;
 
     return (
       <>
@@ -79,47 +90,57 @@ export class EditableTagsTableViewImpl extends Component {
           onSaveEdit={handleSaveEdit}
           onDelete={handleDeleteTag}
         />
-        <Spacer size='small' />
+        <Spacer size="small" />
         <div>
-          <Form ref={innerRef} layout='inline' onFinish={handleAddTag} css={styles.form}>
+          <Form
+            ref={innerRef}
+            layout="inline"
+            onFinish={handleAddTag}
+            css={styles.form}
+          >
             <Form.Item
-              name='name'
+              name="name"
               rules={[
                 {
                   required: true,
                   message: this.props.intl.formatMessage({
                     defaultMessage: 'Name is required.',
                     description:
-                      'Error message for name requirement in editable tags table view in MLflow',
+                      'Error message for name requirement in editable tags table view in MLflow'
                   }),
-                  validator: this.tagNameValidator,
-                },
+                  validator: this.tagNameValidator
+                }
               ]}
             >
               <Input
-                aria-label='tag name'
+                aria-label="tag name"
                 placeholder={this.props.intl.formatMessage({
                   defaultMessage: 'Name',
                   description:
-                    'Default text for name placeholder in editable tags table form in MLflow',
+                    'Default text for name placeholder in editable tags table form in MLflow'
                 })}
               />
             </Form.Item>
-            <Form.Item name='value' rules={[]}>
+            <Form.Item name="value" rules={[]}>
               <Input
-                aria-label='tag value'
+                aria-label="tag value"
                 placeholder={this.props.intl.formatMessage({
                   defaultMessage: 'Value',
                   description:
-                    'Default text for value placeholder in editable tags table form in MLflow',
+                    'Default text for value placeholder in editable tags table form in MLflow'
                 })}
               />
             </Form.Item>
             <Form.Item>
-              <Button loading={isRequestPending} htmlType='submit' data-test-id='add-tag-button'>
+              <Button
+                loading={isRequestPending}
+                htmlType="submit"
+                data-test-id="add-tag-button"
+              >
                 <FormattedMessage
-                  defaultMessage='Add'
-                  description='Add button text in editable tags table view in MLflow'
+                  defaultMessage="Add"
+                  id="4idqpX"
+                  description="Add button text in editable tags table view in MLflow"
                 />
               </Button>
             </Form.Item>
@@ -131,7 +152,7 @@ export class EditableTagsTableViewImpl extends Component {
 }
 
 const styles = {
-  form: (theme) => ({ '& > div': { marginRight: theme.spacing.sm } }),
+  form: theme => ({ '& > div': { marginRight: theme.spacing.sm } })
 };
 
 export const EditableTagsTableView = injectIntl(EditableTagsTableViewImpl);

@@ -35,7 +35,9 @@ export class ErrorWrapper {
     if (this.textJson) {
       if (this.textJson.error_code && this.textJson.message) {
         const message = this.textJson.error_code + ': ' + this.textJson.message;
-        return this.textJson.stack_trace ? `${message}\n\n${this.textJson.stack_trace}` : message;
+        return this.textJson.stack_trace
+          ? `${message}\n\n${this.textJson.stack_trace}`
+          : message;
       } else {
         return this.textJson.message || 'Request Failed';
       }

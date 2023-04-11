@@ -17,7 +17,7 @@ export class DeleteExperimentModalImpl extends Component {
     experimentName: PropTypes.string.isRequired,
     deleteExperimentApi: PropTypes.func.isRequired,
     listExperimentsApi: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   };
 
   handleSubmit = () => {
@@ -33,7 +33,9 @@ export class DeleteExperimentModalImpl extends Component {
             // send it to root
             this.props.history.push(Routes.rootRoute);
           } else {
-            const experimentIds = activeExperimentIds.filter((eid) => eid !== experimentId);
+            const experimentIds = activeExperimentIds.filter(
+              eid => eid !== experimentId
+            );
             const route =
               experimentIds.length === 1
                 ? Routes.getExperimentPageRoute(experimentIds[0])
@@ -43,7 +45,7 @@ export class DeleteExperimentModalImpl extends Component {
         }
       })
       .then(() => this.props.listExperimentsApi(deleteExperimentRequestId))
-      .catch((e) => {
+      .catch(e => {
         Utils.logErrorAndNotifyUser(e);
       });
 
@@ -61,14 +63,15 @@ export class DeleteExperimentModalImpl extends Component {
           <div>
             <p>
               <b>
-                Experiment "{this.props.experimentName}" (Experiment ID: {this.props.experimentId})
-                will be deleted.
+                Experiment "{this.props.experimentName}" (Experiment ID:{' '}
+                {this.props.experimentId}) will be deleted.
               </b>
             </p>
             {process.env.SHOW_GDPR_PURGING_MESSAGES === 'true' ? (
               <p>
-                Deleted experiments are restorable for 30 days, after which they are purged along
-                with their associated runs, including metrics, params, tags, and artifacts.
+                Deleted experiments are restorable for 30 days, after which they
+                are purged along with their associated runs, including metrics,
+                params, tags, and artifacts.
               </p>
             ) : (
               ''
@@ -83,9 +86,9 @@ export class DeleteExperimentModalImpl extends Component {
 
 const mapDispatchToProps = {
   deleteExperimentApi,
-  listExperimentsApi,
+  listExperimentsApi
 };
 
 export const DeleteExperimentModal = withRouter(
-  connect(undefined, mapDispatchToProps)(DeleteExperimentModalImpl),
+  connect(undefined, mapDispatchToProps)(DeleteExperimentModalImpl)
 );

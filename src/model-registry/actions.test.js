@@ -26,11 +26,15 @@ describe('action tests', () => {
   });
 
   test('double quotes', () => {
-    expect(resolveFilterValue('the "best" model')).toEqual('\'the "best" model\'');
+    expect(resolveFilterValue('the "best" model')).toEqual(
+      '\'the "best" model\''
+    );
   });
 
   test('double quotes with wildcard', () => {
-    expect(resolveFilterValue('the "best" model', true)).toEqual('\'%the "best" model%\'');
+    expect(resolveFilterValue('the "best" model', true)).toEqual(
+      '\'%the "best" model%\''
+    );
   });
 
   test('percent character', () => {

@@ -15,7 +15,7 @@ describe('ModelVersionTable', () => {
     minimalProps = {
       modelName: 'Model A',
       modelVersions: [],
-      onChange: jest.fn(),
+      onChange: jest.fn()
     };
   });
 
@@ -23,7 +23,7 @@ describe('ModelVersionTable', () => {
     wrapper = mountWithIntl(
       <BrowserRouter>
         <ModelVersionTable {...minimalProps} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.length).toBe(1);
   });
@@ -32,7 +32,7 @@ describe('ModelVersionTable', () => {
     wrapper = wrapper = mountWithIntl(
       <BrowserRouter>
         <ModelVersionTable {...minimalProps} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.find(`a[href="${RegisteringModelDocUrl}"]`)).toHaveLength(1);
   });
@@ -41,27 +41,47 @@ describe('ModelVersionTable', () => {
     const props = {
       ...minimalProps,
       modelVersions: [
-        mockModelVersionDetailed('Model A', 1, Stages.NONE, ModelVersionStatus.READY),
-        mockModelVersionDetailed('Model A', 2, Stages.PRODUCTION, ModelVersionStatus.READY),
-        mockModelVersionDetailed('Model A', 3, Stages.STAGING, ModelVersionStatus.READY),
-        mockModelVersionDetailed('Model A', 4, Stages.ARCHIVED, ModelVersionStatus.READY),
-      ],
+        mockModelVersionDetailed(
+          'Model A',
+          1,
+          Stages.NONE,
+          ModelVersionStatus.READY
+        ),
+        mockModelVersionDetailed(
+          'Model A',
+          2,
+          Stages.PRODUCTION,
+          ModelVersionStatus.READY
+        ),
+        mockModelVersionDetailed(
+          'Model A',
+          3,
+          Stages.STAGING,
+          ModelVersionStatus.READY
+        ),
+        mockModelVersionDetailed(
+          'Model A',
+          4,
+          Stages.ARCHIVED,
+          ModelVersionStatus.READY
+        )
+      ]
     };
     wrapper = mountWithIntl(
       <BrowserRouter>
         <ModelVersionTable {...props} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.find(Table).props().dataSource.length).toBe(4);
 
     const propsWithActive = {
       ...props,
-      activeStageOnly: true,
+      activeStageOnly: true
     };
     wrapper = mountWithIntl(
       <BrowserRouter>
         <ModelVersionTable {...propsWithActive} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.find(Table).props().dataSource.length).toBe(2);
   });

@@ -7,7 +7,7 @@ export const NOOP = () => {};
 
 export function deepFreeze(o) {
   Object.freeze(o);
-  Object.getOwnPropertyNames(o).forEach((prop) => {
+  Object.getOwnPropertyNames(o).forEach(prop => {
     if (
       o.hasOwnProperty(prop) &&
       o[prop] !== null &&
@@ -23,7 +23,7 @@ export function deepFreeze(o) {
 const defaultProvderProps = {
   locale: DEFAULT_LOCALE,
   defaultLocale: DEFAULT_LOCALE,
-  messages: {},
+  messages: {}
 };
 
 export function mountWithIntl(node, providerProps = {}) {
@@ -31,17 +31,19 @@ export function mountWithIntl(node, providerProps = {}) {
     wrappingComponent: IntlProvider,
     wrappingComponentProps: {
       ...defaultProvderProps,
-      ...providerProps,
-    },
+      ...providerProps
+    }
   });
 }
 
 export function shallowWithIntl(node, providerProps = {}) {
   const mergedProviderProps = {
     ...defaultProvderProps,
-    ...providerProps,
+    ...providerProps
   };
-  return shallow(<IntlProvider {...mergedProviderProps}>{node}</IntlProvider>).dive();
+  return shallow(
+    <IntlProvider {...mergedProviderProps}>{node}</IntlProvider>
+  ).dive();
 }
 
 export function shallowWithInjectIntl(node, providerProps = {}) {

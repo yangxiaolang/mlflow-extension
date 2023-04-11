@@ -3,7 +3,7 @@ import {
   CircleIcon as DuboisCircleIcon,
   CheckCircleBorderIcon,
   useDesignSystemTheme,
-  WarningFillIcon,
+  WarningFillIcon
 } from '@databricks/design-system';
 import { PropTypes } from 'prop-types';
 /**
@@ -12,13 +12,18 @@ import { PropTypes } from 'prop-types';
  * @param version
  * @returns {string}
  */
-export const getModelVersionKey = (modelName, version) => `${modelName}_${version}`;
+export const getModelVersionKey = (modelName, version) =>
+  `${modelName}_${version}`;
 
-export const getProtoField = (fieldName) => `${fieldName}`;
+export const getProtoField = fieldName => `${fieldName}`;
 
 export function ReadyIcon() {
   const { theme } = useDesignSystemTheme();
-  return <CheckCircleBorderIcon css={{ color: theme.colors.textValidationSuccess }} />;
+  return (
+    <CheckCircleBorderIcon
+      css={{ color: theme.colors.textValidationSuccess }}
+    />
+  );
 }
 
 export function FailedIcon() {
@@ -47,5 +52,5 @@ export function CircleIcon({ type }) {
   return <DuboisCircleIcon css={{ color, fontSize: 16 }} />;
 }
 CircleIcon.propTypes = {
-  type: PropTypes.oneOf(['FAILED', 'PENDING', 'READY']).isRequired,
+  type: PropTypes.oneOf(['FAILED', 'PENDING', 'READY']).isRequired
 };

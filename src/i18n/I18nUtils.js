@@ -25,7 +25,7 @@ export const I18nUtils = {
     const locale = I18nUtils.getCurrentLocale();
     return {
       locale,
-      messages: loadedMessages[locale] || {},
+      messages: loadedMessages[locale] || {}
     };
   },
 
@@ -35,7 +35,10 @@ export const I18nUtils = {
    */
   createIntlWithLocale() {
     const params = I18nUtils.getIntlProviderParams();
-    return createIntl({ locale: params.locale, messages: params.messages }, cache);
+    return createIntl(
+      { locale: params.locale, messages: params.messages },
+      cache
+    );
   },
 
   getCurrentLocale() {
@@ -67,10 +70,10 @@ export const I18nUtils = {
     const locales = [
       locale === DEFAULT_LOCALE ? undefined : DEFAULT_LOCALE,
       I18nUtils.getFallbackLocale(locale),
-      locale,
+      locale
     ].filter(Boolean);
     const results = await Promise.all(locales.map(loadMessages));
     loadedMessages[locale] = Object.assign({}, ...results);
     return loadedMessages[locale];
-  },
+  }
 };

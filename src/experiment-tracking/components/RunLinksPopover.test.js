@@ -18,7 +18,7 @@ describe('unit tests', () => {
       runItems: [],
       handleClose: jest.fn(),
       handleKeyDown: jest.fn(),
-      handleVisibleChange: jest.fn(),
+      handleVisibleChange: jest.fn()
     };
   });
 
@@ -36,21 +36,21 @@ describe('unit tests', () => {
           runId: 'runUuid1',
           name: 'run1',
           color: 'rgb(1, 1, 1)',
-          y: 0.1,
+          y: 0.1
         },
         {
           runId: 'runUuid2',
           name: 'run2',
           color: 'rgb(2, 2, 2)',
-          y: 0.2,
-        },
-      ],
+          y: 0.2
+        }
+      ]
     };
 
     wrapper = mount(
       <MemoryRouter>
         <RunLinksPopover {...props} />
-      </MemoryRouter>,
+      </MemoryRouter>
     ).find(RunLinksPopover);
 
     // The popover is attached to the document root and can't be found with wrapper.find.

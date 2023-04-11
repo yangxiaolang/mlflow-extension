@@ -1,10 +1,14 @@
-export const mockRegisteredModelDetailed = (name, latestVersions = [], tags = []) => {
+export const mockRegisteredModelDetailed = (
+  name,
+  latestVersions = [],
+  tags = []
+) => {
   return {
     creation_timestamp: 1571344731467,
     last_updated_timestamp: 1573581360069,
     latest_versions: latestVersions,
     name,
-    tags,
+    tags
   };
 };
 
@@ -16,7 +20,7 @@ export const mockModelVersionDetailed = (
   tags = [],
   run_link = undefined,
   run_id = 'b99a0fc567ae4d32994392c800c0b6ce',
-  user_id = 'richard@example.com',
+  user_id = 'richard@example.com'
 ) => {
   return {
     name,
@@ -32,12 +36,12 @@ export const mockModelVersionDetailed = (
     run_link: run_link,
     status,
     version,
-    tags,
+    tags
   };
 };
 
 export const mockGetFieldValue = (comment, archive) => {
-  return (key) => {
+  return key => {
     if (key === 'comment') {
       return comment;
     } else if (key === 'archiveExistingVersions') {

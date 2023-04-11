@@ -13,20 +13,20 @@ describe('SchemaTable', () => {
     minimalProps = {
       schema: {
         inputs: [],
-        outputs: [],
-      },
+        outputs: []
+      }
     };
     props = {
       schema: {
         inputs: [
           { name: 'column1', type: 'string' },
-          { name: 'column2', type: 'string' },
+          { name: 'column2', type: 'string' }
         ],
         outputs: [
           { name: 'score1', type: 'long' },
-          { name: 'score2', type: 'long' },
-        ],
-      },
+          { name: 'score2', type: 'long' }
+        ]
+      }
     };
   });
 
@@ -39,7 +39,7 @@ describe('SchemaTable', () => {
     wrapper = mountWithIntl(
       <BrowserRouter>
         <SchemaTable {...props} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.find(Table).length).toBe(1);
     expect(wrapper.find('.outer-table').find(Table).length).toBe(1);
@@ -58,7 +58,7 @@ describe('SchemaTable', () => {
     wrapper = mountWithIntl(
       <BrowserRouter>
         <SchemaTable {...props} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.find(Table).length).toBe(1);
     // click to render inputs table
@@ -80,7 +80,7 @@ describe('SchemaTable', () => {
     wrapper = mountWithIntl(
       <BrowserRouter>
         <SchemaTable {...props} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     // click to render outputs table
     expect(wrapper.find(Table).length).toBe(1);
@@ -102,7 +102,7 @@ describe('SchemaTable', () => {
     wrapper = mountWithIntl(
       <BrowserRouter>
         <SchemaTable {...props} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.find(Table).length).toBe(1);
     // click to render inputs and outputs table
@@ -129,22 +129,22 @@ describe('SchemaTable', () => {
           {
             name: 'TensorInput',
             type: 'tensor',
-            'tensor-spec': { dtype: 'float64', shape: [-1, 28, 28] },
-          },
+            'tensor-spec': { dtype: 'float64', shape: [-1, 28, 28] }
+          }
         ],
         outputs: [
           {
             name: 'TensorOutput',
             type: 'tensor',
-            'tensor-spec': { dtype: 'float64', shape: [-1] },
-          },
-        ],
-      },
+            'tensor-spec': { dtype: 'float64', shape: [-1] }
+          }
+        ]
+      }
     };
     wrapper = mountWithIntl(
       <BrowserRouter>
         <SchemaTable {...props} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     expect(wrapper.find(Table).length).toBe(1);
     // click to render inputs and outputs table
@@ -159,7 +159,9 @@ describe('SchemaTable', () => {
     expect(wrapper.html()).toContain('Name');
     expect(wrapper.html()).toContain('Type');
     expect(wrapper.html()).toContain('TensorInput');
-    expect(wrapper.html()).toContain('Tensor (dtype: float64, shape: [-1,28,28])');
+    expect(wrapper.html()).toContain(
+      'Tensor (dtype: float64, shape: [-1,28,28])'
+    );
     expect(wrapper.html()).toContain('TensorOutput');
     expect(wrapper.html()).toContain('Tensor (dtype: float64, shape: [-1])');
   });

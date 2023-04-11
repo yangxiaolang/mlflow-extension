@@ -6,9 +6,11 @@ export class ModelBuilder {
    */
   static extend(AnemicRecord, prototypeFuncs) {
     const FatRecord = class FatRecord extends AnemicRecord {};
-    Object.keys(prototypeFuncs).forEach((funcName) => {
+    Object.keys(prototypeFuncs).forEach(funcName => {
       if (FatRecord.prototype[funcName]) {
-        throw new Error(`Duplicate prototype function: ${funcName} already exists on the model.`);
+        throw new Error(
+          `Duplicate prototype function: ${funcName} already exists on the model.`
+        );
       }
       FatRecord.prototype[funcName] = prototypeFuncs[funcName];
     });

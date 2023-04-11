@@ -8,24 +8,26 @@ export const accessibilityOverrides = {
     color: '#2374bb',
 
     '&:hover, &:focus': {
-      color: '#005580',
-    },
+      color: '#005580'
+    }
   },
   '.ant-btn-primary': {
     borderColor: primaryBlue,
-    backgroundColor: primaryBlue,
+    backgroundColor: primaryBlue
   },
   '.ant-table-placeholder': {
-    color: gray600,
+    color: gray600
   },
   '.ant-tabs-nav .ant-tabs-tab-active': {
-    color: primaryBlue,
+    color: primaryBlue
   },
   '.ant-radio-button-wrapper-checked': {
     '&:not(.ant-radio-button-wrapper-disabled), &:first-child': {
-      color: primaryBlue,
-    },
-  },
+      color: primaryBlue
+    }
+  }
 };
 
-export const AccessibilityOverridesStyles = () => <Global styles={accessibilityOverrides} />;
+export const AccessibilityOverridesStyles = () => (
+  <Global styles={accessibilityOverrides} />
+);

@@ -17,17 +17,23 @@ export class RenameRunModalImpl extends Component {
     runName: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     setTagApi: PropTypes.func.isRequired,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired
   };
 
-  handleRenameRun = (values) => {
+  handleRenameRun = values => {
     // get value of input field
     const newRunName = values[NEW_NAME_FIELD];
 
     const tagKey = Utils.runNameTag;
     const setTagRequestId = getUUID();
 
-    return this.props.setTagApi(this.props.runUuid, tagKey, newRunName, setTagRequestId);
+    return this.props.setTagApi(
+      this.props.runUuid,
+      tagKey,
+      newRunName,
+      setTagRequestId
+    );
   };
 
   render() {
@@ -36,25 +42,29 @@ export class RenameRunModalImpl extends Component {
       <GenericInputModal
         title={this.props.intl.formatMessage({
           defaultMessage: 'Rename Run',
-          description: 'Modal title to rename the experiment run name',
+          description: 'Modal title to rename the experiment run name'
         })}
         okText={this.props.intl.formatMessage({
           defaultMessage: 'Save',
-          description: 'Modal button text to save the changes to rename the experiment run name',
+          description:
+            'Modal button text to save the changes to rename the experiment run name'
         })}
         isOpen={isOpen}
         handleSubmit={this.handleRenameRun}
         onClose={this.props.onClose}
       >
-        <RenameForm type='run' name={runName} visible={isOpen} />
+        <RenameForm type="run" name={runName} visible={isOpen} />
       </GenericInputModal>
     );
   }
 }
 
 const mapDispatchToProps = {
-  setTagApi,
+  setTagApi
 };
 
 export const RenameRunModalWithIntl = injectIntl(RenameRunModalImpl);
-export const RenameRunModal = connect(undefined, mapDispatchToProps)(RenameRunModalWithIntl);
+export const RenameRunModal = connect(
+  undefined,
+  mapDispatchToProps
+)(RenameRunModalWithIntl);

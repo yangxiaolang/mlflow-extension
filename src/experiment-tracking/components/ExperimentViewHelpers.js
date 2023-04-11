@@ -16,26 +16,28 @@ export function ExperimentNoteSection(props) {
     handleSubmitEditNote,
     startEditingDescription,
     noteInfo,
-    showNotesEditor,
+    showNotesEditor
   } = props;
   const content = noteInfo && noteInfo.content;
 
   return (
     <CollapsibleSection
       title={
-        <span className='ExperimentView-editDescriptionHeader'>
+        <span className="ExperimentView-editDescriptionHeader">
           <FormattedMessage
-            defaultMessage='Description'
-            description='Header for displaying notes for the experiment table'
+            defaultMessage="Description"
+            id="wDwAdX"
+            description="Header for displaying notes for the experiment table"
           />
           {!showNotesEditor && (
             <>
               {' '}
-              <Button type='link' onClick={startEditingDescription}>
+              <Button type="link" onClick={startEditingDescription}>
                 <FormattedMessage
-                  defaultMessage='Edit'
+                  defaultMessage="Edit"
+                  id="2YEXRM"
                   // eslint-disable-next-line max-len
-                  description='Text for the edit button next to the description section title on the experiment view page'
+                  description="Text for the edit button next to the description section title on the experiment view page"
                 />
               </Button>
             </>
@@ -44,7 +46,7 @@ export function ExperimentNoteSection(props) {
       }
       forceOpen={showNotesEditor}
       defaultCollapsed={!content}
-      data-test-id='experiment-notes-section'
+      data-test-id="experiment-notes-section"
     >
       <EditableNote
         defaultMarkdown={content}
@@ -61,20 +63,23 @@ ExperimentNoteSection.propTypes = {
   handleSubmitEditNote: PropTypes.func.isRequired,
   handleCancelEditNote: PropTypes.func.isRequired,
   showNotesEditor: PropTypes.bool,
-  noteInfo: PropTypes.object,
+  noteInfo: PropTypes.object
 };
 export class ArtifactLocation extends Component {
   static propTypes = {
     experiment: PropTypes.instanceOf(Experiment).isRequired,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
-    permissionsLearnMoreLinkUrl: PropTypes.string,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired,
+    permissionsLearnMoreLinkUrl: PropTypes.string
   };
   render() {
     const { artifact_location } = this.props.experiment;
     const label = this.props.intl.formatMessage({
       defaultMessage: 'Artifact Location',
-      description: 'Label for displaying the experiment artifact location',
+      description: 'Label for displaying the experiment artifact location'
     });
-    return <Descriptions.Item label={label}>{artifact_location}</Descriptions.Item>;
+    return (
+      <Descriptions.Item label={label}>{artifact_location}</Descriptions.Item>
+    );
   }
 }

@@ -1,7 +1,12 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { getExperiment, getParams, getRunInfo, getRunTags } from '../reducers/Reducers';
+import {
+  getExperiment,
+  getParams,
+  getRunInfo,
+  getRunTags
+} from '../reducers/Reducers';
 import { connect } from 'react-redux';
 import './RunView.css';
 import { HtmlTableView } from './HtmlTableView';
@@ -19,7 +24,10 @@ import { Button } from '@databricks/design-system';
 import { CollapsibleSection } from '../../common/components/CollapsibleSection';
 import { EditableNote } from '../../common/components/EditableNote';
 import { setTagApi, deleteTagApi } from '../actions';
-import { PageHeader, OverflowMenu } from '../../shared/building_blocks/PageHeader';
+import {
+  PageHeader,
+  OverflowMenu
+} from '../../shared/building_blocks/PageHeader';
 
 export class RunViewImpl extends Component {
   static propTypes = {
@@ -39,14 +47,15 @@ export class RunViewImpl extends Component {
     setTagApi: PropTypes.func.isRequired,
     deleteTagApi: PropTypes.func.isRequired,
     modelVersions: PropTypes.arrayOf(PropTypes.object),
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired
   };
 
   state = {
     showRunRenameModal: false,
     showNoteEditor: false,
     showTags: Utils.getVisibleTagValues(this.props.tags).length > 0,
-    isTagsRequestPending: false,
+    isTagsRequestPending: false
   };
 
   formRef = createRef();
@@ -64,7 +73,7 @@ export class RunViewImpl extends Component {
     this.setState({ showRunRenameModal: false });
   };
 
-  handleAddTag = (values) => {
+  handleAddTag = values => {
     const form = this.formRef.current;
     const { runUuid } = this.props;
 
@@ -75,13 +84,14 @@ export class RunViewImpl extends Component {
         this.setState({ isTagsRequestPending: false });
         form.resetFields();
       })
-      .catch((ex) => {
+      .catch(ex => {
         this.setState({ isTagsRequestPending: false });
         console.error(ex);
         const errorMessage = (
           <FormattedMessage
-            defaultMessage='Failed to add tag. Error: {errorTrace}'
-            description='Error message when add to tag feature fails'
+            defaultMessage="Failed to add tag. Error: {errorTrace}"
+            id="GrrT4e"
+            description="Error message when add to tag feature fails"
             values={{ errorTrace: ex.getUserVisibleError() }}
           />
         );
@@ -91,12 +101,13 @@ export class RunViewImpl extends Component {
 
   handleSaveEdit = ({ name, value }) => {
     const { runUuid } = this.props;
-    return this.props.setTagApi(runUuid, name, value).catch((ex) => {
+    return this.props.setTagApi(runUuid, name, value).catch(ex => {
       console.error(ex);
       const errorMessage = (
         <FormattedMessage
-          defaultMessage='Failed to set tag. Error: {errorTrace}'
-          description='Error message when updating or setting a tag feature fails'
+          defaultMessage="Failed to set tag. Error: {errorTrace}"
+          id="4MojW8"
+          description="Error message when updating or setting a tag feature fails"
           values={{ errorTrace: ex.getUserVisibleError() }}
         />
       );
@@ -106,12 +117,13 @@ export class RunViewImpl extends Component {
 
   handleDeleteTag = ({ name }) => {
     const { runUuid } = this.props;
-    return this.props.deleteTagApi(runUuid, name).catch((ex) => {
+    return this.props.deleteTagApi(runUuid, name).catch(ex => {
       console.error(ex);
       const errorMessage = (
         <FormattedMessage
-          defaultMessage='Failed to delete tag. Error: {errorTrace}'
-          description='Error message when deleting a tag feature fails'
+          defaultMessage="Failed to delete tag. Error: {errorTrace}"
+          id="8XT7z5"
+          description="Error message when deleting a tag feature fails"
           values={{ errorTrace: ex.getUserVisibleError() }}
         />
       );
@@ -139,7 +151,7 @@ export class RunViewImpl extends Component {
       }
       Object.values(params)
         .sort()
-        .forEach((p) => {
+        .forEach(p => {
           runCommand += ' -P ' + shellEscape(p.key + '=' + p.value);
         });
     }
@@ -150,13 +162,13 @@ export class RunViewImpl extends Component {
     this.setState({ showNoteEditor: false });
   };
 
-  handleSubmitEditNote = (note) => {
+  handleSubmitEditNote = note => {
     return this.props.handleSetRunTag(NOTE_CONTENT_TAG, note).then(() => {
       this.setState({ showNoteEditor: false });
     });
   };
 
-  startEditingDescription = (e) => {
+  startEditingDescription = e => {
     e.stopPropagation();
     this.setState({ showNoteEditor: true });
   };
@@ -181,20 +193,25 @@ export class RunViewImpl extends Component {
 
   getExperimentPageLink() {
     return this.props.hasComparedExperimentsBefore ? (
-      <Link to={Routes.getCompareExperimentsPageRoute(this.props.comparedExperimentIds)}>
+      <Link
+        to={Routes.getCompareExperimentsPageRoute(
+          this.props.comparedExperimentIds
+        )}
+      >
         <FormattedMessage
-          defaultMessage='Displaying Runs from {numExperiments} Experiments'
+          defaultMessage="Displaying Runs from {numExperiments} Experiments"
+          id="LLm5Bo"
           // eslint-disable-next-line max-len
-          description='Breadcrumb nav item to link to the compare-experiments page on compare runs page'
+          description="Breadcrumb nav item to link to the compare-experiments page on compare runs page"
           values={{
-            numExperiments: this.props.comparedExperimentIds.length,
+            numExperiments: this.props.comparedExperimentIds.length
           }}
         />
       </Link>
     ) : (
       <Link
         to={Routes.getExperimentPageRoute(this.props.experiment.experiment_id)}
-        data-test-id='experiment-runs-link'
+        data-test-id="experiment-runs-link"
       >
         {this.props.experiment.getName()}
       </Link>
@@ -202,29 +219,44 @@ export class RunViewImpl extends Component {
   }
 
   render() {
-    const { runUuid, run, params, tags, latestMetrics, getMetricPagePath, modelVersions } =
-      this.props;
+    const {
+      runUuid,
+      run,
+      params,
+      tags,
+      latestMetrics,
+      getMetricPagePath,
+      modelVersions
+    } = this.props;
     const { showNoteEditor, isTagsRequestPending } = this.state;
     const noteInfo = NoteInfo.fromTags(tags);
-    const startTime = run.getStartTime() ? Utils.formatTimestamp(run.getStartTime()) : '(unknown)';
+    const startTime = run.getStartTime()
+      ? Utils.formatTimestamp(run.getStartTime())
+      : '(unknown)';
     const duration = Utils.getDuration(run.getStartTime(), run.getEndTime());
     const status = RunViewImpl.getRunStatusDisplayName(run.getStatus());
     const lifecycleStage = run.getLifecycleStage();
-    const queryParams = window.location && window.location.search ? window.location.search : '';
+    const queryParams =
+      window.location && window.location.search ? window.location.search : '';
     const runCommand = this.getRunCommand();
     const noteContent = noteInfo && noteInfo.content;
-    const breadcrumbs = [this.getExperimentPageLink(), this.props.runDisplayName];
+    const breadcrumbs = [
+      this.getExperimentPageLink(),
+      this.props.runDisplayName
+    ];
     /* eslint-disable prefer-const */
     let feedbackForm;
     const plotTitle = this.props.intl.formatMessage({
       defaultMessage: 'Plot chart',
-      description: 'Link to the view the plot chart for the experiment run',
+      description: 'Link to the view the plot chart for the experiment run'
     });
 
     return (
-      <div className='RunView'>
+      <div className="RunView">
         <PageHeader
-          title={<span data-test-id='runs-header'>{this.props.runDisplayName}</span>}
+          title={
+            <span data-test-id="runs-header">{this.props.runDisplayName}</span>
+          }
           breadcrumbs={breadcrumbs}
           feedbackForm={feedbackForm}
         >
@@ -235,15 +267,16 @@ export class RunViewImpl extends Component {
                 onClick: this.handleRenameRunClick,
                 itemName: (
                   <FormattedMessage
-                    defaultMessage='Rename'
-                    description='Menu item to rename an experiment run'
+                    defaultMessage="Rename"
+                    id="fv7vQf"
+                    description="Menu item to rename an experiment run"
                   />
-                ),
-              },
+                )
+              }
             ]}
           />
         </PageHeader>
-        <div className='header-container'>
+        <div className="header-container">
           <RenameRunModal
             runUuid={runUuid}
             onClose={this.hideRenameRunModal}
@@ -253,11 +286,11 @@ export class RunViewImpl extends Component {
         </div>
 
         {/* Metadata List */}
-        <Descriptions className='metadata-list'>
+        <Descriptions className="metadata-list">
           <Descriptions.Item
             label={this.props.intl.formatMessage({
               defaultMessage: 'Run ID',
-              description: 'Label for displaying the ID of the experiment run',
+              description: 'Label for displaying the ID of the experiment run'
             })}
           >
             {runUuid}
@@ -265,7 +298,8 @@ export class RunViewImpl extends Component {
           <Descriptions.Item
             label={this.props.intl.formatMessage({
               defaultMessage: 'Date',
-              description: 'Label for displaying the start time of the experiment ran',
+              description:
+                'Label for displaying the start time of the experiment ran'
             })}
           >
             {startTime}
@@ -273,7 +307,8 @@ export class RunViewImpl extends Component {
           <Descriptions.Item
             label={this.props.intl.formatMessage({
               defaultMessage: 'Source',
-              description: 'Label for displaying source notebook of the experiment run',
+              description:
+                'Label for displaying source notebook of the experiment run'
             })}
           >
             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -285,7 +320,8 @@ export class RunViewImpl extends Component {
             <Descriptions.Item
               label={this.props.intl.formatMessage({
                 defaultMessage: 'Git Commit',
-                description: 'Label for displaying the tag or the commit hash of the git commit',
+                description:
+                  'Label for displaying the tag or the commit hash of the git commit'
               })}
             >
               {Utils.renderVersion(tags, false)}
@@ -295,7 +331,7 @@ export class RunViewImpl extends Component {
             <Descriptions.Item
               label={this.props.intl.formatMessage({
                 defaultMessage: 'Entry Point',
-                description: 'Label for displaying entry point of the project',
+                description: 'Label for displaying entry point of the project'
               })}
             >
               {Utils.getEntryPointName(tags) || 'main'}
@@ -304,7 +340,8 @@ export class RunViewImpl extends Component {
           <Descriptions.Item
             label={this.props.intl.formatMessage({
               defaultMessage: 'User',
-              description: 'Label for displaying the user who created the experiment run',
+              description:
+                'Label for displaying the user who created the experiment run'
             })}
           >
             {Utils.getUser(run, tags)}
@@ -313,7 +350,8 @@ export class RunViewImpl extends Component {
             <Descriptions.Item
               label={this.props.intl.formatMessage({
                 defaultMessage: 'Duration',
-                description: 'Label for displaying the duration of the experiment run',
+                description:
+                  'Label for displaying the duration of the experiment run'
               })}
             >
               {duration}
@@ -324,7 +362,7 @@ export class RunViewImpl extends Component {
               defaultMessage: 'Status',
               description:
                 // eslint-disable-next-line max-len
-                'Label for displaying status of the experiment run to see if its running or finished',
+                'Label for displaying status of the experiment run to see if its running or finished'
             })}
           >
             {status}
@@ -335,7 +373,7 @@ export class RunViewImpl extends Component {
                 defaultMessage: 'Lifecycle Stage',
                 description:
                   // eslint-disable-next-line max-len
-                  'Label for displaying lifecycle stage of the experiment run to see if its active or deleted',
+                  'Label for displaying lifecycle stage of the experiment run to see if its active or deleted'
               })}
             >
               {lifecycleStage}
@@ -346,13 +384,13 @@ export class RunViewImpl extends Component {
               label={this.props.intl.formatMessage({
                 defaultMessage: 'Parent Run',
                 description:
-                  'Label for displaying a link to the parent experiment run if any present',
+                  'Label for displaying a link to the parent experiment run if any present'
               })}
             >
               <Link
                 to={Routes.getRunPageRoute(
                   this.props.experimentId,
-                  tags['mlflow.parentRunId'].value,
+                  tags['mlflow.parentRunId'].value
                 )}
               >
                 {tags['mlflow.parentRunId'].value}
@@ -363,18 +401,23 @@ export class RunViewImpl extends Component {
             <Descriptions.Item
               label={this.props.intl.formatMessage({
                 defaultMessage: 'Job Output',
-                description: 'Label for displaying the output logs for the experiment run job',
+                description:
+                  'Label for displaying the output logs for the experiment run job'
               })}
             >
               {/* Reported during ESLint upgrade */}
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
               <a
-                href={Utils.setQueryParams(tags['mlflow.databricks.runURL'].value, queryParams)}
-                target='_blank'
+                href={Utils.setQueryParams(
+                  tags['mlflow.databricks.runURL'].value,
+                  queryParams
+                )}
+                target="_blank"
               >
                 <FormattedMessage
-                  defaultMessage='Logs'
-                  description='Link to the logs for the job output'
+                  defaultMessage="Logs"
+                  id="awLbAc"
+                  description="Link to the logs for the job output"
                 />
               </a>
             </Descriptions.Item>
@@ -382,40 +425,46 @@ export class RunViewImpl extends Component {
         </Descriptions>
 
         {/* Page Sections */}
-        <div className='RunView-info'>
+        <div className="RunView-info">
           {runCommand ? (
             <CollapsibleSection
               title={this.props.intl.formatMessage({
                 defaultMessage: 'Run Command',
                 description:
                   // eslint-disable-next-line max-len
-                  'Label for the collapsible area to display the run command used for the experiment run',
+                  'Label for the collapsible area to display the run command used for the experiment run'
               })}
               onChange={this.handleCollapseChange('runCommand')}
-              data-test-id='run-command-section'
+              data-test-id="run-command-section"
             >
-              <textarea className='run-command text-area' readOnly value={runCommand} />
+              <textarea
+                className="run-command text-area"
+                readOnly
+                value={runCommand}
+              />
             </CollapsibleSection>
           ) : null}
           <CollapsibleSection
             title={
-              <span className='RunView-editDescriptionHeader'>
+              <span className="RunView-editDescriptionHeader">
                 <FormattedMessage
-                  defaultMessage='Description'
-                  description='Label for the notes editable content for the experiment run'
+                  defaultMessage="Description"
+                  id="a3rEfZ"
+                  description="Label for the notes editable content for the experiment run"
                 />
                 {!showNoteEditor && (
                   <>
                     {' '}
                     <Button
-                      type='link'
+                      type="link"
                       onClick={this.startEditingDescription}
-                      data-test-id='edit-description-button'
+                      data-test-id="edit-description-button"
                     >
                       <FormattedMessage
-                        defaultMessage='Edit'
+                        defaultMessage="Edit"
+                        id="d/cZ34"
                         // eslint-disable-next-line max-len
-                        description='Text for the edit button next to the description section title on the run view'
+                        description="Text for the edit button next to the description section title on the run view"
                       />
                     </Button>
                   </>
@@ -425,7 +474,7 @@ export class RunViewImpl extends Component {
             forceOpen={showNoteEditor}
             defaultCollapsed={!noteContent}
             onChange={this.handleCollapseChange('notes')}
-            data-test-id='run-notes-section'
+            data-test-id="run-notes-section"
           >
             <EditableNote
               defaultMarkdown={noteContent}
@@ -441,34 +490,34 @@ export class RunViewImpl extends Component {
                 defaultMessage: 'Parameters',
                 description:
                   // eslint-disable-next-line max-len
-                  'Label for the collapsible area to display the parameters used during the experiment run',
+                  'Label for the collapsible area to display the parameters used during the experiment run'
               }),
-              getParamValues(params).length,
+              getParamValues(params).length
             )}
             onChange={this.handleCollapseChange('parameters')}
-            data-test-id='run-parameters-section'
+            data-test-id="run-parameters-section"
           >
             <HtmlTableView
-              testId='params-table'
+              testId="params-table"
               columns={[
                 {
                   title: this.props.intl.formatMessage({
                     defaultMessage: 'Name',
                     description:
                       // eslint-disable-next-line max-len
-                      'Column title for name column for displaying the params name for the experiment run',
+                      'Column title for name column for displaying the params name for the experiment run'
                   }),
-                  dataIndex: 'name',
+                  dataIndex: 'name'
                 },
                 {
                   title: this.props.intl.formatMessage({
                     defaultMessage: 'Value',
                     description:
                       // eslint-disable-next-line max-len
-                      'Column title for value column for displaying the value of the params for the experiment run ',
+                      'Column title for value column for displaying the value of the params for the experiment run '
                   }),
-                  dataIndex: 'value',
-                },
+                  dataIndex: 'value'
+                }
               ]}
               values={getParamValues(params)}
             />
@@ -480,51 +529,56 @@ export class RunViewImpl extends Component {
                 defaultMessage: 'Metrics',
                 description:
                   // eslint-disable-next-line max-len
-                  'Label for the collapsible area to display the output metrics after the experiment run',
+                  'Label for the collapsible area to display the output metrics after the experiment run'
               }),
-              getMetricValues(latestMetrics, getMetricPagePath, plotTitle).length,
+              getMetricValues(latestMetrics, getMetricPagePath, plotTitle)
+                .length
             )}
             onChange={this.handleCollapseChange('metrics')}
-            data-test-id='run-metrics-section'
+            data-test-id="run-metrics-section"
           >
             <HtmlTableView
-              testId='metrics-table'
+              testId="metrics-table"
               columns={[
                 {
                   title: this.props.intl.formatMessage({
                     defaultMessage: 'Name',
                     description:
                       // eslint-disable-next-line max-len
-                      'Column title for name column for displaying the metrics name for the experiment run',
+                      'Column title for name column for displaying the metrics name for the experiment run'
                   }),
-                  dataIndex: 'name',
+                  dataIndex: 'name'
                 },
                 {
                   title: this.props.intl.formatMessage({
                     defaultMessage: 'Value',
                     description:
                       // eslint-disable-next-line max-len
-                      'Column title for value column for displaying the value of the metrics for the experiment run ',
+                      'Column title for value column for displaying the value of the metrics for the experiment run '
                   }),
-                  dataIndex: 'value',
-                },
+                  dataIndex: 'value'
+                }
               ]}
-              values={getMetricValues(latestMetrics, getMetricPagePath, plotTitle)}
+              values={getMetricValues(
+                latestMetrics,
+                getMetricPagePath,
+                plotTitle
+              )}
             />
           </CollapsibleSection>
-          <div data-test-id='tags-section'>
+          <div data-test-id="tags-section">
             <CollapsibleSection
               title={this.renderSectionTitle(
                 this.props.intl.formatMessage({
                   defaultMessage: 'Tags',
                   description:
-                    'Label for the collapsible area to display the tags for the experiment run',
+                    'Label for the collapsible area to display the tags for the experiment run'
                 }),
-                Utils.getVisibleTagValues(tags).length,
+                Utils.getVisibleTagValues(tags).length
               )}
               defaultCollapsed
               onChange={this.handleCollapseChange('tags')}
-              data-test-id='run-tags-section'
+              data-test-id="run-tags-section"
             >
               <EditableTagsTableView
                 innerRef={this.formRef}
@@ -541,12 +595,16 @@ export class RunViewImpl extends Component {
               defaultMessage: 'Artifacts',
               description:
                 // eslint-disable-next-line max-len
-                'Label for the collapsible area to display the artifacts page',
+                'Label for the collapsible area to display the artifacts page'
             })}
             onChange={this.handleCollapseChange('artifacts')}
-            data-test-id='run-artifacts-section'
+            data-test-id="run-artifacts-section"
           >
-            <ArtifactPage runUuid={runUuid} modelVersions={modelVersions} runTags={tags} />
+            <ArtifactPage
+              runUuid={runUuid}
+              modelVersions={modelVersions}
+              runTags={tags}
+            />
           </CollapsibleSection>
         </div>
       </div>
@@ -564,7 +622,8 @@ export class RunViewImpl extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { comparedExperimentIds, hasComparedExperimentsBefore } = state.compareExperiments;
+  const { comparedExperimentIds, hasComparedExperimentsBefore } =
+    state.compareExperiments;
   const { runUuid, experimentId } = ownProps;
   const run = getRunInfo(runUuid, state);
   const experiment = getExperiment(experimentId, state);
@@ -582,20 +641,27 @@ const mapStateToProps = (state, ownProps) => {
     runDisplayName,
     runName,
     comparedExperimentIds,
-    hasComparedExperimentsBefore,
+    hasComparedExperimentsBefore
   };
 };
 const mapDispatchToProps = { setTagApi, deleteTagApi };
 
 export const RunViewImplWithIntl = injectIntl(RunViewImpl);
-export const RunView = connect(mapStateToProps, mapDispatchToProps)(RunViewImplWithIntl);
+export const RunView = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RunViewImplWithIntl);
 
 // Private helper functions.
 
-const getParamValues = (params) => {
+const getParamValues = params => {
   return Object.values(params)
     .sort()
-    .map((p, index) => ({ key: `params-${index}`, name: p.getKey(), value: p.getValue() }));
+    .map((p, index) => ({
+      key: `params-${index}`,
+      name: p.getKey(),
+      value: p.getValue()
+    }));
 };
 
 const getMetricValues = (latestMetrics, getMetricPagePath, plotTitle) => {
@@ -607,15 +673,15 @@ const getMetricValues = (latestMetrics, getMetricPagePath, plotTitle) => {
         name: (
           <Link to={getMetricPagePath(key)} title={plotTitle}>
             {key}
-            <i className='fas fa-line-chart' style={{ paddingLeft: '6px' }} />
+            <i className="fas fa-line-chart" style={{ paddingLeft: '6px' }} />
           </Link>
         ),
-        value: <span title={value}>{Utils.formatMetric(value)}</span>,
+        value: <span title={value}>{Utils.formatMetric(value)}</span>
       };
     });
 };
 
-const shellEscape = (str) => {
+const shellEscape = str => {
   if (/["\r\n\t ]/.test(str)) {
     return '"' + str.replace(/"/g, '\\"') + '"';
   }

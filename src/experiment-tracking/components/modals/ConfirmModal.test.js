@@ -17,7 +17,7 @@ describe('ConfirmModal', () => {
       onClose: onCloseMock,
       title: 'testTitle',
       helpText: 'testHelp',
-      confirmButtonText: 'confirmTest',
+      confirmButtonText: 'confirmTest'
     };
     wrapper = shallow(<ConfirmModal {...minimalProps} />);
   });
@@ -37,7 +37,7 @@ describe('ConfirmModal', () => {
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 
-  test('test handleSubmitWrapper closes modal in both success & failure cases', (done) => {
+  test('test handleSubmitWrapper closes modal in both success & failure cases', done => {
     const promise = wrapper.find(Modal).prop('onOk')();
     promise.finally(() => {
       expect(onCloseMock).toHaveBeenCalledTimes(1);
@@ -51,7 +51,7 @@ describe('ConfirmModal', () => {
           window.setTimeout(() => {
             reject();
           }, 100);
-        }),
+        })
     );
     const failProps = { ...minimalProps, handleSubmit: mockFailHandleSubmit };
     const failWrapper = shallow(<ConfirmModal {...failProps} />);

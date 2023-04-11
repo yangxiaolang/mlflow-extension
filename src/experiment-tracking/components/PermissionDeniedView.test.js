@@ -6,7 +6,8 @@ describe('PermissionDeniedView', () => {
   let wrapper;
   let minimalProps;
   const mockErrorMessage = 'This is a mock error message';
-  const defaultMessage = 'The current user does not have permission to view this page.';
+  const defaultMessage =
+    'The current user does not have permission to view this page.';
 
   beforeEach(() => {
     minimalProps = { errorMessage: mockErrorMessage };
@@ -23,6 +24,8 @@ describe('PermissionDeniedView', () => {
 
   test('should render default message in h2 when no error message is passed', () => {
     wrapper = shallow(<PermissionDeniedView />);
-    expect(wrapper.find('[data-testid="error-message"]').text()).toBe(defaultMessage);
+    expect(wrapper.find('[data-testid="error-message"]').text()).toBe(
+      defaultMessage
+    );
   });
 });

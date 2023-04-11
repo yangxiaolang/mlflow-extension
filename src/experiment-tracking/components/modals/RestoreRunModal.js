@@ -16,16 +16,17 @@ export class RestoreRunModalImpl extends Component {
     onClose: PropTypes.func.isRequired,
     selectedRunIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     openErrorModal: PropTypes.func.isRequired,
-    restoreRunApi: PropTypes.func.isRequired,
+    restoreRunApi: PropTypes.func.isRequired
   };
 
   handleSubmit() {
     const restorePromises = [];
-    this.props.selectedRunIds.forEach((runId) => {
+    this.props.selectedRunIds.forEach(runId => {
       restorePromises.push(this.props.restoreRunApi(runId));
     });
-    return Promise.all(restorePromises).catch((e) => {
-      const errorMessage = 'While restoring an experiment run, an error occurred.';
+    return Promise.all(restorePromises).catch(e => {
+      const errorMessage =
+        'While restoring an experiment run, an error occurred.';
       this.props.openErrorModal(errorMessage);
     });
   }
@@ -38,7 +39,10 @@ export class RestoreRunModalImpl extends Component {
         onClose={this.props.onClose}
         handleSubmit={this.handleSubmit}
         title={`Restore Experiment ${Utils.pluralize('Run', number)}`}
-        helpText={`${number} experiment ${Utils.pluralize('run', number)} will be restored.`}
+        helpText={`${number} experiment ${Utils.pluralize(
+          'run',
+          number
+        )} will be restored.`}
         confirmButtonText={'Restore'}
       />
     );
@@ -47,7 +51,7 @@ export class RestoreRunModalImpl extends Component {
 
 const mapDispatchToProps = {
   restoreRunApi,
-  openErrorModal,
+  openErrorModal
 };
 
 export default connect(null, mapDispatchToProps)(RestoreRunModalImpl);

@@ -30,7 +30,7 @@ describe('ExperimentRunsTableCompactView', () => {
       handleLoadMoreRuns: () => {},
       loadingMore: false,
       categorizedUncheckedKeys: {},
-      modelVersionsByRunUuid: {},
+      modelVersionsByRunUuid: {}
     };
     wrapper = shallow(<ExperimentRunsTableCompactView {...minimalProps} />);
   });

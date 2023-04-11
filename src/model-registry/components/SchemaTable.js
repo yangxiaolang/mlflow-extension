@@ -13,7 +13,8 @@ export class SchemaTableImpl extends React.PureComponent {
   static propTypes = {
     schema: PropTypes.object,
     defaultExpandAllRows: PropTypes.bool,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired
   };
 
   renderSchemaTable = (schemaData, schemaType) => {
@@ -22,20 +23,20 @@ export class SchemaTableImpl extends React.PureComponent {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        width: '50%',
+        width: '50%'
       },
       {
         title: 'Type',
         dataIndex: 'type',
         key: 'type',
-        width: '50%',
-      },
+        width: '50%'
+      }
     ];
 
     return (
       <Table
-        className='inner-table'
-        size='middle'
+        className="inner-table"
+        size="middle"
         showHeader={false}
         pagination={false}
         locale={{ emptyText: `No schema ${schemaType}.` }}
@@ -46,7 +47,7 @@ export class SchemaTableImpl extends React.PureComponent {
     );
   };
 
-  getSchemaTypeRepr = (schemaTypeSpec) => {
+  getSchemaTypeRepr = schemaTypeSpec => {
     if (schemaTypeSpec.type === MODEL_SCHEMA_TENSOR_TYPE) {
       return (
         `Tensor (dtype: ${schemaTypeSpec['tensor-spec'].dtype},` +
@@ -57,20 +58,20 @@ export class SchemaTableImpl extends React.PureComponent {
     }
   };
 
-  getSchemaRowData = (schemaData) => {
+  getSchemaRowData = schemaData => {
     const rowData = [];
     schemaData.forEach((row, index) => {
       rowData[index] = {
         key: index,
         name: row.name ? row.name : '-',
-        type: row.type ? this.getSchemaTypeRepr(row) : '-',
+        type: row.type ? this.getSchemaTypeRepr(row) : '-'
       };
     });
     return rowData;
   };
 
-  renderSectionHeader = (text) => {
-    return <strong className='primary-text'>{text}</strong>;
+  renderSectionHeader = text => {
+    return <strong className="primary-text">{text}</strong>;
   };
 
   render() {
@@ -83,51 +84,53 @@ export class SchemaTableImpl extends React.PureComponent {
             name: this.props.intl.formatMessage(
               {
                 defaultMessage: 'Inputs ({numInputs})',
-                description: 'Input section header for schema table in model version page',
+                description:
+                  'Input section header for schema table in model version page'
               },
               {
-                numInputs: schema.inputs.length,
-              },
+                numInputs: schema.inputs.length
+              }
             ),
             type: '',
-            table: this.renderSchemaTable(schema.inputs, 'inputs'),
+            table: this.renderSchemaTable(schema.inputs, 'inputs')
           },
           {
             key: '2',
             name: this.props.intl.formatMessage(
               {
                 defaultMessage: 'Outputs ({numOutputs})',
-                description: 'Input section header for schema table in model version page',
+                description:
+                  'Input section header for schema table in model version page'
               },
               {
-                numOutputs: schema.outputs.length,
-              },
+                numOutputs: schema.outputs.length
+              }
             ),
             type: '',
-            table: this.renderSchemaTable(schema.outputs, 'outputs'),
-          },
+            table: this.renderSchemaTable(schema.outputs, 'outputs')
+          }
         ]
       : [];
 
     return (
       <div css={schemaTableStyles}>
         <Table
-          key='schema-table'
-          className='outer-table'
-          rowClassName='section-header-row'
-          size='middle'
+          key="schema-table"
+          className="outer-table"
+          rowClassName="section-header-row"
+          size="middle"
           pagination={false}
           defaultExpandAllRows={this.props.defaultExpandAllRows}
           expandRowByClick
-          expandedRowRender={(record) => record.table}
+          expandedRowRender={record => record.table}
           expandIcon={({ expanded, onExpand, record }) =>
             expanded ? (
-              <span onClick={(e) => onExpand(record, e)}>
-                <i className='far fa-minus-square' />
+              <span onClick={e => onExpand(record, e)}>
+                <i className="far fa-minus-square" />
               </span>
             ) : (
-              <span onClick={(e) => onExpand(record, e)}>
-                <i className='far fa-plus-square' />
+              <span onClick={e => onExpand(record, e)}>
+                <i className="far fa-plus-square" />
               </span>
             )
           }
@@ -136,20 +139,25 @@ export class SchemaTableImpl extends React.PureComponent {
               <div>
                 {/* eslint-disable-next-line max-len */}
                 <FormattedMessage
-                  defaultMessage='No schema. See <link>MLflow docs</link> for how to include
-                     input and output schema with your model.'
-                  description='Text for schema table when no schema exists in the model version
-                     page'
+                  defaultMessage="No schema. See <link>MLflow docs</link> for how to include
+                     input and output schema with your model."
+                  id="+jfhYC"
+                  description="Text for schema table when no schema exists in the model version
+                     page"
                   values={{
-                    link: (chunks) => (
-                      <a href={LogModelWithSignatureUrl} target='_blank' rel='noreferrer'>
+                    link: chunks => (
+                      <a
+                        href={LogModelWithSignatureUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         {chunks}
                       </a>
-                    ),
+                    )
                   }}
                 />
               </div>
-            ),
+            )
           }}
           dataSource={sectionHeaders}
           scroll={{ x: 240 }}
@@ -158,20 +166,22 @@ export class SchemaTableImpl extends React.PureComponent {
             key={1}
             title={this.props.intl.formatMessage({
               defaultMessage: 'Name',
-              description: 'Text for name column in schema table in model version page',
+              description:
+                'Text for name column in schema table in model version page'
             })}
-            width='50%'
-            dataIndex='name'
+            width="50%"
+            dataIndex="name"
             render={this.renderSectionHeader}
           />
           <Column
             key={2}
             title={this.props.intl.formatMessage({
               defaultMessage: 'Type',
-              description: 'Text for type column in schema table in model version page',
+              description:
+                'Text for type column in schema table in model version page'
             })}
-            width='50%'
-            dataIndex='type'
+            width="50%"
+            dataIndex="type"
             render={this.renderSectionHeader}
           />
         </Table>
@@ -182,50 +192,53 @@ export class SchemaTableImpl extends React.PureComponent {
 
 export const SchemaTable = injectIntl(SchemaTableImpl);
 
-const antTable = '.ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table';
+const antTable =
+  '.ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table';
 const schemaTableStyles = {
   [`${antTable}>.ant-table-thead>tr>th.ant-table-expand-icon-th`]: {
     padding: `${spacingMedium}px 0`,
-    width: '32px',
+    width: '32px'
   },
   [`${antTable}>.ant-table-thead>tr>th.ant-table-row-cell-break-word`]: {
-    padding: `${spacingMedium}px 0`,
+    padding: `${spacingMedium}px 0`
   },
   [`${antTable}>.ant-table-tbody>tr>td.ant-table-row-cell-break-word`]: {
-    padding: `${spacingMedium}px 0`,
+    padding: `${spacingMedium}px 0`
   },
-  [`${antTable}>.ant-table-tbody>tr.section-header-row>td.ant-table-row-cell-break-word`]: {
-    padding: '0',
-    backgroundColor: '#EEEEEE',
-    width: '32px',
-  },
-  [`${antTable}>.ant-table-tbody>tr.section-header-row>td.ant-table-row-expand-icon-cell`]: {
-    padding: '0',
-    backgroundColor: '#EEEEEE',
-  },
+  [`${antTable}>.ant-table-tbody>tr.section-header-row>td.ant-table-row-cell-break-word`]:
+    {
+      padding: '0',
+      backgroundColor: '#EEEEEE',
+      width: '32px'
+    },
+  [`${antTable}>.ant-table-tbody>tr.section-header-row>td.ant-table-row-expand-icon-cell`]:
+    {
+      padding: '0',
+      backgroundColor: '#EEEEEE'
+    },
   '.outer-table .ant-table-body': {
     // !important to override inline style of overflowX: scroll
     overflowX: 'auto !important',
-    overflowY: 'hidden',
+    overflowY: 'hidden'
   },
   '.inner-table .ant-table-body': {
     // !important to override inline style of overflowY: scroll
-    overflowY: 'auto !important',
+    overflowY: 'auto !important'
   },
   '.ant-table-expanded-row td': {
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   '.inner-table': {
-    maxWidth: 800,
+    maxWidth: 800
   },
   '.outer-table': {
-    maxWidth: 800,
+    maxWidth: 800
   },
   '.primary-text': {
-    color: gray800,
+    color: gray800
   },
   '.section-header-row': {
     lineHeight: '32px',
-    cursor: 'pointer',
-  },
+    cursor: 'pointer'
+  }
 };

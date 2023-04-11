@@ -14,7 +14,7 @@ export class MetricPageImpl extends Component {
     runUuids: PropTypes.arrayOf(PropTypes.string).isRequired,
     metricKey: PropTypes.string.isRequired,
     experimentIds: PropTypes.arrayOf(PropTypes.string),
-    dispatch: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -23,7 +23,7 @@ export class MetricPageImpl extends Component {
   }
 
   fetchExperiments() {
-    return this.props.experimentIds.map((experimentId) => {
+    return this.props.experimentIds.map(experimentId => {
       const experimentRequestId = getUUID();
       this.props.dispatch(getExperimentApi(experimentId, experimentRequestId));
       return experimentRequestId;
@@ -35,11 +35,15 @@ export class MetricPageImpl extends Component {
       const getExperimentsRequestIds = this.fetchExperiments();
       this.requestIds.push(...getExperimentsRequestIds);
     }
-    this.props.runUuids.forEach((runUuid) => {
+    this.props.runUuids.forEach(runUuid => {
       const getMetricHistoryReqId = getUUID();
       this.requestIds.push(getMetricHistoryReqId);
       this.props.dispatch(
-        getMetricHistoryApi(runUuid, this.props.metricKey, getMetricHistoryReqId),
+        getMetricHistoryApi(
+          runUuid,
+          this.props.metricKey,
+          getMetricHistoryReqId
+        )
       );
       // Fetch tags for each run. TODO: it'd be nice if we could just fetch the tags directly
       const getRunRequestId = getUUID();
@@ -87,7 +91,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     runUuids,
     metricKey,
-    experimentIds,
+    experimentIds
   };
 };
 

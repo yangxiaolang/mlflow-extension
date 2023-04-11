@@ -3,7 +3,11 @@ import { shallow } from 'enzyme';
 import { MemoryRouter as Router } from 'react-router-dom';
 
 import { ErrorCodes } from '../../common/constants';
-import { ExperimentPage, isNewRun, lifecycleFilterToRunViewType } from './ExperimentPage';
+import {
+  ExperimentPage,
+  isNewRun,
+  lifecycleFilterToRunViewType
+} from './ExperimentPage';
 import { ExperimentPagePersistedState } from '../sdk/MlflowLocalStorageMessages';
 import Utils from '../../common/utils/Utils';
 import ExperimentView from './ExperimentView';
@@ -28,7 +32,7 @@ import {
   PAGINATION_DEFAULT_STATE,
   POLL_INTERVAL,
   MLFLOW_EXPERIMENT_PRIMARY_METRIC_NAME,
-  MLFLOW_EXPERIMENT_PRIMARY_METRIC_GREATER_IS_BETTER,
+  MLFLOW_EXPERIMENT_PRIMARY_METRIC_GREATER_IS_BETTER
 } from '../constants';
 import Fixtures from '../utils/test-utils/Fixtures';
 
@@ -52,20 +56,22 @@ beforeEach(() => {
   dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => 0);
   localStorage.clear();
   searchRunsApi = jest.fn(() => Promise.resolve());
-  getExperimentApi = jest.fn(() => Promise.resolve({ action: { payload: {} } }));
+  getExperimentApi = jest.fn(() =>
+    Promise.resolve({ action: { payload: {} } })
+  );
   searchModelVersionsApi = jest.fn(() => Promise.resolve());
   loadMoreRunsApi = jest.fn(() => Promise.resolve());
   searchForNewRuns = jest.fn(() => Promise.resolve());
   setCompareExperiments = jest.fn(() => {});
   location = {
-    pathname: '/',
+    pathname: '/'
   };
   history = {
     push: jest.fn(),
     location: {
       pathname: BASE_PATH,
-      search: '',
-    },
+      search: ''
+    }
   };
 });
 
@@ -73,10 +79,12 @@ afterAll(() => {
   dateNowSpy.mockRestore();
 });
 
-const getExperimentPageMock = (additionalProps) => {
+const getExperimentPageMock = additionalProps => {
   return shallow(
     <ExperimentPage
-      experiments={[Fixtures.createExperiment({ experiment_id: EXPERIMENT_ID })]}
+      experiments={[
+        Fixtures.createExperiment({ experiment_id: EXPERIMENT_ID })
+      ]}
       experimentIds={[EXPERIMENT_ID]}
       searchRunsApi={searchRunsApi}
       getExperimentApi={getExperimentApi}
@@ -89,23 +97,31 @@ const getExperimentPageMock = (additionalProps) => {
       location={location}
       intl={{ formatMessage: () => {} }}
       {...additionalProps}
-    />,
+    />
   );
 };
 
 test('State and search params are correct for blank search', () => {
   const wrapper = getExperimentPageMock({
     location: {
-      search: '?searchInput=test',
-    },
+      search: '?searchInput=test'
+    }
   });
   wrapper.instance().onSearch({ searchInput: '' });
 
   expect(wrapper.state().persistedState.searchInput).toEqual('');
-  expect(wrapper.state().persistedState.orderByKey).toEqual(DEFAULT_ORDER_BY_KEY);
-  expect(wrapper.state().persistedState.orderByAsc).toEqual(DEFAULT_ORDER_BY_ASC);
-  expect(wrapper.state().persistedState.lifecycleFilter).toEqual(DEFAULT_LIFECYCLE_FILTER);
-  expect(wrapper.state().persistedState.modelVersionFilter).toEqual(DEFAULT_MODEL_VERSION_FILTER);
+  expect(wrapper.state().persistedState.orderByKey).toEqual(
+    DEFAULT_ORDER_BY_KEY
+  );
+  expect(wrapper.state().persistedState.orderByAsc).toEqual(
+    DEFAULT_ORDER_BY_ASC
+  );
+  expect(wrapper.state().persistedState.lifecycleFilter).toEqual(
+    DEFAULT_LIFECYCLE_FILTER
+  );
+  expect(wrapper.state().persistedState.modelVersionFilter).toEqual(
+    DEFAULT_MODEL_VERSION_FILTER
+  );
   expect(wrapper.state().persistedState.startTime).toEqual(DEFAULT_START_TIME);
 
   const searchRunsCallParams = searchRunsApi.mock.calls[1][0];
@@ -124,15 +140,17 @@ test('State and search params are correct for complete search', () => {
     orderByAsc: true,
     lifecycleFilter: 'Deleted',
     modelVersionFilter: MODEL_VERSION_FILTER.WTIHOUT_MODEL_VERSIONS,
-    startTime: '1 Hour',
+    startTime: '1 Hour'
   });
 
-  expect(wrapper.state().persistedState.searchInput).toEqual('metrics.metric0 > 3');
+  expect(wrapper.state().persistedState.searchInput).toEqual(
+    'metrics.metric0 > 3'
+  );
   expect(wrapper.state().persistedState.orderByKey).toEqual('test-key');
   expect(wrapper.state().persistedState.orderByAsc).toEqual(true);
   expect(wrapper.state().persistedState.lifecycleFilter).toEqual('Deleted');
   expect(wrapper.state().persistedState.modelVersionFilter).toEqual(
-    MODEL_VERSION_FILTER.WTIHOUT_MODEL_VERSIONS,
+    MODEL_VERSION_FILTER.WTIHOUT_MODEL_VERSIONS
   );
   expect(wrapper.state().persistedState.startTime).toEqual('1 Hour');
 
@@ -146,19 +164,29 @@ test('Loading state without any URL params and no snapshot', () => {
   const wrapper = getExperimentPageMock();
   const { state } = wrapper.instance();
   expect(state.persistedState.searchInput).toEqual('');
-  expect(state.persistedState.lifecycleFilter).toEqual(DEFAULT_LIFECYCLE_FILTER);
-  expect(state.persistedState.modelVersionFilter).toEqual(DEFAULT_MODEL_VERSION_FILTER);
+  expect(state.persistedState.lifecycleFilter).toEqual(
+    DEFAULT_LIFECYCLE_FILTER
+  );
+  expect(state.persistedState.modelVersionFilter).toEqual(
+    DEFAULT_MODEL_VERSION_FILTER
+  );
   expect(state.persistedState.orderByKey).toBe(DEFAULT_ORDER_BY_KEY);
   expect(state.persistedState.orderByAsc).toEqual(DEFAULT_ORDER_BY_ASC);
   expect(state.persistedState.startTime).toEqual(DEFAULT_START_TIME);
-  expect(state.persistedState.showMultiColumns).toEqual(DEFAULT_SHOW_MULTI_COLUMNS);
-  expect(state.persistedState.diffSwitchSelected).toEqual(DEFAULT_DIFF_SWITCH_SELECTED);
-  expect(state.persistedState.categorizedUncheckedKeys).toEqual(DEFAULT_CATEGORIZED_UNCHECKED_KEYS);
+  expect(state.persistedState.showMultiColumns).toEqual(
+    DEFAULT_SHOW_MULTI_COLUMNS
+  );
+  expect(state.persistedState.diffSwitchSelected).toEqual(
+    DEFAULT_DIFF_SWITCH_SELECTED
+  );
+  expect(state.persistedState.categorizedUncheckedKeys).toEqual(
+    DEFAULT_CATEGORIZED_UNCHECKED_KEYS
+  );
   expect(state.persistedState.preSwitchCategorizedUncheckedKeys).toEqual(
-    DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
+    DEFAULT_CATEGORIZED_UNCHECKED_KEYS
   );
   expect(state.persistedState.postSwitchCategorizedUncheckedKeys).toEqual(
-    DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
+    DEFAULT_CATEGORIZED_UNCHECKED_KEYS
   );
 });
 
@@ -185,7 +213,9 @@ test('Loading state with all URL params and no snapshot', () => {
   const { state } = wrapper.instance();
   expect(state.persistedState.searchInput).toEqual('c');
   expect(state.persistedState.lifecycleFilter).toEqual('lifecycle');
-  expect(state.persistedState.modelVersionFilter).toEqual('With Model Versions');
+  expect(state.persistedState.modelVersionFilter).toEqual(
+    'With Model Versions'
+  );
   expect(state.persistedState.orderByKey).toEqual('d');
   expect(state.persistedState.orderByAsc).toEqual(false);
   expect(state.persistedState.startTime).toEqual('LAST_HOUR');
@@ -195,19 +225,19 @@ test('Loading state with all URL params and no snapshot', () => {
     [COLUMN_TYPES.ATTRIBUTES]: ['a1'],
     [COLUMN_TYPES.PARAMS]: ['p1'],
     [COLUMN_TYPES.METRICS]: ['m1'],
-    [COLUMN_TYPES.TAGS]: ['t1'],
+    [COLUMN_TYPES.TAGS]: ['t1']
   });
   expect(state.persistedState.preSwitchCategorizedUncheckedKeys).toEqual({
     [COLUMN_TYPES.ATTRIBUTES]: ['a2'],
     [COLUMN_TYPES.PARAMS]: ['p2'],
     [COLUMN_TYPES.METRICS]: ['m2'],
-    [COLUMN_TYPES.TAGS]: ['t2'],
+    [COLUMN_TYPES.TAGS]: ['t2']
   });
   expect(state.persistedState.postSwitchCategorizedUncheckedKeys).toEqual({
     [COLUMN_TYPES.ATTRIBUTES]: ['a3'],
     [COLUMN_TYPES.PARAMS]: ['p3'],
     [COLUMN_TYPES.METRICS]: ['m3'],
-    [COLUMN_TYPES.TAGS]: ['t3'],
+    [COLUMN_TYPES.TAGS]: ['t3']
   });
 });
 
@@ -228,27 +258,35 @@ test('onClear clears all parameters', () => {
       categorizedUncheckedKeys: {},
       diffSwitchSelected: true,
       preSwitchCategorizedUncheckedKeys: {},
-      postSwitchCategorizedUncheckedKeys: {},
-    }).toJSON(),
+      postSwitchCategorizedUncheckedKeys: {}
+    }).toJSON()
   });
 
   instance.onClear();
   const { state } = instance;
   expect(updateUrlWithViewStateSpy).toHaveBeenCalledTimes(1);
   expect(state.persistedState.searchInput).toEqual('');
-  expect(state.persistedState.lifecycleFilter).toEqual(DEFAULT_LIFECYCLE_FILTER);
-  expect(state.persistedState.modelVersionFilter).toEqual(DEFAULT_MODEL_VERSION_FILTER);
+  expect(state.persistedState.lifecycleFilter).toEqual(
+    DEFAULT_LIFECYCLE_FILTER
+  );
+  expect(state.persistedState.modelVersionFilter).toEqual(
+    DEFAULT_MODEL_VERSION_FILTER
+  );
   expect(state.persistedState.orderByKey).toBe(DEFAULT_ORDER_BY_KEY);
   expect(state.persistedState.orderByAsc).toEqual(DEFAULT_ORDER_BY_ASC);
   expect(state.persistedState.startTime).toEqual(DEFAULT_START_TIME);
   expect(state.persistedState.showMultiColumns).toEqual(false);
-  expect(state.persistedState.diffSwitchSelected).toEqual(DEFAULT_DIFF_SWITCH_SELECTED);
-  expect(state.persistedState.categorizedUncheckedKeys).toEqual(DEFAULT_CATEGORIZED_UNCHECKED_KEYS);
+  expect(state.persistedState.diffSwitchSelected).toEqual(
+    DEFAULT_DIFF_SWITCH_SELECTED
+  );
+  expect(state.persistedState.categorizedUncheckedKeys).toEqual(
+    DEFAULT_CATEGORIZED_UNCHECKED_KEYS
+  );
   expect(state.persistedState.preSwitchCategorizedUncheckedKeys).toEqual(
-    DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
+    DEFAULT_CATEGORIZED_UNCHECKED_KEYS
   );
   expect(state.persistedState.postSwitchCategorizedUncheckedKeys).toEqual(
-    DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
+    DEFAULT_CATEGORIZED_UNCHECKED_KEYS
   );
 });
 
@@ -256,58 +294,60 @@ test('should render permission denied view when getExperiment yields permission 
   const experimentPageInstance = getExperimentPageMock().instance();
   experimentPageInstance.setState({
     getExperimentRequestIds: [getUUID()],
-    searchRunsRequestId: getUUID(),
+    searchRunsRequestId: getUUID()
   });
   const errorMessage = 'Access Denied';
   const responseErrorWrapper = new ErrorWrapper(
     `{"error_code": "${ErrorCodes.PERMISSION_DENIED}", "message": "${errorMessage}"}`,
-    403,
+    403
   );
   const searchRunsErrorRequest = {
     id: experimentPageInstance.state.searchRunsRequestId,
     active: false,
-    error: responseErrorWrapper,
+    error: responseErrorWrapper
   };
   const getExperimentErrorRequest = {
     id: experimentPageInstance.state.getExperimentRequestIds[0],
     active: false,
-    error: responseErrorWrapper,
+    error: responseErrorWrapper
   };
   const wrapper = shallow(
     experimentPageInstance.renderExperimentView(false, true, [
       searchRunsErrorRequest,
-      getExperimentErrorRequest,
-    ]),
+      getExperimentErrorRequest
+    ])
   );
-  expect(wrapper.find('[data-testid="error-message"]').text()).toEqual(errorMessage);
+  expect(wrapper.find('[data-testid="error-message"]').text()).toEqual(
+    errorMessage
+  );
 });
 
 test('should render experiment view when search error occurs', () => {
   const experimentPageInstance = getExperimentPageMock().instance();
   experimentPageInstance.setState({
     getExperimentRequestIds: [getUUID()],
-    searchRunsRequestId: getUUID(),
+    searchRunsRequestId: getUUID()
   });
   const responseErrorWrapper = new ErrorWrapper(
     `{"error_code": "${ErrorCodes.INVALID_PARAMETER_VALUE}", "message": "Invalid"}`,
-    400,
+    400
   );
   const searchRunsErrorRequest = {
     id: experimentPageInstance.state.searchRunsRequestId,
     active: false,
-    error: responseErrorWrapper,
+    error: responseErrorWrapper
   };
   const getExperimentErrorRequest = {
     id: experimentPageInstance.state.getExperimentRequestIds[0],
-    active: false,
+    active: false
   };
   const renderedView = shallow(
     <Router>
       {experimentPageInstance.renderExperimentView(false, true, [
         searchRunsErrorRequest,
-        getExperimentErrorRequest,
+        getExperimentErrorRequest
       ])}
-    </Router>,
+    </Router>
   );
   expect(renderedView.find(ExperimentView)).toHaveLength(1);
 });
@@ -317,7 +357,9 @@ test('should update next page token initially', () => {
   searchRunsApi = jest.fn(() => promise);
   const wrapper = getExperimentPageMock();
   const instance = wrapper.instance();
-  return promise.then(() => expect(instance.state.nextPageToken).toBe('token_1'));
+  return promise.then(() =>
+    expect(instance.state.nextPageToken).toBe('token_1')
+  );
 });
 
 test('should update next page token after load-more', () => {
@@ -326,7 +368,9 @@ test('should update next page token after load-more', () => {
   const wrapper = getExperimentPageMock();
   const instance = wrapper.instance();
   instance.handleLoadMoreRuns();
-  return promise.then(() => expect(instance.state.nextPageToken).toBe('token_1'));
+  return promise.then(() =>
+    expect(instance.state.nextPageToken).toBe('token_1')
+  );
 });
 
 test('should update next page token to null when load-more response has no token', () => {
@@ -338,20 +382,26 @@ test('should update next page token to null when load-more response has no token
   const instance = wrapper.instance();
   instance.handleLoadMoreRuns();
   return Promise.all([promise1, promise2]).then(() =>
-    expect(instance.state.nextPageToken).toBe(null),
+    expect(instance.state.nextPageToken).toBe(null)
   );
 });
 
 test('should set state to default values on promise rejection when loading more', () => {
-  loadMoreRunsApi = jest.fn(() => Promise.reject(new Error('loadMoreRuns rejected')));
+  loadMoreRunsApi = jest.fn(() =>
+    Promise.reject(new Error('loadMoreRuns rejected'))
+  );
   const wrapper = getExperimentPageMock();
   const instance = wrapper.instance();
   return Promise.resolve(instance.handleLoadMoreRuns()).then(() => {
-    expect(instance.state.nextPageToken).toBe(PAGINATION_DEFAULT_STATE.nextPageToken);
-    expect(instance.state.numRunsFromLatestSearch).toBe(
-      PAGINATION_DEFAULT_STATE.numRunsFromLatestSearch,
+    expect(instance.state.nextPageToken).toBe(
+      PAGINATION_DEFAULT_STATE.nextPageToken
     );
-    expect(instance.state.loadingMore).toBe(PAGINATION_DEFAULT_STATE.loadingMore);
+    expect(instance.state.numRunsFromLatestSearch).toBe(
+      PAGINATION_DEFAULT_STATE.numRunsFromLatestSearch
+    );
+    expect(instance.state.loadingMore).toBe(
+      PAGINATION_DEFAULT_STATE.loadingMore
+    );
   });
 });
 
@@ -359,11 +409,15 @@ test('should set state to default values on promise rejection onSearch', () => {
   const wrapper = getExperimentPageMock();
   const instance = wrapper.instance();
   return Promise.resolve(instance.onSearch({})).then(() => {
-    expect(instance.state.nextPageToken).toBe(PAGINATION_DEFAULT_STATE.nextPageToken);
-    expect(instance.state.numRunsFromLatestSearch).toBe(
-      PAGINATION_DEFAULT_STATE.numRunsFromLatestSearch,
+    expect(instance.state.nextPageToken).toBe(
+      PAGINATION_DEFAULT_STATE.nextPageToken
     );
-    expect(instance.state.loadingMore).toBe(PAGINATION_DEFAULT_STATE.loadingMore);
+    expect(instance.state.numRunsFromLatestSearch).toBe(
+      PAGINATION_DEFAULT_STATE.numRunsFromLatestSearch
+    );
+    expect(instance.state.loadingMore).toBe(
+      PAGINATION_DEFAULT_STATE.loadingMore
+    );
   });
 });
 
@@ -375,55 +429,55 @@ test('should nest children when filtering or sorting', () => {
     {
       persistedState: {
         orderByKey: null,
-        searchInput: null,
-      },
+        searchInput: null
+      }
     },
-    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(true),
+    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(true)
   );
   instance.setState(
     {
       persistedState: {
         orderByKey: 'name',
-        searchInput: null,
-      },
+        searchInput: null
+      }
     },
-    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(false),
+    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(false)
   );
   instance.setState(
     {
       persistedState: {
         orderByKey: null,
-        searchInput: 'metrics.a > 1',
-      },
+        searchInput: 'metrics.a > 1'
+      }
     },
-    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(false),
+    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(false)
   );
   instance.setState(
     {
       persistedState: {
         orderByKey: 'name',
-        searchInput: 'metrics.a > 1',
-      },
+        searchInput: 'metrics.a > 1'
+      }
     },
-    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(false),
+    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(false)
   );
   instance.setState(
     {
       persistedState: {
         orderByKey: ATTRIBUTE_COLUMN_SORT_KEY.DATE,
-        searchInput: 'metrics.a > 1',
-      },
+        searchInput: 'metrics.a > 1'
+      }
     },
-    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(true),
+    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(true)
   );
   instance.setState(
     {
       persistedState: {
         orderByKey: ATTRIBUTE_COLUMN_SORT_KEY.DATE,
-        searchInput: null,
-      },
+        searchInput: null
+      }
     },
-    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(true),
+    () => expect(instance.shouldNestChildrenAndFetchParents()).toBe(true)
   );
 });
 
@@ -435,37 +489,37 @@ test('should return correct orderBy expression', () => {
     {
       persistedState: {
         orderByKey: 'key',
-        orderByAsc: true,
-      },
+        orderByAsc: true
+      }
     },
-    () => expect(instance.getOrderByExpr()).toEqual(['key ASC']),
+    () => expect(instance.getOrderByExpr()).toEqual(['key ASC'])
   );
   instance.setState(
     {
       persistedState: {
         orderByKey: 'key',
-        orderByAsc: false,
-      },
+        orderByAsc: false
+      }
     },
-    () => expect(instance.getOrderByExpr()).toEqual(['key DESC']),
+    () => expect(instance.getOrderByExpr()).toEqual(['key DESC'])
   );
   instance.setState(
     {
       persistedState: {
         orderByKey: '',
-        orderByAsc: true,
-      },
+        orderByAsc: true
+      }
     },
-    () => expect(instance.getOrderByExpr()).toEqual([]),
+    () => expect(instance.getOrderByExpr()).toEqual([])
   );
   instance.setState(
     {
       persistedState: {
         orderByKey: null,
-        orderByAsc: null,
-      },
+        orderByAsc: null
+      }
     },
-    () => expect(instance.getOrderByExpr()).toEqual([]),
+    () => expect(instance.getOrderByExpr()).toEqual([])
   );
 });
 
@@ -478,10 +532,10 @@ test('handleGettingRuns chain functions should not change response', () => {
       runs: [
         {
           info: {},
-          data: {},
-        },
-      ],
-    },
+          data: {}
+        }
+      ]
+    }
   };
 
   expect(instance.updateNextPageToken(response)).toEqual(response);
@@ -541,8 +595,8 @@ describe('using cached startTime when requesting subsequent pages', () => {
     const instance = wrapper.instance();
     instance.setState({
       persistedState: new ExperimentPagePersistedState({
-        startTime: 'LAST_24_HOURS',
-      }).toJSON(),
+        startTime: 'LAST_24_HOURS'
+      }).toJSON()
     });
 
     const mockFirstRequestFn = jest.fn().mockImplementation(({ filter }) => {
@@ -550,24 +604,30 @@ describe('using cached startTime when requesting subsequent pages', () => {
       return Promise.resolve({ value: { next_page_token: 'TOKEN' } });
     });
 
-    await instance.handleGettingRuns(mockFirstRequestFn, instance.searchRunsApi);
+    await instance.handleGettingRuns(
+      mockFirstRequestFn,
+      instance.searchRunsApi
+    );
 
     expect(mockFirstRequestFn).toBeCalledWith(
       expect.objectContaining({
-        filter: expect.stringContaining('attributes.start_time'),
-      }),
+        filter: expect.stringContaining('attributes.start_time')
+      })
     );
 
     jest.advanceTimersByTime(5000);
 
     const mockNextPageRequestFn = jest.fn().mockResolvedValue({});
 
-    await instance.handleGettingRuns(mockNextPageRequestFn, instance.searchRunsApi);
+    await instance.handleGettingRuns(
+      mockNextPageRequestFn,
+      instance.searchRunsApi
+    );
 
     expect(mockNextPageRequestFn).toBeCalledWith(
       expect.objectContaining({
-        filter: startTimeFilter,
-      }),
+        filter: startTimeFilter
+      })
     );
   });
 });
@@ -601,13 +661,17 @@ describe('fetchModelVersionsForRuns', () => {
 
     instance.fetchModelVersionsForRuns({
       value: {
-        runs: [{ info: { run_id: '1' } }, { info: { run_id: '2' } }, { info: { run_id: '3' } }],
-      },
+        runs: [
+          { info: { run_id: '1' } },
+          { info: { run_id: '2' } },
+          { info: { run_id: '3' } }
+        ]
+      }
     });
 
     expect(searchModelVersionsApi).toHaveBeenCalledWith(
       { run_id: ['1', '2', '3'] },
-      instance.searchModelVersionsRequestId,
+      instance.searchModelVersionsRequestId
     );
   });
 
@@ -626,9 +690,11 @@ describe('fetchModelVersionsForRuns', () => {
   it('should chunk runs to searchModelVersions', () => {
     const wrapper = getExperimentPageMock();
     const instance = wrapper.instance();
-    const runs = [...Array(MAX_RUNS_IN_SEARCH_MODEL_VERSIONS_FILTER + 1).keys()].map((run_id) => ({
+    const runs = [
+      ...Array(MAX_RUNS_IN_SEARCH_MODEL_VERSIONS_FILTER + 1).keys()
+    ].map(run_id => ({
       info: { run_id },
-      data: {},
+      data: {}
     }));
 
     instance.fetchModelVersionsForRuns({ value: { runs } });
@@ -647,7 +713,10 @@ describe('handleGettingRuns', () => {
     instance.fetchModelVersionsForRuns = jest.fn();
 
     return Promise.resolve(
-      instance.handleGettingRuns(() => Promise.resolve(), instance.searchRunsApi),
+      instance.handleGettingRuns(
+        () => Promise.resolve(),
+        instance.searchRunsApi
+      )
     ).then(() => {
       expect(instance.updateCachedStartDate).toHaveBeenCalled();
       expect(instance.updateNextPageToken).toHaveBeenCalled();
@@ -706,13 +775,13 @@ describe('pollInfo', () => {
     instance.setState(
       {
         pollingState: {
-          newRuns: false,
-        },
+          newRuns: false
+        }
       },
       async () => {
         await instance.pollInfo();
         expect(instance.pollNewRuns).toHaveBeenCalledTimes(0);
-      },
+      }
     );
   });
 });
@@ -725,9 +794,11 @@ describe('pollNewRuns', () => {
     }
 
     test('Should set pollingState.newRuns to false if there are already max new runs', async () => {
-      const mockSearchForNewRuns = jest.fn(() => Promise.resolve({ runs: maxNewRuns }));
+      const mockSearchForNewRuns = jest.fn(() =>
+        Promise.resolve({ runs: maxNewRuns })
+      );
       const instance = getExperimentPageMock({
-        searchForNewRuns: mockSearchForNewRuns,
+        searchForNewRuns: mockSearchForNewRuns
       }).instance();
 
       expect(mockSearchForNewRuns).toHaveBeenCalledTimes(0);
@@ -739,9 +810,11 @@ describe('pollNewRuns', () => {
     });
 
     test('Should set pollingState.newRuns to true if a new search is triggered', async () => {
-      const mockSearchForNewRuns = jest.fn(() => Promise.resolve({ runs: maxNewRuns }));
+      const mockSearchForNewRuns = jest.fn(() =>
+        Promise.resolve({ runs: maxNewRuns })
+      );
       const instance = getExperimentPageMock({
-        searchForNewRuns: mockSearchForNewRuns,
+        searchForNewRuns: mockSearchForNewRuns
       }).instance();
 
       await instance.pollNewRuns();
@@ -761,7 +834,7 @@ describe('pollNewRuns', () => {
 
     test('numberOfNewRuns should be 0 if no new runs', async () => {
       const instance = getExperimentPageMock({
-        searchForNewRuns: () => Promise.resolve({ runs: [] }),
+        searchForNewRuns: () => Promise.resolve({ runs: [] })
       }).instance();
 
       await instance.pollNewRuns();
@@ -774,25 +847,25 @@ describe('pollNewRuns', () => {
           runs: [
             {
               info: {
-                start_time: Date.now() + 10000,
-              },
+                start_time: Date.now() + 10000
+              }
             },
             {
               info: {
-                end_time: Date.now() + 10000,
-              },
+                end_time: Date.now() + 10000
+              }
             },
             {
               info: {
-                end_time: 0,
-              },
-            },
-          ],
-        }),
+                end_time: 0
+              }
+            }
+          ]
+        })
       );
 
       const instance = getExperimentPageMock({
-        searchForNewRuns: mockSearchForNewRuns,
+        searchForNewRuns: mockSearchForNewRuns
       }).instance();
 
       await instance.pollNewRuns();
@@ -820,8 +893,8 @@ describe('isNewRun', () => {
   test('should return false if start time and end time undefined', () => {
     expect(
       isNewRun(2, {
-        info: {},
-      }),
+        info: {}
+      })
     ).toEqual(false);
   });
 
@@ -830,9 +903,9 @@ describe('isNewRun', () => {
       isNewRun(2, {
         info: {
           start_time: 1,
-          end_time: 1,
-        },
-      }),
+          end_time: 1
+        }
+      })
     ).toEqual(false);
   });
 
@@ -841,9 +914,9 @@ describe('isNewRun', () => {
       isNewRun(2, {
         info: {
           start_time: 1,
-          end_time: 0,
-        },
-      }),
+          end_time: 0
+        }
+      })
     ).toEqual(false);
   });
 
@@ -852,9 +925,9 @@ describe('isNewRun', () => {
       isNewRun(1, {
         info: {
           start_time: 1,
-          end_time: 0,
-        },
-      }),
+          end_time: 0
+        }
+      })
     ).toEqual(true);
   });
 
@@ -863,9 +936,9 @@ describe('isNewRun', () => {
       isNewRun(2, {
         info: {
           start_time: 1,
-          end_time: 3,
-        },
-      }),
+          end_time: 3
+        }
+      })
     ).toEqual(true);
   });
 });
@@ -878,37 +951,37 @@ describe('startTime select filters out the experiment runs correctly', () => {
     instance.setState(
       {
         persistedState: new ExperimentPagePersistedState({
-          startTime: '',
-        }).toJSON(),
+          startTime: ''
+        }).toJSON()
       },
-      () => expect(instance.getStartTimeExpr()).toBe(null),
+      () => expect(instance.getStartTimeExpr()).toBe(null)
     );
 
     instance.setState(
       {
         persistedState: new ExperimentPagePersistedState({
-          startTime: undefined,
-        }).toJSON(),
+          startTime: undefined
+        }).toJSON()
       },
-      () => expect(instance.getStartTimeExpr()).toBe(null),
+      () => expect(instance.getStartTimeExpr()).toBe(null)
     );
 
     instance.setState(
       {
         persistedState: new ExperimentPagePersistedState({
-          startTime: 'ALL',
-        }).toJSON(),
+          startTime: 'ALL'
+        }).toJSON()
       },
-      () => expect(instance.getStartTimeExpr()).toBe(null),
+      () => expect(instance.getStartTimeExpr()).toBe(null)
     );
 
     instance.setState(
       {
         persistedState: new ExperimentPagePersistedState({
-          startTime: 'LAST_24_HOURS',
-        }).toJSON(),
+          startTime: 'LAST_24_HOURS'
+        }).toJSON()
       },
-      () => expect(instance.getStartTimeExpr()).toMatch('attributes.start_time'),
+      () => expect(instance.getStartTimeExpr()).toMatch('attributes.start_time')
     );
   });
 
@@ -922,68 +995,70 @@ describe('startTime select filters out the experiment runs correctly', () => {
       {
         persistedState: {
           startTime: '',
-          searchInput: 'metrics.met > 0',
-        },
+          searchInput: 'metrics.met > 0'
+        }
       },
       () => {
         instance.handleGettingRuns(getRunsAction, requestId);
         expect(getRunsAction).toHaveBeenCalledWith(
           expect.objectContaining({
-            filter: 'metrics.met > 0',
-          }),
+            filter: 'metrics.met > 0'
+          })
         );
-      },
+      }
     );
 
     instance.setState(
       {
         persistedState: {
           startTime: 'ALL',
-          searchInput: 'metrics.met > 0',
-        },
+          searchInput: 'metrics.met > 0'
+        }
       },
       () => {
         instance.handleGettingRuns(getRunsAction, requestId);
         expect(getRunsAction).toHaveBeenCalledWith(
           expect.objectContaining({
-            filter: 'metrics.met > 0',
-          }),
+            filter: 'metrics.met > 0'
+          })
         );
-      },
+      }
     );
 
     instance.setState(
       {
         persistedState: {
           startTime: 'LAST_HOUR_FAKE',
-          searchInput: 'metrics.met > 0',
-        },
+          searchInput: 'metrics.met > 0'
+        }
       },
       () => {
         instance.handleGettingRuns(getRunsAction, requestId);
         expect(getRunsAction).toHaveBeenCalledWith(
           expect.objectContaining({
-            filter: 'metrics.met > 0',
-          }),
+            filter: 'metrics.met > 0'
+          })
         );
-      },
+      }
     );
 
     instance.setState(
       {
         persistedState: {
           startTime: 'LAST_HOUR',
-          searchInput: 'metrics.met > 0',
-        },
+          searchInput: 'metrics.met > 0'
+        }
       },
       () => {
         instance.handleGettingRuns(getRunsAction, requestId);
         expect(getRunsAction).toHaveBeenCalledWith(
           expect.objectContaining({
-            filter: expect.stringMatching('metrics.met > 0 and attributes.start_time'),
-          }),
+            filter: expect.stringMatching(
+              'metrics.met > 0 and attributes.start_time'
+            )
+          })
         );
-      },
+      }
     );
   });
 });
@@ -1000,7 +1075,7 @@ describe('updateUrlWithViewState', () => {
     [COLUMN_TYPES.ATTRIBUTES]: [''],
     [COLUMN_TYPES.PARAMS]: [''],
     [COLUMN_TYPES.METRICS]: [''],
-    [COLUMN_TYPES.TAGS]: [''],
+    [COLUMN_TYPES.TAGS]: ['']
   };
   const defaultParameters = {
     searchInput: '',
@@ -1013,14 +1088,14 @@ describe('updateUrlWithViewState', () => {
     categorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
     diffSwitchSelected: DEFAULT_DIFF_SWITCH_SELECTED,
     preSwitchCategorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
-    postSwitchCategorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
+    postSwitchCategorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS
   };
   let wrapper;
   let instance;
   beforeEach(() => {
     localStorage.clear();
     wrapper = getExperimentPageMock({
-      history: history,
+      history: history
     });
     instance = wrapper.instance();
   });
@@ -1034,7 +1109,7 @@ describe('updateUrlWithViewState', () => {
       lifecycleFilter,
       modelVersionFilter,
       showMultiColumns,
-      diffSwitchSelected,
+      diffSwitchSelected
     } = defaultParameters;
 
     instance.updateUrlWithViewState();
@@ -1050,15 +1125,15 @@ describe('updateUrlWithViewState', () => {
       categorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
       diffSwitchSelected,
       preSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
-      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
+      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys
     });
   });
 
   test('updateUrlWithViewState updates URL correctly with orderByAsc true', () => {
     instance.setState({
       persistedState: new ExperimentPagePersistedState({
-        orderByAsc: true,
-      }).toJSON(),
+        orderByAsc: true
+      }).toJSON()
     });
 
     const {
@@ -1068,7 +1143,7 @@ describe('updateUrlWithViewState', () => {
       lifecycleFilter,
       modelVersionFilter,
       showMultiColumns,
-      diffSwitchSelected,
+      diffSwitchSelected
     } = defaultParameters;
 
     instance.updateUrlWithViewState();
@@ -1084,7 +1159,7 @@ describe('updateUrlWithViewState', () => {
       categorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
       diffSwitchSelected,
       preSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
-      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
+      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys
     });
   });
 
@@ -1092,12 +1167,18 @@ describe('updateUrlWithViewState', () => {
     instance.setState({
       persistedState: new ExperimentPagePersistedState({
         lifecycleFilter: 'life',
-        modelVersionFilter: 'model',
-      }).toJSON(),
+        modelVersionFilter: 'model'
+      }).toJSON()
     });
 
-    const { searchInput, orderByKey, orderByAsc, startTime, showMultiColumns, diffSwitchSelected } =
-      defaultParameters;
+    const {
+      searchInput,
+      orderByKey,
+      orderByAsc,
+      startTime,
+      showMultiColumns,
+      diffSwitchSelected
+    } = defaultParameters;
 
     instance.updateUrlWithViewState();
 
@@ -1112,15 +1193,15 @@ describe('updateUrlWithViewState', () => {
       categorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
       diffSwitchSelected,
       preSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
-      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
+      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys
     });
   });
 
   test('updateUrlWithViewState updates URL correctly with searchInput', () => {
     instance.setState({
       persistedState: new ExperimentPagePersistedState({
-        searchInput: 'search-value',
-      }).toJSON(),
+        searchInput: 'search-value'
+      }).toJSON()
     });
 
     const {
@@ -1130,7 +1211,7 @@ describe('updateUrlWithViewState', () => {
       lifecycleFilter,
       modelVersionFilter,
       showMultiColumns,
-      diffSwitchSelected,
+      diffSwitchSelected
     } = defaultParameters;
 
     instance.updateUrlWithViewState();
@@ -1146,15 +1227,15 @@ describe('updateUrlWithViewState', () => {
       categorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
       diffSwitchSelected,
       preSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
-      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
+      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys
     });
   });
 
   test('updateUrlWithViewState updates URL correctly with showMultiColumns false', () => {
     instance.setState({
       persistedState: new ExperimentPagePersistedState({
-        showMultiColumns: false,
-      }).toJSON(),
+        showMultiColumns: false
+      }).toJSON()
     });
 
     const {
@@ -1164,7 +1245,7 @@ describe('updateUrlWithViewState', () => {
       startTime,
       lifecycleFilter,
       modelVersionFilter,
-      diffSwitchSelected,
+      diffSwitchSelected
     } = defaultParameters;
 
     instance.updateUrlWithViewState();
@@ -1180,7 +1261,7 @@ describe('updateUrlWithViewState', () => {
       categorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
       diffSwitchSelected,
       preSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
-      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys,
+      postSwitchCategorizedUncheckedKeys: emptyCategorizedUncheckedKeys
     });
   });
 
@@ -1189,21 +1270,21 @@ describe('updateUrlWithViewState', () => {
       [COLUMN_TYPES.ATTRIBUTES]: ['a1'],
       [COLUMN_TYPES.PARAMS]: ['p1'],
       [COLUMN_TYPES.METRICS]: ['m1'],
-      [COLUMN_TYPES.TAGS]: ['t1'],
+      [COLUMN_TYPES.TAGS]: ['t1']
     };
 
     const preSwitchCategorizedUncheckedKeys = {
       [COLUMN_TYPES.ATTRIBUTES]: ['a2'],
       [COLUMN_TYPES.PARAMS]: ['p2'],
       [COLUMN_TYPES.METRICS]: ['m2'],
-      [COLUMN_TYPES.TAGS]: ['t2'],
+      [COLUMN_TYPES.TAGS]: ['t2']
     };
 
     const postSwitchCategorizedUncheckedKeys = {
       [COLUMN_TYPES.ATTRIBUTES]: ['a3'],
       [COLUMN_TYPES.PARAMS]: ['p3'],
       [COLUMN_TYPES.METRICS]: ['m3'],
-      [COLUMN_TYPES.TAGS]: ['t3'],
+      [COLUMN_TYPES.TAGS]: ['t3']
     };
 
     instance.setState({
@@ -1211,8 +1292,8 @@ describe('updateUrlWithViewState', () => {
         diffSwitchSelected: true,
         categorizedUncheckedKeys: categorizedUncheckedKeys,
         preSwitchCategorizedUncheckedKeys: preSwitchCategorizedUncheckedKeys,
-        postSwitchCategorizedUncheckedKeys: postSwitchCategorizedUncheckedKeys,
-      }).toJSON(),
+        postSwitchCategorizedUncheckedKeys: postSwitchCategorizedUncheckedKeys
+      }).toJSON()
     });
 
     const {
@@ -1222,7 +1303,7 @@ describe('updateUrlWithViewState', () => {
       startTime,
       lifecycleFilter,
       modelVersionFilter,
-      showMultiColumns,
+      showMultiColumns
     } = defaultParameters;
 
     instance.updateUrlWithViewState();
@@ -1238,7 +1319,7 @@ describe('updateUrlWithViewState', () => {
       categorizedUncheckedKeys: categorizedUncheckedKeys,
       diffSwitchSelected: true,
       preSwitchCategorizedUncheckedKeys: preSwitchCategorizedUncheckedKeys,
-      postSwitchCategorizedUncheckedKeys: postSwitchCategorizedUncheckedKeys,
+      postSwitchCategorizedUncheckedKeys: postSwitchCategorizedUncheckedKeys
     });
   });
 });
@@ -1258,8 +1339,8 @@ describe('filtersDidUpdate', () => {
         orderByAsc: DEFAULT_ORDER_BY_ASC,
         startTime: DEFAULT_START_TIME,
         lifecycleFilter: DEFAULT_LIFECYCLE_FILTER,
-        modelVersionFilter: DEFAULT_MODEL_VERSION_FILTER,
-      },
+        modelVersionFilter: DEFAULT_MODEL_VERSION_FILTER
+      }
     };
   });
   test('filtersDidUpdate returns true when filters were not updated', () => {
@@ -1325,10 +1406,10 @@ describe('handleColumnSelectionCheck', () => {
     instance.updateUrlWithViewState = updateUrlWithViewStateSpy;
     instance.snapshotComponentState = snapshotComponentStateSpy;
     instance.handleColumnSelectionCheck({
-      key: 'value',
+      key: 'value'
     });
     expect(instance.state.persistedState.categorizedUncheckedKeys).toEqual({
-      key: 'value',
+      key: 'value'
     });
     expect(updateUrlWithViewStateSpy).toHaveBeenCalledTimes(1);
     expect(snapshotComponentStateSpy).toHaveBeenCalledTimes(1);
@@ -1346,24 +1427,28 @@ describe('handleDiffSwitchChange', () => {
 
     instance.handleDiffSwitchChange({
       categorizedUncheckedKeys: {
-        key1: 'value1',
+        key1: 'value1'
       },
       preSwitchCategorizedUncheckedKeys: {
-        key2: 'value2',
+        key2: 'value2'
       },
       postSwitchCategorizedUncheckedKeys: {
-        key3: 'value3',
-      },
+        key3: 'value3'
+      }
     });
 
     expect(instance.state.persistedState.categorizedUncheckedKeys).toEqual({
-      key1: 'value1',
+      key1: 'value1'
     });
-    expect(instance.state.persistedState.preSwitchCategorizedUncheckedKeys).toEqual({
-      key2: 'value2',
+    expect(
+      instance.state.persistedState.preSwitchCategorizedUncheckedKeys
+    ).toEqual({
+      key2: 'value2'
     });
-    expect(instance.state.persistedState.postSwitchCategorizedUncheckedKeys).toEqual({
-      key3: 'value3',
+    expect(
+      instance.state.persistedState.postSwitchCategorizedUncheckedKeys
+    ).toEqual({
+      key3: 'value3'
     });
     expect(instance.state.persistedState.diffSwitchSelected).toEqual(true);
     expect(updateUrlWithViewStateSpy).toHaveBeenCalledTimes(1);
@@ -1371,18 +1456,22 @@ describe('handleDiffSwitchChange', () => {
 
     instance.handleDiffSwitchChange({
       categorizedUncheckedKeys: {
-        key4: 'value4',
-      },
+        key4: 'value4'
+      }
     });
 
     expect(instance.state.persistedState.categorizedUncheckedKeys).toEqual({
-      key4: 'value4',
+      key4: 'value4'
     });
-    expect(instance.state.persistedState.preSwitchCategorizedUncheckedKeys).toEqual({
-      key2: 'value2',
+    expect(
+      instance.state.persistedState.preSwitchCategorizedUncheckedKeys
+    ).toEqual({
+      key2: 'value2'
     });
-    expect(instance.state.persistedState.postSwitchCategorizedUncheckedKeys).toEqual({
-      key3: 'value3',
+    expect(
+      instance.state.persistedState.postSwitchCategorizedUncheckedKeys
+    ).toEqual({
+      key3: 'value3'
     });
     expect(instance.state.persistedState.diffSwitchSelected).toEqual(false);
     expect(updateUrlWithViewStateSpy).toHaveBeenCalledTimes(2);
@@ -1397,27 +1486,29 @@ describe('sortRunsByPrimaryMetric', () => {
       tags: [
         {
           key: MLFLOW_EXPERIMENT_PRIMARY_METRIC_NAME,
-          value: 'metric1',
+          value: 'metric1'
         },
         {
           key: MLFLOW_EXPERIMENT_PRIMARY_METRIC_GREATER_IS_BETTER,
-          value: 'True',
-        },
-      ],
+          value: 'True'
+        }
+      ]
     });
     const wrapper = getExperimentPageMock({
       getExperimentApi: () =>
         Promise.resolve({
           action: {
             payload: {
-              experiment,
-            },
-          },
-        }),
+              experiment
+            }
+          }
+        })
     });
     const instance = wrapper.instance();
     return instance.loadData().then(() => {
-      expect(instance.state.persistedState.orderByKey).toEqual('metrics.`metric1`');
+      expect(instance.state.persistedState.orderByKey).toEqual(
+        'metrics.`metric1`'
+      );
       expect(instance.state.persistedState.orderByAsc).toEqual(false);
     });
   });

@@ -11,11 +11,11 @@ describe('ShowArtifactMapView', () => {
   beforeEach(() => {
     minimalProps = {
       path: 'fakepath',
-      runUuid: 'fakeUuid',
+      runUuid: 'fakeUuid'
     };
     // Mock the `getArtifact` function to avoid spurious network errors
     // during testing
-    const getArtifact = jest.fn((artifactLocation) => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('some content');
     });
     commonProps = { ...minimalProps, getArtifact: getArtifact };
@@ -27,8 +27,8 @@ describe('ShowArtifactMapView', () => {
     expect(wrapper.length).toBe(1);
   });
 
-  test('should render error message when error occurs', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render error message when error occurs', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.reject(new Error('my error text'));
     });
     const props = { ...minimalProps, getArtifact: getArtifact };
@@ -48,17 +48,17 @@ describe('ShowArtifactMapView', () => {
     expect(wrapper.find('.artifact-map-view-loading').length).toBe(1);
   });
 
-  test('should render simple geoJSON in map view', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render simple geoJSON in map view', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       const geojson = {
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [125.6, 10.1],
+          coordinates: [125.6, 10.1]
         },
         properties: {
-          name: 'Dinagat Islands',
-        },
+          name: 'Dinagat Islands'
+        }
       };
       return Promise.resolve(JSON.stringify(geojson));
     });
@@ -67,7 +67,7 @@ describe('ShowArtifactMapView', () => {
     global.document.body.appendChild(div);
     const props = { ...minimalProps, getArtifact: getArtifact };
     wrapper = mount(<ShowArtifactMapView {...props} />, {
-      attachTo: div,
+      attachTo: div
     });
 
     setImmediate(() => {

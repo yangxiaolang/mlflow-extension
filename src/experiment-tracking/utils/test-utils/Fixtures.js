@@ -6,7 +6,7 @@ const createExperiment = ({
   artifact_location = 'dbfs:/databricks/mlflow/0',
   lifecycle_stage = 'active',
   tags = [],
-  allowed_actions = [],
+  allowed_actions = []
 } = {}) =>
   Experiment.fromJs({
     experiment_id,
@@ -14,7 +14,7 @@ const createExperiment = ({
     artifact_location,
     lifecycle_stage,
     tags,
-    allowed_actions,
+    allowed_actions
   });
 
 const createRunInfo = () => {
@@ -24,7 +24,10 @@ const createRunInfo = () => {
 const fixtures = {
   createExperiment,
   createRunInfo,
-  experiments: [createExperiment(), createExperiment({ experiment_id: '1', name: 'Test' })],
+  experiments: [
+    createExperiment(),
+    createExperiment({ experiment_id: '1', name: 'Test' })
+  ]
 };
 
 export default fixtures;

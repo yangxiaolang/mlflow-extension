@@ -27,18 +27,24 @@ export interface DescriptionsItemProps {
  */
 export const Descriptions = ({
   children,
-  columns = 3,
+  columns = 3
 }: React.PropsWithChildren<DescriptionsProps>) => {
-  const instanceStyles = useMemo(() => styles.descriptionsArea(columns), [columns]);
+  const instanceStyles = useMemo(
+    () => styles.descriptionsArea(columns),
+    [columns]
+  );
 
   return <div css={instanceStyles}>{children}</div>;
 };
 
-Descriptions.Item = ({ label, children }: React.PropsWithChildren<DescriptionsItemProps>) => {
+Descriptions.Item = ({
+  label,
+  children
+}: React.PropsWithChildren<DescriptionsItemProps>) => {
   return (
     <>
       <div>
-        <Typography.Text size='sm' color='secondary'>
+        <Typography.Text size="sm" color="secondary">
           {label}:
         </Typography.Text>
       </div>
@@ -53,6 +59,6 @@ const styles = {
     gridTemplateColumns: `repeat(${columnCount}, auto 1fr)`,
     columnGap: theme.spacing.sm,
     rowGap: theme.spacing.md,
-    marginBottom: theme.spacing.lg,
-  }),
+    marginBottom: theme.spacing.lg
+  })
 };

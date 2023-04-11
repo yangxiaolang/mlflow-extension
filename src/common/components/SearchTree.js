@@ -15,7 +15,7 @@ export const NodeShape = {
   // uniq key to identify this node
   key: PropTypes.string.isRequired,
   // an array of child nodes
-  children: PropTypes.arrayOf(PropTypes.object),
+  children: PropTypes.arrayOf(PropTypes.object)
 };
 
 export class SearchTreeImpl extends React.Component {
@@ -28,7 +28,8 @@ export class SearchTreeImpl extends React.Component {
     checkedKeys: PropTypes.array.isRequired,
     // Handler called when user press ESC key in the search input
     onSearchInputEscapeKeyPress: PropTypes.func.isRequired,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired
   };
 
   state = {
@@ -37,39 +38,39 @@ export class SearchTreeImpl extends React.Component {
     // Current search input value
     searchValue: '',
     // Whether to automatically expand all parent node of current expanded keys
-    autoExpandParent: true,
+    autoExpandParent: true
   };
 
-  handleExpand = (expandedKeys) => {
+  handleExpand = expandedKeys => {
     this.setState({
       expandedKeys,
       // we set autoExpandParent to false here because if it is true, we won't be able to toggle
       // COLLAPSE any subtree having an expanded child node.
-      autoExpandParent: false,
+      autoExpandParent: false
     });
   };
 
-  handleSearch = (e) => {
+  handleSearch = e => {
     const { value } = e.target;
     const { data } = this.props;
     const dataList = flattenDataToList(data);
     const expandedKeys = _.uniq(
       dataList
-        .map((item) =>
+        .map(item =>
           item.title.toLowerCase().includes(value.toLowerCase())
             ? getParentKey(item.key, data)
-            : null,
+            : null
         )
-        .filter((item) => !_.isEmpty(item)),
+        .filter(item => !_.isEmpty(item))
     );
     this.setState({
       expandedKeys,
       searchValue: value,
-      autoExpandParent: true,
+      autoExpandParent: true
     });
   };
 
-  handleSearchInputKeyUp = (e) => {
+  handleSearchInputKeyUp = e => {
     const { onSearchInputEscapeKeyPress } = this.props;
     if (e.key === 'Escape' && onSearchInputEscapeKeyPress) {
       this.setState({ searchValue: '' });
@@ -77,7 +78,7 @@ export class SearchTreeImpl extends React.Component {
     }
   };
 
-  handleCheck = (checkedKeys) => {
+  handleCheck = checkedKeys => {
     const { onCheck } = this.props;
     if (onCheck) {
       onCheck(checkedKeys, this.getAllKeys());
@@ -87,12 +88,12 @@ export class SearchTreeImpl extends React.Component {
   getAllKeys() {
     const { data } = this.props;
     const dataList = flattenDataToList(data);
-    return dataList.map((item) => item.key);
+    return dataList.map(item => item.key);
   }
 
-  renderTreeNodes = (data) => {
+  renderTreeNodes = data => {
     const { searchValue } = this.state;
-    return data.map((item) => {
+    return data.map(item => {
       const index = item.title.toLowerCase().indexOf(searchValue.toLowerCase());
       const beforeStr = item.title.substring(0, index);
       const matchStr = item.title.substring(index, index + searchValue.length);
@@ -102,7 +103,7 @@ export class SearchTreeImpl extends React.Component {
           // We set the span title to display search tree node text on hover
           <span style={styles.treeNodeTextStyle} title={item.title}>
             {beforeStr}
-            <span className='search-highlight' style={styles.searchHighlight}>
+            <span className="search-highlight" style={styles.searchHighlight}>
               {matchStr}
             </span>
             {afterStr}
@@ -118,13 +119,13 @@ export class SearchTreeImpl extends React.Component {
           key: item.key,
           title,
           children: this.renderTreeNodes(item.children),
-          'data-test-id': item.key,
+          'data-test-id': item.key
         };
       }
       return {
         key: item.key,
         title,
-        'data-test-id': item.key,
+        'data-test-id': item.key
       };
     });
   };
@@ -138,9 +139,10 @@ export class SearchTreeImpl extends React.Component {
           style={{ marginBottom: 8 }}
           placeholder={intl.formatMessage({
             defaultMessage: 'Search',
+            id: 'Yx7fMC',
             description:
               // eslint-disable-next-line max-len
-              'Placeholder text for input box to search for the columns names that could be selected or unselected to be rendered on the experiment runs table',
+              'Placeholder text for input box to search for the columns names that could be selected or unselected to be rendered on the experiment runs table'
           })}
           value={searchValue}
           onChange={this.handleSearch}
@@ -189,12 +191,14 @@ export const getParentKey = (key, treeData) => {
   for (let i = 0; i < treeData.length; i++) {
     const node = treeData[i];
     if (node.children) {
-      if (node.children.some((item) => item.key === key)) {
+      if (node.children.some(item => item.key === key)) {
         parentKey = node.key;
       } else {
         parentKey = getParentKey(key, node.children);
       }
-      if (parentKey) break;
+      if (parentKey) {
+        break;
+      }
     }
   }
   return parentKey;
@@ -204,9 +208,9 @@ export const styles = {
   treeNodeTextStyle: {
     maxWidth: 400,
     overflow: 'hidden',
-    textOverflow: 'ellipsis',
+    textOverflow: 'ellipsis'
   },
-  searchHighlight: { color: '#f50' },
+  searchHighlight: { color: '#f50' }
 };
 
 export const SearchTree = injectIntl(SearchTreeImpl);

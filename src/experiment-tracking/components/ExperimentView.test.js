@@ -12,13 +12,16 @@ import {
   addExperimentToState,
   addExperimentTagsToState,
   createPendingApi,
-  emptyState,
+  emptyState
 } from '../utils/test-utils/ReduxStoreFixtures';
 import Utils from '../../common/utils/Utils';
 import { Spinner } from '../../common/components/Spinner';
 import { getUUID } from '../../common/utils/ActionUtils';
 import { Metric, Param, RunTag, RunInfo } from '../sdk/MlflowMessages';
-import { mountWithIntl, shallowWithInjectIntl } from '../../common/utils/TestUtils';
+import {
+  mountWithIntl,
+  shallowWithInjectIntl
+} from '../../common/utils/TestUtils';
 import {
   COLUMN_TYPES,
   LIFECYCLE_FILTER,
@@ -32,7 +35,7 @@ import {
   COLUMN_SORT_BY_ASC,
   COLUMN_SORT_BY_DESC,
   DEFAULT_LIFECYCLE_FILTER,
-  DEFAULT_MODEL_VERSION_FILTER,
+  DEFAULT_MODEL_VERSION_FILTER
 } from '../constants';
 
 const EXPERIMENT_ID = '3';
@@ -71,16 +74,16 @@ const getDefaultExperimentViewProps = () => {
         start_time: 1,
         end_time: 1,
         artifact_uri: 'dummypath',
-        lifecycle_stage: 'active',
-      }),
+        lifecycle_stage: 'active'
+      })
     ],
     experiments: [Fixtures.createExperiment({ experiment_id: EXPERIMENT_ID })],
     experimentIds: [EXPERIMENT_ID],
     history: {
       location: {
-        pathname: '/',
+        pathname: '/'
       },
-      push: historyPushSpy,
+      push: historyPushSpy
     },
     paramKeyList: ['batch_size'],
     metricKeyList: ['acc'],
@@ -107,7 +110,7 @@ const getDefaultExperimentViewProps = () => {
     location: { pathname: '/' },
     modelVersionsByRunUuid: {},
     compareExperiments: false,
-    numberOfNewRuns: 0,
+    numberOfNewRuns: 0
   };
 };
 
@@ -124,15 +127,15 @@ const mountExperimentViewMock = (componentProps = {}) => {
       <BrowserRouter>
         <ExperimentViewWithIntl {...mergedProps} />
       </BrowserRouter>
-    </Provider>,
+    </Provider>
   );
 };
 
-const createTags = (tags) => {
+const createTags = tags => {
   // Converts {key: value, ...} to {key: RunTag(key, value), ...}
   return Object.entries(tags).reduce(
     (acc, [key, value]) => ({ ...acc, [key]: RunTag.fromJs({ key, value }) }),
-    {},
+    {}
   );
 };
 
@@ -142,12 +145,17 @@ test('Should render with minimal props without exploding', () => {
 });
 
 test('Should render compact view without exploding', () => {
-  const wrapper = mountExperimentViewMock({ isLoading: false, forceCompactTableView: true });
-  expect(wrapper.find('ExperimentRunsTableCompactView').text()).toContain('batch_size:512');
+  const wrapper = mountExperimentViewMock({
+    isLoading: false,
+    forceCompactTableView: true
+  });
+  expect(wrapper.find('ExperimentRunsTableCompactView').text()).toContain(
+    'batch_size:512'
+  );
   expect(wrapper.length).toBe(1);
 });
 
-test(`Clearing filter state calls sets searchInput to empty string`, () => {
+test('Clearing filter state calls sets searchInput to empty string', () => {
   const wrapper = getExperimentViewMock();
   const instance = wrapper.instance();
 
@@ -166,7 +174,7 @@ test('Onboarding alert does not show if disabled', () => {
   const wrapper = getExperimentViewMock();
   const instance = wrapper.instance();
   instance.setState({
-    showOnboardingHelper: false,
+    showOnboardingHelper: false
   });
   expect(wrapper.find('Alert')).toHaveLength(0);
 });
@@ -181,7 +189,9 @@ test('Page title is set', () => {
   const mockUpdatePageTitle = jest.fn();
   Utils.updatePageTitle = mockUpdatePageTitle;
   getExperimentViewMock();
-  expect(mockUpdatePageTitle.mock.calls[0][0]).toBe('Default - MLflow Experiment');
+  expect(mockUpdatePageTitle.mock.calls[0][0]).toBe(
+    'Default - MLflow Experiment'
+  );
 });
 
 // mapStateToProps should only be run after the call to getExperiment from ExperimentPage is
@@ -189,7 +199,9 @@ test('Page title is set', () => {
 test("mapStateToProps doesn't blow up if the searchRunsApi is pending", () => {
   const searchRunsId = getUUID();
   let state = emptyState;
-  const experiment = Fixtures.createExperiment({ experiment_id: EXPERIMENT_ID });
+  const experiment = Fixtures.createExperiment({
+    experiment_id: EXPERIMENT_ID
+  });
   state = addApiToState(state, createPendingApi(searchRunsId));
   state = addExperimentToState(state, experiment);
   state = addExperimentTagsToState(state, experiment.experiment_id, []);
@@ -197,7 +209,7 @@ test("mapStateToProps doesn't blow up if the searchRunsApi is pending", () => {
     lifecycleFilter: LIFECYCLE_FILTER.ACTIVE,
     searchRunsRequestId: searchRunsId,
     experiments: [experiment],
-    experimentIds: [experiment.experiment_id],
+    experimentIds: [experiment.experiment_id]
   });
   expect(newProps).toEqual({
     runInfos: [],
@@ -207,7 +219,7 @@ test("mapStateToProps doesn't blow up if the searchRunsApi is pending", () => {
     paramsList: [],
     tagsList: [],
     experimentTags: {},
-    modelVersionsByRunUuid: {},
+    modelVersionsByRunUuid: {}
   });
 });
 
@@ -216,18 +228,20 @@ describe('Download CSV', () => {
     'mlflow.runName': 'name',
     'mlflow.source.name': 'src.py',
     'mlflow.source.type': 'LOCAL',
-    'mlflow.user': 'user',
+    'mlflow.user': 'user'
   };
 
   const blobOptionExpected = { type: 'application/csv;charset=utf-8' };
   const filenameExpected = 'runs.csv';
   const startTimeStringExpected = Utils.formatTimestamp(
-    getDefaultExperimentViewProps().runInfos[0].start_time,
+    getDefaultExperimentViewProps().runInfos[0].start_time
   );
   const saveAsSpy = jest.spyOn(FileSaver, 'saveAs');
-  const blobSpy = jest.spyOn(global, 'Blob').mockImplementation((content, options) => {
-    return { content, options };
-  });
+  const blobSpy = jest
+    .spyOn(global, 'Blob')
+    .mockImplementation((content, options) => {
+      return { content, options };
+    });
 
   afterEach(() => {
     saveAsSpy.mockClear();
@@ -239,8 +253,8 @@ describe('Download CSV', () => {
       createTags({
         ...mlflowSystemTags,
         a: '0',
-        b: '1',
-      }),
+        b: '1'
+      })
     ];
     const csvExpected = `
 Start Time,Duration,Run ID,Name,Source Type,Source Name,User,Status,batch_size,acc,a,b
@@ -258,8 +272,8 @@ ${startTimeStringExpected},0ms,run-id,name,LOCAL,src.py,user,FINISHED,512,0.1,0,
       createTags({
         ...mlflowSystemTags,
         a: '0',
-        b: '1',
-      }),
+        b: '1'
+      })
     ];
     const csvExpected = `
 Start Time,Duration,Run ID,Name,Source Type,Source Name,User,Status,batch_size,acc,a
@@ -269,7 +283,10 @@ ${startTimeStringExpected},0ms,run-id,name,LOCAL,src.py,user,FINISHED,512,0.1,0
     const wrapper = getExperimentViewMock({ tagsList });
     // Uncheck the tag 'b'
     wrapper.setProps({
-      categorizedUncheckedKeys: { [COLUMN_TYPES.TAGS]: ['b'], [COLUMN_TYPES.ATTRIBUTES]: [] },
+      categorizedUncheckedKeys: {
+        [COLUMN_TYPES.TAGS]: ['b'],
+        [COLUMN_TYPES.ATTRIBUTES]: []
+      }
     });
     // Then, download CSV
     wrapper.instance().onDownloadCsv();
@@ -300,8 +317,8 @@ describe('ExperimentView event handlers', () => {
     instance = wrapper.instance();
     Object.assign(navigator, {
       clipboard: {
-        writeText: () => {},
-      },
+        writeText: () => {}
+      }
     });
   });
 
@@ -311,7 +328,7 @@ describe('ExperimentView event handlers', () => {
 
     expect(onSearchSpy).toHaveBeenCalledTimes(1);
     expect(onSearchSpy).toBeCalledWith({
-      lifecycleFilter: newFilterInput,
+      lifecycleFilter: newFilterInput
     });
   });
 
@@ -321,15 +338,15 @@ describe('ExperimentView event handlers', () => {
 
     expect(onSearchSpy).toHaveBeenCalledTimes(1);
     expect(onSearchSpy).toBeCalledWith({
-      modelVersionFilter: newFilterInput,
+      modelVersionFilter: newFilterInput
     });
   });
 
   test('search filters are correctly applied', () => {
     instance.onSearchInput({
       target: {
-        value: 'SearchString',
-      },
+        value: 'SearchString'
+      }
     });
 
     instance.onSortBy('orderByKey', true);
@@ -337,14 +354,14 @@ describe('ExperimentView event handlers', () => {
     expect(onSearchSpy).toHaveBeenCalledTimes(1);
     expect(onSearchSpy).toBeCalledWith({
       orderByKey: 'orderByKey',
-      orderByAsc: true,
+      orderByAsc: true
     });
 
     instance.onSearch(undefined, 'SearchString');
 
     expect(onSearchSpy).toHaveBeenCalledTimes(2);
     expect(onSearchSpy).toBeCalledWith({
-      searchInput: 'SearchString',
+      searchInput: 'SearchString'
     });
   });
 });
@@ -354,33 +371,48 @@ describe('Sort by dropdown', () => {
     const wrapper = mountExperimentViewMock({
       isLoading: false,
       forceCompactTableView: true,
-      startTime: 'ALL',
+      startTime: 'ALL'
     });
 
     const sortSelect = wrapper
-      .find("Select [data-test-id='sort-select-dropdown'] > .ant-select-selector")
+      .find(
+        "Select [data-test-id='sort-select-dropdown'] > .ant-select-selector"
+      )
       .first();
     sortSelect.simulate('mousedown');
     wrapper.update();
 
-    expect(wrapper.exists(`[data-test-id="sort-select-User-${COLUMN_SORT_BY_ASC}"]`)).toBe(true);
-    expect(wrapper.exists(`[data-test-id="sort-select-batch_size-${COLUMN_SORT_BY_ASC}"]`)).toBe(
-      true,
-    );
-    expect(wrapper.exists(`[data-test-id="sort-select-acc-${COLUMN_SORT_BY_ASC}"]`)).toBe(true);
-    expect(wrapper.exists(`[data-test-id="sort-select-User-${COLUMN_SORT_BY_DESC}"]`)).toBe(true);
-    expect(wrapper.exists(`[data-test-id="sort-select-batch_size-${COLUMN_SORT_BY_DESC}"]`)).toBe(
-      true,
-    );
-    expect(wrapper.exists(`[data-test-id="sort-select-acc-${COLUMN_SORT_BY_DESC}"]`)).toBe(true);
+    expect(
+      wrapper.exists(`[data-test-id="sort-select-User-${COLUMN_SORT_BY_ASC}"]`)
+    ).toBe(true);
+    expect(
+      wrapper.exists(
+        `[data-test-id="sort-select-batch_size-${COLUMN_SORT_BY_ASC}"]`
+      )
+    ).toBe(true);
+    expect(
+      wrapper.exists(`[data-test-id="sort-select-acc-${COLUMN_SORT_BY_ASC}"]`)
+    ).toBe(true);
+    expect(
+      wrapper.exists(`[data-test-id="sort-select-User-${COLUMN_SORT_BY_DESC}"]`)
+    ).toBe(true);
+    expect(
+      wrapper.exists(
+        `[data-test-id="sort-select-batch_size-${COLUMN_SORT_BY_DESC}"]`
+      )
+    ).toBe(true);
+    expect(
+      wrapper.exists(`[data-test-id="sort-select-acc-${COLUMN_SORT_BY_DESC}"]`)
+    ).toBe(true);
 
-    wrapper.find("Select[data-test-id='sort-select-dropdown']").first().prop('onChange')(
-      'attributes.start_time',
-    );
+    wrapper
+      .find("Select[data-test-id='sort-select-dropdown']")
+      .first()
+      .prop('onChange')('attributes.start_time');
 
     expect(onSearchSpy).toBeCalledWith({
       orderByAsc: false,
-      orderByKey: 'attributes.start_time',
+      orderByKey: 'attributes.start_time'
     });
   });
 });
@@ -390,27 +422,40 @@ describe('Start time dropdown', () => {
     const wrapper = mountExperimentViewMock({
       isLoading: false,
       forceCompactTableView: true,
-      startTime: 'ALL',
+      startTime: 'ALL'
     });
 
     const startTimeSelect = wrapper
-      .find("Select [data-test-id='start-time-select-dropdown'] > .ant-select-selector")
+      .find(
+        "Select [data-test-id='start-time-select-dropdown'] > .ant-select-selector"
+      )
       .first();
     startTimeSelect.simulate('mousedown');
 
     expect(wrapper.exists('[data-test-id="start-time-select-ALL"]')).toBe(true);
-    expect(wrapper.exists('[data-test-id="start-time-select-LAST_HOUR"]')).toBe(true);
-    expect(wrapper.exists('[data-test-id="start-time-select-LAST_24_HOURS"]')).toBe(true);
-    expect(wrapper.exists('[data-test-id="start-time-select-LAST_7_DAYS"]')).toBe(true);
-    expect(wrapper.exists('[data-test-id="start-time-select-LAST_30_DAYS"]')).toBe(true);
-    expect(wrapper.exists('[data-test-id="start-time-select-LAST_YEAR"]')).toBe(true);
-
-    wrapper.find("Select[data-test-id='start-time-select-dropdown']").first().prop('onChange')(
-      'LAST_7_DAYS',
+    expect(wrapper.exists('[data-test-id="start-time-select-LAST_HOUR"]')).toBe(
+      true
+    );
+    expect(
+      wrapper.exists('[data-test-id="start-time-select-LAST_24_HOURS"]')
+    ).toBe(true);
+    expect(
+      wrapper.exists('[data-test-id="start-time-select-LAST_7_DAYS"]')
+    ).toBe(true);
+    expect(
+      wrapper.exists('[data-test-id="start-time-select-LAST_30_DAYS"]')
+    ).toBe(true);
+    expect(wrapper.exists('[data-test-id="start-time-select-LAST_YEAR"]')).toBe(
+      true
     );
 
+    wrapper
+      .find("Select[data-test-id='start-time-select-dropdown']")
+      .first()
+      .prop('onChange')('LAST_7_DAYS');
+
     expect(onSearchSpy).toBeCalledWith({
-      startTime: 'LAST_7_DAYS',
+      startTime: 'LAST_7_DAYS'
     });
   });
 });
@@ -428,12 +473,13 @@ describe('handleDiffSwitchChange', () => {
           [COLUMN_TYPES.ATTRIBUTES]: ['a1'],
           [COLUMN_TYPES.PARAMS]: ['p1'],
           [COLUMN_TYPES.METRICS]: ['m1'],
-          [COLUMN_TYPES.TAGS]: ['t1'],
+          [COLUMN_TYPES.TAGS]: ['t1']
         };
       });
     wrapper = getExperimentViewMock();
     instance = wrapper.instance();
-    instance.getCategorizedUncheckedKeysDiffView = getCategorizedUncheckedKeysDiffViewSpy;
+    instance.getCategorizedUncheckedKeysDiffView =
+      getCategorizedUncheckedKeysDiffViewSpy;
   });
 
   test('handleDiffSwitchChange changes state correctly', () => {
@@ -449,25 +495,25 @@ describe('handleDiffSwitchChange', () => {
         [COLUMN_TYPES.ATTRIBUTES]: ['a1'],
         [COLUMN_TYPES.PARAMS]: ['p1'],
         [COLUMN_TYPES.METRICS]: ['m1'],
-        [COLUMN_TYPES.TAGS]: ['t1'],
+        [COLUMN_TYPES.TAGS]: ['t1']
       },
       preSwitchCategorizedUncheckedKeys: {
         [COLUMN_TYPES.ATTRIBUTES]: [],
         [COLUMN_TYPES.PARAMS]: [],
         [COLUMN_TYPES.METRICS]: [],
-        [COLUMN_TYPES.TAGS]: [],
+        [COLUMN_TYPES.TAGS]: []
       },
       postSwitchCategorizedUncheckedKeys: {
         [COLUMN_TYPES.ATTRIBUTES]: ['a1'],
         [COLUMN_TYPES.PARAMS]: ['p1'],
         [COLUMN_TYPES.METRICS]: ['m1'],
-        [COLUMN_TYPES.TAGS]: ['t1'],
-      },
+        [COLUMN_TYPES.TAGS]: ['t1']
+      }
     });
 
     // Turn switch on
     wrapper.setProps({
-      diffSwitchSelected: true,
+      diffSwitchSelected: true
     });
 
     // Test execution with switch turned on
@@ -475,7 +521,7 @@ describe('handleDiffSwitchChange', () => {
     expect(getCategorizedUncheckedKeysDiffViewSpy).toHaveBeenCalledTimes(1);
     expect(handleDiffSwitchChangeSpy).toHaveBeenCalledTimes(2);
     expect(handleDiffSwitchChangeSpy).toHaveBeenLastCalledWith({
-      categorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
+      categorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS
     });
   });
 
@@ -485,8 +531,8 @@ describe('handleDiffSwitchChange', () => {
         [COLUMN_TYPES.ATTRIBUTES]: ['a2'],
         [COLUMN_TYPES.PARAMS]: ['p2'],
         [COLUMN_TYPES.METRICS]: ['m2'],
-        [COLUMN_TYPES.TAGS]: ['t2'],
-      },
+        [COLUMN_TYPES.TAGS]: ['t2']
+      }
     });
 
     // Test execution with switch turned off
@@ -497,25 +543,25 @@ describe('handleDiffSwitchChange', () => {
         [COLUMN_TYPES.ATTRIBUTES]: ['a1'],
         [COLUMN_TYPES.PARAMS]: ['p1'],
         [COLUMN_TYPES.METRICS]: ['m1'],
-        [COLUMN_TYPES.TAGS]: ['t1'],
+        [COLUMN_TYPES.TAGS]: ['t1']
       },
       preSwitchCategorizedUncheckedKeys: {
         [COLUMN_TYPES.ATTRIBUTES]: ['a2'],
         [COLUMN_TYPES.PARAMS]: ['p2'],
         [COLUMN_TYPES.METRICS]: ['m2'],
-        [COLUMN_TYPES.TAGS]: ['t2'],
+        [COLUMN_TYPES.TAGS]: ['t2']
       },
       postSwitchCategorizedUncheckedKeys: {
         [COLUMN_TYPES.ATTRIBUTES]: ['a1'],
         [COLUMN_TYPES.PARAMS]: ['p1'],
         [COLUMN_TYPES.METRICS]: ['m1'],
-        [COLUMN_TYPES.TAGS]: ['t1'],
-      },
+        [COLUMN_TYPES.TAGS]: ['t1']
+      }
     });
 
     // Test execution with switch turned on
     wrapper.setProps({
-      diffSwitchSelected: true,
+      diffSwitchSelected: true
     });
 
     instance.handleDiffSwitchChange();
@@ -524,8 +570,8 @@ describe('handleDiffSwitchChange', () => {
         [COLUMN_TYPES.ATTRIBUTES]: ['a2'],
         [COLUMN_TYPES.PARAMS]: ['p2'],
         [COLUMN_TYPES.METRICS]: ['m2'],
-        [COLUMN_TYPES.TAGS]: ['t2'],
-      },
+        [COLUMN_TYPES.TAGS]: ['t2']
+      }
     });
   });
 
@@ -536,8 +582,8 @@ describe('handleDiffSwitchChange', () => {
         [COLUMN_TYPES.ATTRIBUTES]: ['a2'],
         [COLUMN_TYPES.PARAMS]: ['p2'],
         [COLUMN_TYPES.METRICS]: ['m2'],
-        [COLUMN_TYPES.TAGS]: ['t2'],
-      },
+        [COLUMN_TYPES.TAGS]: ['t2']
+      }
     });
 
     // Test execution with switch turned off
@@ -550,20 +596,20 @@ describe('handleDiffSwitchChange', () => {
         [COLUMN_TYPES.ATTRIBUTES]: ['a1', 'a3'], // select a3
         [COLUMN_TYPES.PARAMS]: [], // deselect p1
         [COLUMN_TYPES.METRICS]: ['m1', 'm3'],
-        [COLUMN_TYPES.TAGS]: [],
+        [COLUMN_TYPES.TAGS]: []
       },
       preSwitchCategorizedUncheckedKeys: {
         [COLUMN_TYPES.ATTRIBUTES]: ['a2'],
         [COLUMN_TYPES.PARAMS]: ['p2'],
         [COLUMN_TYPES.METRICS]: ['m2'],
-        [COLUMN_TYPES.TAGS]: ['t2'],
+        [COLUMN_TYPES.TAGS]: ['t2']
       },
       postSwitchCategorizedUncheckedKeys: {
         [COLUMN_TYPES.ATTRIBUTES]: ['a1'],
         [COLUMN_TYPES.PARAMS]: ['p1'],
         [COLUMN_TYPES.METRICS]: ['m1'],
-        [COLUMN_TYPES.TAGS]: ['t1'],
-      },
+        [COLUMN_TYPES.TAGS]: ['t1']
+      }
     });
 
     // Change unchecked columns
@@ -572,8 +618,8 @@ describe('handleDiffSwitchChange', () => {
         [COLUMN_TYPES.ATTRIBUTES]: ['a1', 'a3'], // select a3
         [COLUMN_TYPES.PARAMS]: [], // deselect p1
         [COLUMN_TYPES.METRICS]: ['m1', 'm3'],
-        [COLUMN_TYPES.TAGS]: [],
-      },
+        [COLUMN_TYPES.TAGS]: []
+      }
     });
 
     // Test execution with switch turned off
@@ -585,8 +631,8 @@ describe('handleDiffSwitchChange', () => {
         [COLUMN_TYPES.ATTRIBUTES]: ['a2', 'a3'],
         [COLUMN_TYPES.PARAMS]: ['p2'],
         [COLUMN_TYPES.METRICS]: ['m2', 'm3'],
-        [COLUMN_TYPES.TAGS]: ['t2'],
-      },
+        [COLUMN_TYPES.TAGS]: ['t2']
+      }
     });
   });
 });

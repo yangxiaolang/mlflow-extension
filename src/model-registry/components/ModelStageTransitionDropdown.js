@@ -1,5 +1,10 @@
 import React from 'react';
-import { Dropdown, Menu, Modal, ChevronDownIcon } from '@databricks/design-system';
+import {
+  Dropdown,
+  Menu,
+  Modal,
+  ChevronDownIcon
+} from '@databricks/design-system';
 
 import PropTypes from 'prop-types';
 import { Stages, StageTagComponents, ActivityTypes } from '../constants';
@@ -10,22 +15,22 @@ import { FormattedMessage } from 'react-intl';
 export class ModelStageTransitionDropdown extends React.Component {
   static propTypes = {
     currentStage: PropTypes.string,
-    onSelect: PropTypes.func,
+    onSelect: PropTypes.func
   };
 
   static defaultProps = {
-    currentStage: Stages.NONE,
+    currentStage: Stages.NONE
   };
 
   state = {
     confirmModalVisible: false,
     confirmingActivity: null,
-    handleConfirm: undefined,
+    handleConfirm: undefined
   };
 
   transitionFormRef = React.createRef();
 
-  handleMenuItemClick = (activity) => {
+  handleMenuItemClick = activity => {
     const { onSelect } = this.props;
     this.setState({
       confirmModalVisible: true,
@@ -35,10 +40,12 @@ export class ModelStageTransitionDropdown extends React.Component {
         (() => {
           this.setState({ confirmModalVisible: false });
           const archiveExistingVersions = Boolean(
-            this.transitionFormRef.current.getFieldValue('archiveExistingVersions'),
+            this.transitionFormRef.current.getFieldValue(
+              'archiveExistingVersions'
+            )
           );
           this.props.onSelect(activity, archiveExistingVersions);
-        }),
+        })
     });
   };
 
@@ -46,9 +53,9 @@ export class ModelStageTransitionDropdown extends React.Component {
     this.setState({ confirmModalVisible: false });
   };
 
-  getNoneCurrentStages = (currentStage) => {
+  getNoneCurrentStages = currentStage => {
     const stages = Object.values(Stages);
-    _.remove(stages, (s) => s === currentStage);
+    _.remove(stages, s => s === currentStage);
     return stages;
   };
 
@@ -57,23 +64,24 @@ export class ModelStageTransitionDropdown extends React.Component {
     const nonCurrentStages = this.getNoneCurrentStages(currentStage);
     return (
       <Menu onSelect={onSelect}>
-        {nonCurrentStages.map((stage) => (
+        {nonCurrentStages.map(stage => (
           <Menu.Item
             key={`transition-to-${stage}`}
             onClick={() =>
               this.handleMenuItemClick({
                 type: ActivityTypes.APPLIED_TRANSITION,
-                to_stage: stage,
+                to_stage: stage
               })
             }
           >
             <FormattedMessage
-              defaultMessage='Transition to'
-              description='Text for transitioning a model version to a different stage under
-                 dropdown menu in model version page'
+              defaultMessage="Transition to"
+              id="UhdPmo"
+              description="Text for transitioning a model version to a different stage under
+                 dropdown menu in model version page"
             />
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <i className='fas fa-long-arrow-right' />
+            <i className="fas fa-long-arrow-right" />
             &nbsp;&nbsp;&nbsp;&nbsp;
             {StageTagComponents[stage]}
           </Menu.Item>
@@ -83,7 +91,8 @@ export class ModelStageTransitionDropdown extends React.Component {
   }
 
   renderConfirmModal() {
-    const { confirmModalVisible, confirmingActivity, handleConfirm } = this.state;
+    const { confirmModalVisible, confirmingActivity, handleConfirm } =
+      this.state;
     if (confirmingActivity) {
       const formComponent = (
         <DirectTransitionForm
@@ -95,8 +104,9 @@ export class ModelStageTransitionDropdown extends React.Component {
         <Modal
           title={
             <FormattedMessage
-              defaultMessage='Stage Transition'
-              description='Title text for model version stage transitions in confirm modal'
+              defaultMessage="Stage Transition"
+              id="Dxwvus"
+              description="Title text for model version stage transitions in confirm modal"
             />
           }
           visible={confirmModalVisible}
@@ -104,16 +114,18 @@ export class ModelStageTransitionDropdown extends React.Component {
           onCancel={this.handleConfirmModalCancel}
           okText={
             <FormattedMessage
-              defaultMessage='OK'
-              description='Text for OK button on the confirmation page for stage transition
-                 on the model versions page'
+              defaultMessage="OK"
+              id="SAD2Mj"
+              description="Text for OK button on the confirmation page for stage transition
+                 on the model versions page"
             />
           }
           cancelText={
             <FormattedMessage
-              defaultMessage='Cancel'
-              description='Text for cancel button on the confirmation page for stage
-                transitions on the model versions page'
+              defaultMessage="Cancel"
+              id="XzoBvA"
+              description="Text for cancel button on the confirmation page for stage
+                transitions on the model versions page"
             />
           }
         >
@@ -132,7 +144,7 @@ export class ModelStageTransitionDropdown extends React.Component {
         <Dropdown
           overlay={this.getMenu()}
           trigger={['click']}
-          className='stage-transition-dropdown'
+          className="stage-transition-dropdown"
         >
           <span>
             {StageTagComponents[currentStage]}
@@ -145,17 +157,18 @@ export class ModelStageTransitionDropdown extends React.Component {
   }
 }
 
-export const renderActivityDescription = (activity) => {
+export const renderActivityDescription = activity => {
   if (activity) {
     return (
       <div>
         <FormattedMessage
-          defaultMessage='Transition to'
-          description='Text for activity description under confirmation modal for model
-             version stage transition'
+          defaultMessage="Transition to"
+          id="ZYBoeF"
+          description="Text for activity description under confirmation modal for model
+             version stage transition"
         />
         &nbsp;&nbsp;&nbsp;
-        <i className='fas fa-long-arrow-right' />
+        <i className="fas fa-long-arrow-right" />
         &nbsp;&nbsp;&nbsp;&nbsp;
         {StageTagComponents[activity.to_stage]}
       </div>

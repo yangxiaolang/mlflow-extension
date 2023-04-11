@@ -14,13 +14,13 @@ describe('I18nUtils', () => {
     window.location = oldLocation;
   });
 
-  const setQueryLocale = (locale) => {
+  const setQueryLocale = locale => {
     oldLocation = window.location;
     delete window.location;
     window.location = { search: `?l=${locale}` };
   };
 
-  const setLocalStorageLocale = (locale) => {
+  const setLocalStorageLocale = locale => {
     localStorage.setItem('locale', locale);
   };
 
@@ -66,18 +66,18 @@ describe('I18nUtils', () => {
         'fr-CA': 'value',
         'fr-FR': 'value',
         en: 'value',
-        'top-locale': 'fr-CA',
+        'top-locale': 'fr-CA'
       });
       expect(await I18nUtils.loadMessages('pt-BR')).toEqual({
         'pt-BR': 'value',
         'pt-PT': 'value',
         en: 'value',
-        'top-locale': 'pt-BR',
+        'top-locale': 'pt-BR'
       });
       expect(await I18nUtils.loadMessages('en-GB')).toEqual({
         'en-GB': 'value',
         en: 'value',
-        'top-locale': 'en-GB',
+        'top-locale': 'en-GB'
       });
     });
 
@@ -86,14 +86,14 @@ describe('I18nUtils', () => {
       expect(frResult).toEqual({
         'fr-FR': 'value',
         en: 'value',
-        'top-locale': 'fr-FR',
+        'top-locale': 'fr-FR'
       });
 
       // no base language falls back to default only
       const zzzResult = await I18nUtils.loadMessages('zzz-unknown'); // special mocked locale
       expect(zzzResult).toEqual({
         en: 'value',
-        'top-locale': 'en',
+        'top-locale': 'en'
       });
     });
   });
@@ -106,7 +106,7 @@ describe('I18nUtils', () => {
         'fr-CA': 'value',
         'fr-FR': 'value',
         en: 'value',
-        'top-locale': 'fr-CA',
+        'top-locale': 'fr-CA'
       });
     });
   });

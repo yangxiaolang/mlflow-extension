@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import RequestStateWrapper from '../../common/components/RequestStateWrapper';
 import { getUUID } from '../../common/utils/ActionUtils';
 import Utils from '../../common/utils/Utils';
-import { getCombinedSearchFilter, constructSearchInputFromURLState } from '../utils/SearchUtils';
+import {
+  getCombinedSearchFilter,
+  constructSearchInputFromURLState
+} from '../utils/SearchUtils';
 import {
   AntdTableSortOrder,
   REGISTERED_MODELS_PER_PAGE,
-  REGISTERED_MODELS_SEARCH_NAME_FIELD,
+  REGISTERED_MODELS_SEARCH_NAME_FIELD
 } from '../constants';
 import { searchRegisteredModelsApi } from '../actions';
 import LocalStorageUtils from '../../common/utils/LocalStorageUtils';
@@ -24,7 +27,7 @@ export class ModelListPageImpl extends React.Component {
       maxResultsSelection: REGISTERED_MODELS_PER_PAGE,
       pageTokens: {},
       loading: false,
-      searchInput: constructSearchInputFromURLState(this.getUrlState()),
+      searchInput: constructSearchInputFromURLState(this.getUrlState())
     };
   }
   static propTypes = {
@@ -32,7 +35,7 @@ export class ModelListPageImpl extends React.Component {
     searchRegisteredModelsApi: PropTypes.func.isRequired,
     // react-router props
     history: PropTypes.object.isRequired,
-    location: PropTypes.object,
+    location: PropTypes.object
   };
   modelListPageStoreKey = 'ModelListPageStore';
   defaultPersistedPageTokens = { 1: null };
@@ -41,7 +44,9 @@ export class ModelListPageImpl extends React.Component {
   criticalInitialRequestIds = [this.initialSearchRegisteredModelsApiId];
 
   getUrlState() {
-    return this.props.location ? Utils.getSearchParamsFromUrl(this.props.location.search) : {};
+    return this.props.location
+      ? Utils.getSearchParamsFromUrl(this.props.location.search)
+      : {};
   }
 
   componentDidMount() {
@@ -51,7 +56,10 @@ export class ModelListPageImpl extends React.Component {
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState(
       {
-        orderByKey: urlState.orderByKey === undefined ? this.state.orderByKey : urlState.orderByKey,
+        orderByKey:
+          urlState.orderByKey === undefined
+            ? this.state.orderByKey
+            : urlState.orderByKey,
         orderByAsc:
           urlState.orderByAsc === undefined
             ? this.state.orderByAsc
@@ -61,11 +69,11 @@ export class ModelListPageImpl extends React.Component {
             ? parseInt(urlState.page, 10)
             : this.state.currentPage,
         maxResultsSelection: maxResultsForTokens,
-        pageTokens: persistedPageTokens,
+        pageTokens: persistedPageTokens
       },
       () => {
         this.loadModels(true);
-      },
+      }
     );
   }
 
@@ -104,18 +112,26 @@ export class ModelListPageImpl extends React.Component {
    * ModelRegistry component.
    */
   static getLocalStore(key) {
-    return LocalStorageUtils.getSessionScopedStoreForComponent('ModelListPage', key);
+    return LocalStorageUtils.getSessionScopedStoreForComponent(
+      'ModelListPage',
+      key
+    );
   }
 
   // Loads the initial set of models.
   loadModels(isInitialLoading = false) {
-    this.loadPage(this.state.currentPage, undefined, undefined, isInitialLoading);
+    this.loadPage(
+      this.state.currentPage,
+      undefined,
+      undefined,
+      isInitialLoading
+    );
   }
 
   resetHistoryState() {
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       currentPage: 1,
-      pageTokens: this.defaultPersistedPageTokens,
+      pageTokens: this.defaultPersistedPageTokens
     }));
     this.setPersistedPageTokens(this.defaultPersistedPageTokens);
   }
@@ -129,7 +145,7 @@ export class ModelListPageImpl extends React.Component {
   static getOrderByExpr = (orderByKey, orderByAsc) =>
     orderByKey ? `${orderByKey} ${orderByAsc ? 'ASC' : 'DESC'}` : '';
 
-  isEmptyPageResponse = (value) => {
+  isEmptyPageResponse = value => {
     return !value || !value.registered_models || !value.next_page_token;
   };
 
@@ -149,16 +165,16 @@ export class ModelListPageImpl extends React.Component {
   updatePageState = (page, response = {}) => {
     const nextPageToken = this.getNextPageTokenFromResponse(response);
     this.setState(
-      (prevState) => ({
+      prevState => ({
         currentPage: page,
         pageTokens: {
           ...prevState.pageTokens,
-          [page + 1]: nextPageToken,
-        },
+          [page + 1]: nextPageToken
+        }
       }),
       () => {
         this.setPersistedPageTokens(this.state.pageTokens);
-      },
+      }
     );
   };
 
@@ -174,17 +190,22 @@ export class ModelListPageImpl extends React.Component {
       {
         orderByKey: REGISTERED_MODELS_SEARCH_NAME_FIELD,
         orderByAsc: true,
-        searchInput: '',
+        searchInput: ''
         // eslint-disable-nextline
       },
       () => {
-        this.updateUrlWithSearchFilter('', REGISTERED_MODELS_SEARCH_NAME_FIELD, true, 1);
+        this.updateUrlWithSearchFilter(
+          '',
+          REGISTERED_MODELS_SEARCH_NAME_FIELD,
+          true,
+          1
+        );
         this.loadPage(1, callback, errorCallback);
-      },
+      }
     );
   };
 
-  handleSearchInputChange = (searchInput) => {
+  handleSearchInputChange = searchInput => {
     this.setState({ searchInput: searchInput });
   };
 
@@ -203,7 +224,10 @@ export class ModelListPageImpl extends React.Component {
       urlParams['page'] = page;
     }
     const newUrl = `/models?${Utils.getSearchUrlFromState(urlParams)}`;
-    if (newUrl !== this.props.history.location.pathname + this.props.history.location.search) {
+    if (
+      newUrl !==
+      this.props.history.location.pathname + this.props.history.location.search
+    ) {
       this.props.history.push(newUrl);
     }
   };
@@ -227,7 +251,12 @@ export class ModelListPageImpl extends React.Component {
     this.loadPage(currentPage - 1, callback, errorCallback);
   };
 
-  handleClickSortableColumn = (orderByKey, sortOrder, callback, errorCallback) => {
+  handleClickSortableColumn = (
+    orderByKey,
+    sortOrder,
+    callback,
+    errorCallback
+  ) => {
     const orderByAsc = sortOrder !== AntdTableSortOrder.DESC; // default to true
     this.setState({ orderByKey, orderByAsc }, () => {
       this.resetHistoryState();
@@ -244,7 +273,7 @@ export class ModelListPageImpl extends React.Component {
       searchInput,
       pageTokens,
       orderByKey,
-      orderByAsc,
+      orderByAsc
       // eslint-disable-nextline
     } = this.state;
     this.setState({ loading: true });
@@ -252,7 +281,7 @@ export class ModelListPageImpl extends React.Component {
     this.props
       .searchRegisteredModelsApi(
         getCombinedSearchFilter({
-          query: searchInput,
+          query: searchInput
           // eslint-disable-nextline
         }),
         this.state.maxResultsSelection,
@@ -260,14 +289,14 @@ export class ModelListPageImpl extends React.Component {
         pageTokens[page],
         isInitialLoading
           ? this.initialSearchRegisteredModelsApiId
-          : this.searchRegisteredModelsApiId,
+          : this.searchRegisteredModelsApiId
       )
-      .then((r) => {
+      .then(r => {
         this.updatePageState(page, r);
         this.setState({ loading: false });
         callback && callback();
       })
-      .catch((e) => {
+      .catch(e => {
         Utils.logErrorAndNotifyUser(e);
         this.setState({ currentPage: 1 });
         this.resetHistoryState();
@@ -281,7 +310,7 @@ export class ModelListPageImpl extends React.Component {
       orderByAsc,
       currentPage,
       pageTokens,
-      searchInput,
+      searchInput
       // eslint-disable-nextline
     } = this.state;
     const { models } = this.props;
@@ -312,15 +341,18 @@ export class ModelListPageImpl extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const models = Object.values(state.entities.modelByName);
   return {
-    models,
+    models
   };
 };
 
 const mapDispatchToProps = {
-  searchRegisteredModelsApi,
+  searchRegisteredModelsApi
 };
 
-export const ModelListPage = connect(mapStateToProps, mapDispatchToProps)(ModelListPageImpl);
+export const ModelListPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModelListPageImpl);

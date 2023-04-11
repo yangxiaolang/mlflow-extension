@@ -27,17 +27,17 @@ class ShowArtifactMapView extends Component {
   static propTypes = {
     runUuid: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    getArtifact: PropTypes.func,
+    getArtifact: PropTypes.func
   };
 
   static defaultProps = {
-    getArtifact: getArtifactContent,
+    getArtifact: getArtifactContent
   };
 
   state = {
     loading: true,
     error: undefined,
-    features: undefined,
+    features: undefined
   };
 
   componentDidMount() {
@@ -45,7 +45,10 @@ class ShowArtifactMapView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.path !== prevProps.path || this.props.runUuid !== prevProps.runUuid) {
+    if (
+      this.props.path !== prevProps.path ||
+      this.props.runUuid !== prevProps.runUuid
+    ) {
       this.fetchArtifacts();
     }
 
@@ -65,10 +68,11 @@ class ShowArtifactMapView extends Component {
       // Load tiles from OSM with the corresponding attribution
       // Potentially, these could be set in an ENV VAR to use a custom map
       const tilesURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-      const attr = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+      const attr =
+        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
       L.tileLayer(tilesURL, {
-        attribution: attr,
+        attribution: attr
       }).addTo(map);
 
       const geojsonLayer = L.geoJSON(this.state.features, {
@@ -77,10 +81,13 @@ class ShowArtifactMapView extends Component {
         },
         pointToLayer(feature, latlng) {
           if (feature.properties && feature.properties.style) {
-            return L.circleMarker(latlng, feature.properties && feature.properties.style);
+            return L.circleMarker(
+              latlng,
+              feature.properties && feature.properties.style
+            );
           } else if (feature.properties && feature.properties.icon) {
             return L.marker(latlng, {
-              icon: L.icon(feature.properties && feature.properties.icon),
+              icon: L.icon(feature.properties && feature.properties.icon)
             });
           }
           return L.marker(latlng, {
@@ -89,11 +96,11 @@ class ShowArtifactMapView extends Component {
               iconUrl: icon,
               shadowUrl: iconShadow,
               iconSize: [24, 36],
-              iconAnchor: [12, 36],
-            }),
+              iconAnchor: [12, 36]
+            })
           });
         },
-        onEachFeature: onEachFeature,
+        onEachFeature: onEachFeature
       }).addTo(map);
       map.fitBounds(geojsonLayer.getBounds());
       this.leafletMap = map;
@@ -102,17 +109,17 @@ class ShowArtifactMapView extends Component {
 
   render() {
     if (this.state.loading) {
-      return <div className='artifact-map-view-loading'>Loading...</div>;
+      return <div className="artifact-map-view-loading">Loading...</div>;
     }
     if (this.state.error) {
       return (
-        <div className='artifact-map-view-error'>
+        <div className="artifact-map-view-error">
           Oops, we couldn't load your file because of an error.
         </div>
       );
     } else {
       return (
-        <div className='map-container'>
+        <div className="map-container">
           <div id={this.mapDivId}></div>
         </div>
       );
@@ -124,11 +131,11 @@ class ShowArtifactMapView extends Component {
     const artifactLocation = getSrc(this.props.path, this.props.runUuid);
     this.props
       .getArtifact(artifactLocation)
-      .then((rawFeatures) => {
+      .then(rawFeatures => {
         const parsedFeatures = JSON.parse(rawFeatures);
         this.setState({ features: parsedFeatures, loading: false });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({ error: error, loading: false, features: undefined });
       });
   }

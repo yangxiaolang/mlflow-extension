@@ -3,7 +3,10 @@ import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
-import { mockModelVersionDetailed, mockRegisteredModelDetailed } from '../test-utils';
+import {
+  mockModelVersionDetailed,
+  mockRegisteredModelDetailed
+} from '../test-utils';
 import { ModelVersionStatus, Stages } from '../constants';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -21,27 +24,36 @@ describe('ModelVersionPage', () => {
   beforeEach(() => {
     // TODO: remove global fetch mock by explicitly mocking all the service API calls
     global.fetch = jest.fn(() =>
-      Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('') }),
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('')
+      })
     );
     minimalProps = {
       match: {
         params: {
           modelName: encodeURIComponent('Model A'),
-          version: '1',
-        },
+          version: '1'
+        }
       },
       history: {
-        push: jest.fn(),
-      },
+        push: jest.fn()
+      }
     };
     const versions = [
-      mockModelVersionDetailed('Model A', 1, Stages.PRODUCTION, ModelVersionStatus.READY),
+      mockModelVersionDetailed(
+        'Model A',
+        1,
+        Stages.PRODUCTION,
+        ModelVersionStatus.READY
+      )
     ];
     minimalStore = mockStore({
       entities: {
         runInfosByUuid: {},
         modelByName: {
-          'Model A': mockRegisteredModelDetailed('Model A', versions),
+          'Model A': mockRegisteredModelDetailed('Model A', versions)
         },
         modelVersionsByModel: {
           'Model A': {
@@ -49,15 +61,15 @@ describe('ModelVersionPage', () => {
               'Model A',
               '1',
               Stages.PRODUCTION,
-              ModelVersionStatus.READY,
-            ),
-          },
+              ModelVersionStatus.READY
+            )
+          }
         },
         activitiesByModelVersion: {},
         transitionRequestsByModelVersion: {},
-        mlModelArtifactByModelVersion: {},
+        mlModelArtifactByModelVersion: {}
       },
-      apis: {},
+      apis: {}
     });
   });
 
@@ -67,7 +79,7 @@ describe('ModelVersionPage', () => {
         <BrowserRouter>
           <ModelVersionPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find(ModelVersionPage).length).toBe(1);
   });
@@ -78,19 +90,21 @@ describe('ModelVersionPage', () => {
         <BrowserRouter>
           <ModelVersionPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     instance = wrapper.find(ModelVersionPageImpl).instance();
     const mockError = {
       getErrorCode() {
         return 'RESOURCE_DOES_NOT_EXIST';
-      },
+      }
     };
     Utils.isBrowserTabVisible = jest.fn(() => true);
     instance.loadData = jest.fn(() => Promise.reject(mockError));
     expect(instance.props.modelName).toEqual('Model A');
     return instance.pollData().then(() => {
-      expect(minimalProps.history.push).toHaveBeenCalledWith(getModelPageRoute('Model A'));
+      expect(minimalProps.history.push).toHaveBeenCalledWith(
+        getModelPageRoute('Model A')
+      );
     });
   });
 });

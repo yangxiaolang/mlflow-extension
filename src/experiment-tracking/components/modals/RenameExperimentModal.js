@@ -18,10 +18,10 @@ export class RenameExperimentModalImpl extends Component {
     experimentNames: PropTypes.arrayOf(PropTypes.string).isRequired,
     onClose: PropTypes.func.isRequired,
     updateExperimentApi: PropTypes.func.isRequired,
-    getExperimentApi: PropTypes.func.isRequired,
+    getExperimentApi: PropTypes.func.isRequired
   };
 
-  handleRenameExperiment = (values) => {
+  handleRenameExperiment = values => {
     // get value of input field
     const newExperimentName = values[NEW_NAME_FIELD];
     const updateExperimentPromise = this.props
@@ -33,21 +33,21 @@ export class RenameExperimentModalImpl extends Component {
 
   debouncedExperimentNameValidator = debounce(
     getExperimentNameValidator(() => this.props.experimentNames),
-    400,
+    400
   );
 
   render() {
     const { isOpen, experimentName } = this.props;
     return (
       <GenericInputModal
-        title='Rename Experiment'
-        okText='Save'
+        title="Rename Experiment"
+        okText="Save"
         isOpen={isOpen}
         handleSubmit={this.handleRenameExperiment}
         onClose={this.props.onClose}
       >
         <RenameForm
-          type='experiment'
+          type="experiment"
           name={experimentName}
           visible={isOpen}
           validator={this.debouncedExperimentNameValidator}
@@ -57,18 +57,18 @@ export class RenameExperimentModalImpl extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const experiments = getExperiments(state);
-  const experimentNames = experiments.map((e) => e.getName());
+  const experimentNames = experiments.map(e => e.getName());
   return { experimentNames };
 };
 
 const mapDispatchToProps = {
   updateExperimentApi,
-  getExperimentApi,
+  getExperimentApi
 };
 
 export const RenameExperimentModal = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(RenameExperimentModalImpl);

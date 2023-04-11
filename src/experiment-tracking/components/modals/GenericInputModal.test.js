@@ -31,14 +31,19 @@ describe('GenericInputModal', () => {
       onClose: jest.fn(),
       onCancel: jest.fn(),
       // Mock submission handler that sleeps 1s then resolves
-      handleSubmit: (values) =>
-        new Promise((resolve) => {
+      handleSubmit: values =>
+        new Promise(resolve => {
           window.setTimeout(() => {
             resolve();
           }, 1000);
         }),
       title: 'Enter your input',
-      children: <SimpleForm shouldValidationThrow={false} resetFieldsFn={resetFieldsMock} />,
+      children: (
+        <SimpleForm
+          shouldValidationThrow={false}
+          resetFieldsFn={resetFieldsMock}
+        />
+      )
     };
     wrapper = shallow(<GenericInputModal {...minimalProps} />);
   });
@@ -59,7 +64,7 @@ describe('GenericInputModal', () => {
       const instance = wrapper.instance();
       wrapper.children(SimpleForm).props().innerRef.current = {
         validateFields: () => validateFields(true),
-        resetFields: () => resetFields(resetFieldsMock),
+        resetFields: () => resetFields(resetFieldsMock)
       };
       const onValidationPromise = instance.onSubmit();
       expect(instance.state.isSubmitting).toEqual(true);
@@ -68,7 +73,7 @@ describe('GenericInputModal', () => {
       // no longer be submitting
       expect(resetFieldsMock).toBeCalled();
       expect(instance.state.isSubmitting).toEqual(false);
-    },
+    }
   );
 
   test(
@@ -77,15 +82,19 @@ describe('GenericInputModal', () => {
     async () => {
       // Test that validateFields() is called, and that handleSubmit is not called
       // when validation fails (and submitting state remains false)
-      const form = <SimpleForm shouldValidationThrow resetFieldsFn={resetFieldsMock} />;
+      const form = (
+        <SimpleForm shouldValidationThrow resetFieldsFn={resetFieldsMock} />
+      );
       const handleSubmit = jest.fn();
       wrapper = shallow(
-        <GenericInputModal {...{ ...minimalProps, children: form, handleSubmit }} />,
+        <GenericInputModal
+          {...{ ...minimalProps, children: form, handleSubmit }}
+        />
       );
       const instance = wrapper.instance();
       wrapper.children(SimpleForm).props().innerRef.current = {
         validateFields: () => validateFields(false),
-        resetFields: () => resetFields(resetFieldsMock),
+        resetFields: () => resetFields(resetFieldsMock)
       };
       const onValidationPromise = instance.onSubmit();
       expect(instance.state.isSubmitting).toEqual(true);
@@ -101,7 +110,7 @@ describe('GenericInputModal', () => {
         expect(handleSubmit).not.toBeCalled();
         expect(instance.state.isSubmitting).toEqual(false);
       }
-    },
+    }
   );
 
   test(
@@ -110,20 +119,27 @@ describe('GenericInputModal', () => {
     async () => {
       // Test that validateFields() is called, and that handleSubmit is not called
       // when validation fails (and submitting state remains false)
-      const form = <SimpleForm shouldValidationThrow={false} resetFieldsFn={resetFieldsMock} />;
-      const handleSubmit = (values) =>
+      const form = (
+        <SimpleForm
+          shouldValidationThrow={false}
+          resetFieldsFn={resetFieldsMock}
+        />
+      );
+      const handleSubmit = values =>
         new Promise((resolve, reject) => {
           window.setTimeout(() => {
             reject(new Error());
           }, 1000);
         });
       wrapper = shallow(
-        <GenericInputModal {...{ ...minimalProps, children: form, handleSubmit }} />,
+        <GenericInputModal
+          {...{ ...minimalProps, children: form, handleSubmit }}
+        />
       );
       const instance = wrapper.instance();
       wrapper.children(SimpleForm).props().innerRef.current = {
         validateFields: () => validateFields(true),
-        resetFields: () => resetFields(resetFieldsMock),
+        resetFields: () => resetFields(resetFieldsMock)
       };
       const onValidationPromise = instance.onSubmit();
       expect(instance.state.isSubmitting).toEqual(true);
@@ -132,6 +148,6 @@ describe('GenericInputModal', () => {
       // validation error)
       expect(resetFieldsMock).toBeCalled();
       expect(instance.state.isSubmitting).toEqual(false);
-    },
+    }
   );
 });

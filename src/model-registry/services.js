@@ -5,103 +5,152 @@ import {
   patchBigIntJson,
   patchJson,
   postBigIntJson,
-  postJson,
+  postJson
 } from '../common/utils/FetchUtils';
 
 export class Services {
   /**
    * Create a registered model
    */
-  static createRegisteredModel = (data) =>
-    postBigIntJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/registered-models/create', data });
+  static createRegisteredModel = data =>
+    postBigIntJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/registered-models/create',
+      data
+    });
 
   /**
    * List all registered models
    */
-  static listRegisteredModels = (data) =>
-    getBigIntJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/registered-models/list', data });
+  static listRegisteredModels = data =>
+    getBigIntJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/registered-models/list',
+      data
+    });
 
   /**
    * Search registered models
    */
-  static searchRegisteredModels = (data) =>
-    getBigIntJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/registered-models/search', data });
+  static searchRegisteredModels = data =>
+    getBigIntJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/registered-models/search',
+      data
+    });
 
   /**
    * Update registered model
    */
-  static updateRegisteredModel = (data) =>
-    patchBigIntJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/registered-models/update', data });
+  static updateRegisteredModel = data =>
+    patchBigIntJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/registered-models/update',
+      data
+    });
 
   /**
    * Delete registered model
    */
-  static deleteRegisteredModel = (data) =>
-    deleteJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/registered-models/delete', data });
+  static deleteRegisteredModel = data =>
+    deleteJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/registered-models/delete',
+      data
+    });
 
   /**
    * Set registered model tag
    */
-  static setRegisteredModelTag = (data) =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/registered-models/set-tag', data });
+  static setRegisteredModelTag = data =>
+    postJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/registered-models/set-tag',
+      data
+    });
 
   /**
    * Delete registered model tag
    */
-  static deleteRegisteredModelTag = (data) =>
-    deleteJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/registered-models/delete-tag', data });
+  static deleteRegisteredModelTag = data =>
+    deleteJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/registered-models/delete-tag',
+      data
+    });
 
   /**
    * Create model version
    */
-  static createModelVersion = (data) =>
-    postBigIntJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/model-versions/create', data });
+  static createModelVersion = data =>
+    postBigIntJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/model-versions/create',
+      data
+    });
 
   /**
    * Search model versions
    */
-  static searchModelVersions = (data) =>
-    getJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/model-versions/search', data });
+  static searchModelVersions = data =>
+    getJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/model-versions/search',
+      data
+    });
 
   /**
    * Update model version
    */
-  static updateModelVersion = (data) =>
-    patchJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/model-versions/update', data });
+  static updateModelVersion = data =>
+    patchJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/model-versions/update',
+      data
+    });
 
   /**
    * Transition model version stage
    */
-  static transitionModelVersionStage = (data) =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/model-versions/transition-stage', data });
+  static transitionModelVersionStage = data =>
+    postJson({
+      relativeUrl:
+        '/mlflow/ajax-api/2.0/preview/mlflow/model-versions/transition-stage',
+      data
+    });
 
   /**
    * Delete model version
    */
-  static deleteModelVersion = (data) =>
-    deleteJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/model-versions/delete', data });
+  static deleteModelVersion = data =>
+    deleteJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/model-versions/delete',
+      data
+    });
 
   /**
    * Get individual registered model
    */
-  static getRegisteredModel = (data) =>
-    getJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/registered-models/get', data });
+  static getRegisteredModel = data =>
+    getJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/registered-models/get',
+      data
+    });
 
   /**
    * Get individual model version
    */
-  static getModelVersion = (data) =>
-    getJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/model-versions/get', data });
+  static getModelVersion = data =>
+    getJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/model-versions/get',
+      data
+    });
 
   /**
    * Set model version tag
    */
-  static setModelVersionTag = (data) =>
-    postJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/model-versions/set-tag', data });
+  static setModelVersionTag = data =>
+    postJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/model-versions/set-tag',
+      data
+    });
 
   /**
    * Delete model version tag
    */
-  static deleteModelVersionTag = (data) =>
-    deleteJson({ relativeUrl: '/ajax-api/2.0/preview/mlflow/model-versions/delete-tag', data });
+  static deleteModelVersionTag = data =>
+    deleteJson({
+      relativeUrl: '/mlflow/ajax-api/2.0/preview/mlflow/model-versions/delete-tag',
+      data
+    });
 }

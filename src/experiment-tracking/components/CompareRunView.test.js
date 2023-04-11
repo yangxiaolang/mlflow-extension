@@ -18,7 +18,7 @@ const getCompareRunViewMock = () => {
       runNames={['run1']}
       runDisplayNames={['run1DisplayName', 'run2DisplayName']}
       intl={createIntl({ locale: 'en' })}
-    />,
+    />
   );
 };
 

@@ -5,13 +5,15 @@ import {
   searchModelVersionsApi,
   getRegisteredModelApi,
   updateRegisteredModelApi,
-  deleteRegisteredModelApi,
+  deleteRegisteredModelApi
 } from '../actions';
 import { ModelView } from './ModelView';
 import { getModelVersions } from '../reducers';
 import { MODEL_VERSION_STATUS_POLL_INTERVAL as POLL_INTERVAL } from '../constants';
 import { PageContainer } from '../../common/components/PageContainer';
-import RequestStateWrapper, { triggerError } from '../../common/components/RequestStateWrapper';
+import RequestStateWrapper, {
+  triggerError
+} from '../../common/components/RequestStateWrapper';
 import { Spinner } from '../../common/components/Spinner';
 import { ErrorView } from '../../common/components/ErrorView';
 import { modelListPageRoute } from '../routes';
@@ -32,7 +34,7 @@ export class ModelPageImpl extends React.Component {
     getRegisteredModelApi: PropTypes.func.isRequired,
     updateRegisteredModelApi: PropTypes.func.isRequired,
     deleteRegisteredModelApi: PropTypes.func.isRequired,
-    intl: PropTypes.any,
+    intl: PropTypes.any
   };
 
   initSearchModelVersionsApiRequestId = getUUID();
@@ -42,33 +44,44 @@ export class ModelPageImpl extends React.Component {
 
   criticalInitialRequestIds = [
     this.initSearchModelVersionsApiRequestId,
-    this.initgetRegisteredModelApiRequestId,
+    this.initgetRegisteredModelApiRequestId
   ];
 
-  handleEditDescription = (description) => {
+  handleEditDescription = description => {
     const { model } = this.props;
     return this.props
-      .updateRegisteredModelApi(model.name, description, this.updateRegisteredModelApiId)
+      .updateRegisteredModelApi(
+        model.name,
+        description,
+        this.updateRegisteredModelApiId
+      )
       .then(this.loadData);
   };
 
   handleDelete = () => {
     const { model } = this.props;
-    return this.props.deleteRegisteredModelApi(model.name, this.deleteRegisteredModelApiId);
+    return this.props.deleteRegisteredModelApi(
+      model.name,
+      this.deleteRegisteredModelApiId
+    );
   };
 
-  loadData = (isInitialLoading) => {
+  loadData = isInitialLoading => {
     const { modelName } = this.props;
     this.hasUnfilledRequests = true;
     const promiseValues = [
       this.props.getRegisteredModelApi(
         modelName,
-        isInitialLoading === true ? this.initgetRegisteredModelApiRequestId : null,
+        isInitialLoading === true
+          ? this.initgetRegisteredModelApiRequestId
+          : null
       ),
       this.props.searchModelVersionsApi(
         { name: modelName },
-        isInitialLoading === true ? this.initSearchModelVersionsApiRequestId : null,
-      ),
+        isInitialLoading === true
+          ? this.initSearchModelVersionsApiRequestId
+          : null
+      )
     ];
     return Promise.all(promiseValues).then(() => {
       this.hasUnfilledRequests = false;
@@ -78,7 +91,7 @@ export class ModelPageImpl extends React.Component {
   pollData = () => {
     const { modelName, history } = this.props;
     if (!this.hasUnfilledRequests && Utils.isBrowserTabVisible()) {
-      return this.loadData().catch((e) => {
+      return this.loadData().catch(e => {
         if (e.getErrorCode() === 'RESOURCE_DOES_NOT_EXIST') {
           Utils.logErrorAndNotifyUser(e);
           this.props.deleteRegisteredModelApi(modelName, undefined, true);
@@ -113,18 +126,23 @@ export class ModelPageImpl extends React.Component {
           {(loading, hasError, requests) => {
             if (hasError) {
               clearInterval(this.pollIntervalId);
-              if (Utils.shouldRender404(requests, [this.initgetRegisteredModelApiRequestId])) {
+              if (
+                Utils.shouldRender404(requests, [
+                  this.initgetRegisteredModelApiRequestId
+                ])
+              ) {
                 return (
                   <ErrorView
                     statusCode={404}
                     subMessage={this.props.intl.formatMessage(
                       {
                         defaultMessage: 'Model {modelName} does not exist',
-                        description: 'Sub-message text for error message on overall model page',
+                        description:
+                          'Sub-message text for error message on overall model page'
                       },
                       {
-                        modelName: modelName,
-                      },
+                        modelName: modelName
+                      }
                     )}
                     fallbackHomePageReactRoute={modelListPageRoute}
                   />
@@ -162,7 +180,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     modelName,
     model,
-    modelVersions,
+    modelVersions
   };
 };
 
@@ -170,7 +188,10 @@ const mapDispatchToProps = {
   searchModelVersionsApi,
   getRegisteredModelApi,
   updateRegisteredModelApi,
-  deleteRegisteredModelApi,
+  deleteRegisteredModelApi
 };
 
-export const ModelPage = connect(mapStateToProps, mapDispatchToProps)(injectIntl(ModelPageImpl));
+export const ModelPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(ModelPageImpl));

@@ -19,7 +19,7 @@ describe('RenameExperimentModal', () => {
       experimentNames: ['arrayName1', 'arrayName2'],
       onClose: jest.fn(() => Promise.resolve({})),
       updateExperimentApi: mockUpdateExperimentApi,
-      getExperimentApi: mockGetExperimentApi,
+      getExperimentApi: mockGetExperimentApi
     };
 
     wrapper = shallow(<RenameExperimentModalImpl {...minimalProps} />);
@@ -30,9 +30,11 @@ describe('RenameExperimentModal', () => {
     expect(wrapper.find(GenericInputModal).length).toBe(1);
   });
 
-  test('form submission should result in updateExperimentApi and getExperimentApi calls', (done) => {
+  test('form submission should result in updateExperimentApi and getExperimentApi calls', done => {
     const values = { newName: 'renamed' };
-    const promise = wrapper.find(GenericInputModal).prop('handleSubmit')(values);
+    const promise = wrapper.find(GenericInputModal).prop('handleSubmit')(
+      values
+    );
     promise.finally(() => {
       expect(mockUpdateExperimentApi).toHaveBeenCalledTimes(1);
       expect(mockUpdateExperimentApi).toHaveBeenCalledWith('123', 'renamed');
@@ -41,7 +43,7 @@ describe('RenameExperimentModal', () => {
     });
   });
 
-  test('if updateExperimentApi fails, getExperimentApi should not be called', (done) => {
+  test('if updateExperimentApi fails, getExperimentApi should not be called', done => {
     const values = { newName: 'renamed' };
     // Failing the updateExperimentApi call means getExperimentApi should not be called.
     const mockFailUpdateExperimentApi = jest.fn(
@@ -50,23 +52,31 @@ describe('RenameExperimentModal', () => {
           window.setTimeout(() => {
             reject();
           }, 100);
-        }),
+        })
     );
 
-    const failUpdateProps = { ...minimalProps, updateExperimentApi: mockFailUpdateExperimentApi };
-    const failUpdateWrapper = shallow(<RenameExperimentModalImpl {...failUpdateProps} />);
-    const failUpdatePromise = failUpdateWrapper.find(GenericInputModal).prop('handleSubmit')(
-      values,
+    const failUpdateProps = {
+      ...minimalProps,
+      updateExperimentApi: mockFailUpdateExperimentApi
+    };
+    const failUpdateWrapper = shallow(
+      <RenameExperimentModalImpl {...failUpdateProps} />
     );
+    const failUpdatePromise = failUpdateWrapper
+      .find(GenericInputModal)
+      .prop('handleSubmit')(values);
     failUpdatePromise.catch(() => {
       expect(mockFailUpdateExperimentApi).toHaveBeenCalledTimes(1);
-      expect(mockFailUpdateExperimentApi).toHaveBeenCalledWith('123', 'renamed');
+      expect(mockFailUpdateExperimentApi).toHaveBeenCalledWith(
+        '123',
+        'renamed'
+      );
       expect(mockGetExperimentApi).toHaveBeenCalledTimes(0);
       done();
     });
   });
 
-  test('If getExperimentApi fails, updateExperimentApi should still have been called', (done) => {
+  test('If getExperimentApi fails, updateExperimentApi should still have been called', done => {
     const values = { newName: 'renamed' };
 
     // Failing the getExperimentApi call should still mean both functions are called.
@@ -76,11 +86,18 @@ describe('RenameExperimentModal', () => {
           window.setTimeout(() => {
             reject();
           }, 100);
-        }),
+        })
     );
-    const failGetProps = { ...minimalProps, getExperimentApi: mockFailGetExperimentApi };
-    const failGetWrapper = shallow(<RenameExperimentModalImpl {...failGetProps} />);
-    const failGetPromise = failGetWrapper.find(GenericInputModal).prop('handleSubmit')(values);
+    const failGetProps = {
+      ...minimalProps,
+      getExperimentApi: mockFailGetExperimentApi
+    };
+    const failGetWrapper = shallow(
+      <RenameExperimentModalImpl {...failGetProps} />
+    );
+    const failGetPromise = failGetWrapper
+      .find(GenericInputModal)
+      .prop('handleSubmit')(values);
     failGetPromise.catch(() => {
       expect(mockUpdateExperimentApi).toHaveBeenCalledTimes(1);
       expect(mockUpdateExperimentApi).toHaveBeenCalledWith('123', 'renamed');

@@ -8,7 +8,7 @@ import {
   getRegisteredModelApi,
   getModelVersionApi,
   getModelVersionArtifactApi,
-  parseMlModelFile,
+  parseMlModelFile
 } from '../actions';
 import RequestStateWrapper from '../../common/components/RequestStateWrapper';
 import { CompareModelVersionsView } from './CompareModelVersionsView';
@@ -23,7 +23,7 @@ export class CompareModelVersionsPageImpl extends Component {
     getRegisteredModelApi: PropTypes.func.isRequired,
     getModelVersionApi: PropTypes.func.isRequired,
     getModelVersionArtifactApi: PropTypes.func.isRequired,
-    parseMlModelFile: PropTypes.func.isRequired,
+    parseMlModelFile: PropTypes.func.isRequired
   };
 
   registeredModelRequestId = getUUID();
@@ -37,19 +37,25 @@ export class CompareModelVersionsPageImpl extends Component {
       this.registeredModelRequestId,
       this.runRequestId,
       this.versionRequestId,
-      this.getMlModelFileRequestId,
+      this.getMlModelFileRequestId
     ],
-    requestIdsWith404ErrorsToIgnore: [this.runRequestId, this.getMlModelFileRequestId],
+    requestIdsWith404ErrorsToIgnore: [
+      this.runRequestId,
+      this.getMlModelFileRequestId
+    ]
   };
 
   removeRunRequestId() {
-    this.setState((prevState) => ({
-      requestIds: _.without(prevState.requestIds, this.runRequestId),
+    this.setState(prevState => ({
+      requestIds: _.without(prevState.requestIds, this.runRequestId)
     }));
   }
 
   componentDidMount() {
-    this.props.getRegisteredModelApi(this.props.modelName, this.registeredModelRequestId);
+    this.props.getRegisteredModelApi(
+      this.props.modelName,
+      this.registeredModelRequestId
+    );
     for (const modelVersion in this.props.versionsToRuns) {
       if ({}.hasOwnProperty.call(this.props.versionsToRuns, modelVersion)) {
         const runID = this.props.versionsToRuns[modelVersion];
@@ -64,23 +70,30 @@ export class CompareModelVersionsPageImpl extends Component {
           this.removeRunRequestId();
         }
         const { modelName } = this.props;
-        this.props.getModelVersionApi(modelName, modelVersion, this.versionRequestId);
+        this.props.getModelVersionApi(
+          modelName,
+          modelVersion,
+          this.versionRequestId
+        );
         this.props
           .getModelVersionArtifactApi(modelName, modelVersion)
-          .then((content) =>
+          .then(content =>
             this.props.parseMlModelFile(
               modelName,
               modelVersion,
               content.value,
-              this.getMlModelFileRequestId,
-            ),
+              this.getMlModelFileRequestId
+            )
           )
           .catch(() => {
             // Failure of this call chain should not block the page. Here we remove
             // `getMlModelFileRequestId` from `requestIds` to unblock RequestStateWrapper
             // from rendering its content
-            this.setState((prevState) => ({
-              requestIds: _.without(prevState.requestIds, this.getMlModelFileRequestId),
+            this.setState(prevState => ({
+              requestIds: _.without(
+                prevState.requestIds,
+                this.getMlModelFileRequestId
+              )
             }));
           });
       }
@@ -92,7 +105,9 @@ export class CompareModelVersionsPageImpl extends Component {
       <PageContainer>
         <RequestStateWrapper
           requestIds={this.state.requestIds}
-          requestIdsWith404sToIgnore={this.state.requestIdsWith404ErrorsToIgnore}
+          requestIdsWith404sToIgnore={
+            this.state.requestIdsWith404ErrorsToIgnore
+          }
         >
           <CompareModelVersionsView
             modelName={this.props.modelName}
@@ -117,10 +132,10 @@ const mapDispatchToProps = {
   getRegisteredModelApi,
   getModelVersionApi,
   getModelVersionArtifactApi,
-  parseMlModelFile,
+  parseMlModelFile
 };
 
 export const CompareModelVersionsPage = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(CompareModelVersionsPageImpl);

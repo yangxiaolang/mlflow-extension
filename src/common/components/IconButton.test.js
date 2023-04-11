@@ -19,16 +19,22 @@ describe('IconButton', () => {
 
   test('should not have padding', () => {
     wrapper = shallow(<IconButton {...minimalProps} />);
-    expect(wrapper.find(Button).get(0).props.style).toHaveProperty('padding', 0);
+    expect(wrapper.find(Button).get(0).props.style).toHaveProperty(
+      'padding',
+      0
+    );
   });
 
   test('should propagate props to Button', () => {
     const props = {
       className: 'class',
-      style: { margin: 5 },
+      style: { margin: 5 }
     };
     wrapper = shallow(<IconButton {...{ ...minimalProps, ...props }} />);
-    expect(wrapper.find(Button).get(0).props).toHaveProperty('className', 'class');
+    expect(wrapper.find(Button).get(0).props).toHaveProperty(
+      'className',
+      'class'
+    );
     expect(wrapper.find(Button).get(0).props.style).toHaveProperty('margin', 5);
   });
 

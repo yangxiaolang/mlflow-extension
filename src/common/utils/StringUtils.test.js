@@ -1,7 +1,7 @@
 import {
   truncateToFirstLineWithMaxLength,
   capitalizeFirstChar,
-  middleTruncateStr,
+  middleTruncateStr
 } from './StringUtils';
 
 describe('truncateToFirstLineWithMaxLength', () => {
@@ -12,7 +12,9 @@ describe('truncateToFirstLineWithMaxLength', () => {
 
   test('if first line longer than maxLength, should truncate and add ellipses', () => {
     const str = 'This is 24 characters, so this part should be truncated';
-    expect(truncateToFirstLineWithMaxLength(str, 24)).toEqual('This is 24 characters...');
+    expect(truncateToFirstLineWithMaxLength(str, 24)).toEqual(
+      'This is 24 characters...'
+    );
   });
 
   test('should not add ellipses if length is equal to maxLength', () => {
@@ -29,7 +31,9 @@ describe('truncateToFirstLineWithMaxLength', () => {
 describe('capitalizeFirstChar', () => {
   test('should capitalize first char and lower case all other chars', () => {
     const str = 'i WaNt THis tO oNlY cAPItaLize FirSt ChaR.';
-    expect(capitalizeFirstChar(str)).toEqual('I want this to only capitalize first char.');
+    expect(capitalizeFirstChar(str)).toEqual(
+      'I want this to only capitalize first char.'
+    );
   });
 
   test('should not work for str with length less than 1', () => {

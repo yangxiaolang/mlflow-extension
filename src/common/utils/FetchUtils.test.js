@@ -22,7 +22,7 @@ import {
   postYaml,
   deleteJson,
   deleteBigIntJson,
-  deleteYaml,
+  deleteYaml
 } from './FetchUtils';
 import { ErrorWrapper } from './ErrorWrapper';
 
@@ -35,8 +35,8 @@ describe('FetchUtils', () => {
     it('cookies from static service are parsed correctly', () => {
       expect(
         getDefaultHeadersFromCookies(
-          `a=b; mlflow-request-header-My-CSRF=1; mlflow-request-header-Hello=World; c=d`,
-        ),
+          'a=b; mlflow-request-header-My-CSRF=1; mlflow-request-header-Hello=World; c=d'
+        )
       ).toEqual({ 'My-CSRF': '1', Hello: 'World' });
     });
   });
@@ -57,16 +57,20 @@ describe('FetchUtils', () => {
         throw new Error('failed to parse');
       };
       const mockResponse = {
-        text: () => Promise.resolve('text'),
+        text: () => Promise.resolve('text')
       };
-      parseResponse({ resolve: mockResolve, response: mockResponse, parser: invalidParser });
+      parseResponse({
+        resolve: mockResolve,
+        response: mockResponse,
+        parser: invalidParser
+      });
       await new Promise(setImmediate);
       expect(mockResolve).toHaveBeenCalledWith('text');
     });
 
     it('defaultResponseParser', async () => {
       const mockResponse = {
-        text: () => Promise.resolve('{"a": 123, "b": "flying monkey"}'),
+        text: () => Promise.resolve('{"a": 123, "b": "flying monkey"}')
       };
       defaultResponseParser({ resolve: mockResolve, response: mockResponse });
       await new Promise(setImmediate);
@@ -75,23 +79,31 @@ describe('FetchUtils', () => {
 
     it('jsonBigIntResponseParser', async () => {
       const mockResponse = {
-        text: () => Promise.resolve('{"a": 11111111222222223333333344444445555555555}'),
+        text: () =>
+          Promise.resolve('{"a": 11111111222222223333333344444445555555555}')
       };
-      jsonBigIntResponseParser({ resolve: mockResolve, response: mockResponse });
+      jsonBigIntResponseParser({
+        resolve: mockResolve,
+        response: mockResponse
+      });
       await new Promise(setImmediate);
-      expect(mockResolve).toHaveBeenCalledWith({ a: '11111111222222223333333344444445555555555' });
+      expect(mockResolve).toHaveBeenCalledWith({
+        a: '11111111222222223333333344444445555555555'
+      });
     });
 
     it('yamlResponseParser', async () => {
       const mockResponse = {
         text: () =>
-          Promise.resolve('artifact_path: model_signature\nflavors:\n  keras:\n    data: data\n'),
+          Promise.resolve(
+            'artifact_path: model_signature\nflavors:\n  keras:\n    data: data\n'
+          )
       };
       yamlResponseParser({ resolve: mockResolve, response: mockResponse });
       await new Promise(setImmediate);
       expect(mockResolve).toHaveBeenCalledWith({
         artifact_path: 'model_signature',
-        flavors: { keras: { data: 'data' } },
+        flavors: { keras: { data: 'data' } }
       });
     });
   });
@@ -108,17 +120,17 @@ describe('FetchUtils', () => {
         ok: true,
         status: 200,
         statusText: 'Ok',
-        text: () => Promise.resolve('{"crazy": 8}'),
+        text: () => Promise.resolve('{"crazy": 8}')
       };
       mockFetch = jest.fn(() => Promise.resolve(mockResponse));
       global.fetch = mockFetch;
       setTimeoutSpy = jest.spyOn(window, 'setTimeout');
-      relativeUrl = '/ajax-api/2.0/service/endpoint';
+      relativeUrl = '/mlflow/ajax-api/2.0/service/endpoint';
       mockData = {
         group_id: 12345,
         user_id: 'qwerty',
         experimental_user: true,
-        invalid_field: undefined,
+        invalid_field: undefined
       };
     });
 
@@ -127,32 +139,35 @@ describe('FetchUtils', () => {
     });
 
     it('default headerOptions and options are expected', () => {
-      Object.values(HTTPMethods).forEach(async (method) => {
+      Object.values(HTTPMethods).forEach(async method => {
         await fetchEndpointRaw({ relativeUrl, method, data: mockData });
         expect(mockFetch).toHaveBeenCalledWith(relativeUrl, {
           dataType: 'json',
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          method,
+          method
         });
       });
     });
 
     it('overridden headerOptions and options are propagated correctly', () => {
-      const customHeaders = { zzz_header: '123456', 'Content-Type': 'application/text' };
+      const customHeaders = {
+        zzz_header: '123456',
+        'Content-Type': 'application/text'
+      };
       const customOptions = { redirect: 'follow', dataType: 'text' };
-      Object.values(HTTPMethods).forEach(async (method) => {
+      Object.values(HTTPMethods).forEach(async method => {
         await fetchEndpointRaw({
           relativeUrl,
           method,
           data: mockData,
           headerOptions: customHeaders,
-          options: customOptions,
+          options: customOptions
         });
         expect(mockFetch).toHaveBeenCalledWith(relativeUrl, {
           dataType: 'text',
           headers: { 'Content-Type': 'application/text', zzz_header: '123456' },
           method,
-          redirect: 'follow',
+          redirect: 'follow'
         });
       });
     });
@@ -181,7 +196,11 @@ describe('FetchUtils', () => {
     let mockSuccessCondition;
     let mockErrorCondition;
     let setTimeoutSpy;
-    const retryWithMocks = ({ retries = 5, interval = 5, retryIntervalMultiplier = 1 }) =>
+    const retryWithMocks = ({
+      retries = 5,
+      interval = 5,
+      retryIntervalMultiplier = 1
+    }) =>
       retry(mockFn, {
         retries: retries,
         interval: interval,
@@ -189,7 +208,7 @@ describe('FetchUtils', () => {
         successCondition: mockSuccessCondition,
         success: mockSuccess,
         errorCondition: mockErrorCondition,
-        error: mockError,
+        error: mockError
       });
 
     beforeEach(() => {
@@ -298,10 +317,14 @@ describe('FetchUtils', () => {
     it('retryIntervalMultiplier changes retry interval', async () => {
       mockSuccessCondition = jest.fn(() => false);
       mockErrorCondition = jest.fn(() => false);
-      await retryWithMocks({ retries: 5, interval: 100, retryIntervalMultiplier: 2 });
+      await retryWithMocks({
+        retries: 5,
+        interval: 100,
+        retryIntervalMultiplier: 2
+      });
       expect(mockFn).toHaveBeenCalledTimes(6);
       let i = 0;
-      [100, 200, 400, 800, 1600].forEach((interval) => {
+      [100, 200, 400, 800, 1600].forEach(interval => {
         expect(setTimeoutSpy.mock.calls[i][1]).toEqual(interval);
         i += 1;
       });
@@ -310,19 +333,29 @@ describe('FetchUtils', () => {
 
   describe('fetchEndpoint', () => {
     it('fetchEndpoint resolves on ok response', async () => {
-      const okResponse = { ok: true, status: 200, text: () => Promise.resolve('{"dope": "ape"}') };
+      const okResponse = {
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('{"dope": "ape"}')
+      };
       global.fetch = jest.fn(() => Promise.resolve(okResponse));
-      await expect(fetchEndpoint({ relativeUrl: 'http://localhost:3000' })).resolves.toEqual({
-        dope: 'ape',
+      await expect(
+        fetchEndpoint({ relativeUrl: 'http://localhost:3000' })
+      ).resolves.toEqual({
+        dope: 'ape'
       });
     });
 
     it('fetchEndpoint resolves on consecutive 429 and a final valid response', async () => {
-      const tooManyRequestsResponse = { ok: false, status: 429, statusText: 'TooManyRequests' };
+      const tooManyRequestsResponse = {
+        ok: false,
+        status: 429,
+        statusText: 'TooManyRequests'
+      };
       const okResponse = {
         ok: true,
         status: 200,
-        text: () => Promise.resolve('{"sorry": "I am late"}'),
+        text: () => Promise.resolve('{"sorry": "I am late"}')
       };
       const responses = [...Array(2).fill(tooManyRequestsResponse), okResponse];
       // pop the head of the array on each call
@@ -331,8 +364,8 @@ describe('FetchUtils', () => {
         fetchEndpoint({
           relativeUrl: 'http://localhost:3000',
           initialDelay: 5,
-          retries: 4,
-        }),
+          retries: 4
+        })
       ).resolves.toEqual({ sorry: 'I am late' });
     });
 
@@ -340,7 +373,10 @@ describe('FetchUtils', () => {
       const tooManyRequestsResponse = {
         ok: false,
         status: 429,
-        text: () => Promise.resolve('{error_code: "TooManyRequests", message: "TooManyRequests"}'),
+        text: () =>
+          Promise.resolve(
+            '{error_code: "TooManyRequests", message: "TooManyRequests"}'
+          )
       };
       const responses = Array(3).fill(tooManyRequestsResponse);
       global.fetch = jest.fn(() => Promise.resolve(responses.shift()));
@@ -349,10 +385,13 @@ describe('FetchUtils', () => {
         fetchEndpoint({
           relativeUrl: 'http://localhost:3000',
           initialDelay: 5,
-          retries: 2,
-        }),
+          retries: 2
+        })
       ).rejects.toEqual(
-        new ErrorWrapper('{error_code: "TooManyRequests", message: "TooManyRequests"}', 429),
+        new ErrorWrapper(
+          '{error_code: "TooManyRequests", message: "TooManyRequests"}',
+          429
+        )
       );
     });
 
@@ -361,7 +400,9 @@ describe('FetchUtils', () => {
         ok: false,
         status: 403,
         text: () =>
-          Promise.resolve('{error_code: "PermissionDenied", message: "PermissionDenied"}'),
+          Promise.resolve(
+            '{error_code: "PermissionDenied", message: "PermissionDenied"}'
+          )
       };
       global.fetch = jest.fn(() => Promise.resolve(permissionDeniedResponse));
 
@@ -369,10 +410,13 @@ describe('FetchUtils', () => {
         fetchEndpoint({
           relativeUrl: 'http://localhost:3000',
           initialDelay: 5,
-          retries: 2,
-        }),
+          retries: 2
+        })
       ).rejects.toEqual(
-        new ErrorWrapper('{error_code: "PermissionDenied", message: "PermissionDenied"}', 403),
+        new ErrorWrapper(
+          '{error_code: "PermissionDenied", message: "PermissionDenied"}',
+          403
+        )
       );
     });
 
@@ -384,9 +428,11 @@ describe('FetchUtils', () => {
         fetchEndpoint({
           relativeUrl: 'http://localhost:3000',
           initialDelay: 5,
-          retries: 2,
-        }),
-      ).rejects.toEqual(new ErrorWrapper(new Error('something went wrong...'), 500));
+          retries: 2
+        })
+      ).rejects.toEqual(
+        new ErrorWrapper(new Error('something went wrong...'), 500)
+      );
     });
   });
 
@@ -401,17 +447,17 @@ describe('FetchUtils', () => {
         ok: true,
         status: 200,
         statusText: 'Ok',
-        text: () => Promise.resolve('{"crazy": 8}'),
+        text: () => Promise.resolve('{"crazy": 8}')
       };
       mockFetch = jest.fn(() => Promise.resolve(mockResponse));
       global.fetch = mockFetch;
-      relativeUrl = '/ajax-api/2.0/service/endpoint';
+      relativeUrl = '/mlflow/ajax-api/2.0/service/endpoint';
       mockData = {
         group_id: 12345,
         user_id: 'qwerty',
         experimental_user: false,
         null_field: null,
-        undefined_field: undefined,
+        undefined_field: undefined
       };
     });
 
@@ -420,15 +466,15 @@ describe('FetchUtils', () => {
     });
 
     it('GET requests bake data in query params', () => {
-      [getJson, getBigIntJson, getYaml].forEach(async (getCall) => {
+      [getJson, getBigIntJson, getYaml].forEach(async getCall => {
         await getCall({ relativeUrl, data: mockData });
         expect(mockFetch).toHaveBeenCalledWith(
           `${relativeUrl}?group_id=12345&user_id=qwerty&experimental_user=false&null_field=null`,
           {
             dataType: 'json',
             headers: { 'Content-Type': 'application/json; charset=utf-8' },
-            method: 'GET',
-          },
+            method: 'GET'
+          }
         );
       });
     });
@@ -446,8 +492,8 @@ describe('FetchUtils', () => {
         { fetchCall: postYaml, method: HTTPMethods.POST },
         { fetchCall: deleteJson, method: HTTPMethods.DELETE },
         { fetchCall: deleteBigIntJson, method: HTTPMethods.DELETE },
-        { fetchCall: deleteYaml, method: HTTPMethods.DELETE },
-      ].forEach((args) => {
+        { fetchCall: deleteYaml, method: HTTPMethods.DELETE }
+      ].forEach(args => {
         const { fetchCall, method } = args;
         const mockArrayData = [1, undefined, null, 2];
         const mockStringData = '[1, undefined, null, 2]';
@@ -458,24 +504,24 @@ describe('FetchUtils', () => {
             group_id: 12345,
             user_id: 'qwerty',
             experimental_user: false,
-            null_field: null,
+            null_field: null
           }),
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          method,
+          method
         });
         fetchCall({ relativeUrl, data: mockArrayData });
         expect(mockFetch).toHaveBeenLastCalledWith(relativeUrl, {
           dataType: 'json',
           body: JSON.stringify([1, null, 2]),
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          method,
+          method
         });
         fetchCall({ relativeUrl, data: mockStringData });
         expect(mockFetch).toHaveBeenCalledWith(relativeUrl, {
           dataType: 'json',
           body: mockStringData,
           headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          method,
+          method
         });
       });
     });

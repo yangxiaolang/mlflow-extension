@@ -23,23 +23,23 @@ export class RequestStateWrapper extends Component {
     children: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.element,
-      PropTypes.arrayOf(PropTypes.element),
-    ]),
+      PropTypes.arrayOf(PropTypes.element)
+    ])
   };
 
   static defaultProps = {
     requests: [],
     requestIdsWith404sToIgnore: [],
-    shouldOptimisticallyRender: false,
+    shouldOptimisticallyRender: false
   };
 
   state = {
     shouldRender: false,
-    shouldRenderError: false,
+    shouldRenderError: false
   };
 
   static getErrorRequests(requests, requestIdsWith404sToIgnore) {
-    return requests.filter((r) => {
+    return requests.filter(r => {
       if (r.error !== undefined) {
         return !(
           requestIdsWith404sToIgnore &&
@@ -53,7 +53,7 @@ export class RequestStateWrapper extends Component {
 
   static getDerivedStateFromProps(nextProps) {
     const shouldRender = nextProps.requests.length
-      ? nextProps.requests.every((r) => r && r.active === false)
+      ? nextProps.requests.every(r => r && r.active === false)
       : false;
 
     return {
@@ -61,8 +61,8 @@ export class RequestStateWrapper extends Component {
       shouldRenderError:
         RequestStateWrapper.getErrorRequests(
           nextProps.requests,
-          nextProps.requestIdsWith404sToIgnore,
-        ).length > 0,
+          nextProps.requestIdsWith404sToIgnore
+        ).length > 0
     };
   }
 
@@ -72,7 +72,11 @@ export class RequestStateWrapper extends Component {
 
     if (typeof children === 'function') {
       return children(!shouldRender, shouldRenderError, requests);
-    } else if (shouldRender || shouldRenderError || this.props.shouldOptimisticallyRender) {
+    } else if (
+      shouldRender ||
+      shouldRenderError ||
+      this.props.shouldOptimisticallyRender
+    ) {
       if (shouldRenderError) {
         triggerError(requests);
       }
@@ -88,14 +92,14 @@ export class RequestStateWrapper extends Component {
   }
 }
 
-export const triggerError = (requests) => {
+export const triggerError = requests => {
   // This triggers the OOPS error boundary.
   console.error('ERROR', requests);
   throw Error(DEFAULT_ERROR_MESSAGE);
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  requests: getApis(ownProps.requestIds, state),
+  requests: getApis(ownProps.requestIds, state)
 });
 
 export default connect(mapStateToProps)(RequestStateWrapper);

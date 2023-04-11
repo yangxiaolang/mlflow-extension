@@ -10,7 +10,7 @@ import Utils from '../../../common/utils/Utils';
  */
 export class GenericInputModal extends Component {
   state = {
-    isSubmitting: false,
+    isSubmitting: false
   };
 
   static propTypes = {
@@ -25,7 +25,7 @@ export class GenericInputModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     title: PropTypes.node.isRequired,
     // Antd Form
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired
   };
 
   formRef = React.createRef();
@@ -53,7 +53,7 @@ export class GenericInputModal extends Component {
     this.formRef.current.resetFields();
   };
 
-  handleSubmitFailure = (e) => {
+  handleSubmitFailure = e => {
     this.setState({ isSubmitting: false });
     Utils.logErrorAndNotifyUser(e);
   };
@@ -78,7 +78,7 @@ export class GenericInputModal extends Component {
     const { okText, cancelText, isOpen, footer, children } = this.props;
 
     // add props (ref) to passed component
-    const displayForm = React.Children.map(children, (child) => {
+    const displayForm = React.Children.map(children, child => {
       // Checking isValidElement is the safe way and avoids a typescript
       // error too.
       if (React.isValidElement(child)) {

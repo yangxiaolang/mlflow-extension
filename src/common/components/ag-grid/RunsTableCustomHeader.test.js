@@ -22,7 +22,7 @@ describe('RunsTableCustomHeader', () => {
       canonicalSortKey: 'user',
       orderByKey: 'user',
       orderByAsc: true,
-      onSortBy: jest.fn(),
+      onSortBy: jest.fn()
     };
     wrapper = mount(<RunsTableCustomHeader {...props} />);
     expect(wrapper.find(SortByIcon).length).toBe(1);
@@ -47,7 +47,7 @@ describe('RunsTableCustomHeader', () => {
       canonicalSortKey: 'user',
       orderByKey: 'username',
       orderByAsc: false,
-      onSortBy,
+      onSortBy
     };
     wrapper = mount(<RunsTableCustomHeader {...props} />);
     let instance = wrapper.instance();
@@ -74,7 +74,7 @@ describe('RunsTableCustomHeader', () => {
       enableSorting: true,
       canonicalSortKey: key,
       orderByKey: key,
-      orderByAsc: true,
+      orderByAsc: true
     };
     wrapper = mount(<RunsTableCustomHeader {...props} />);
 

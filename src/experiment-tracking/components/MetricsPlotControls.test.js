@@ -22,26 +22,37 @@ describe('unit tests', () => {
     showPoint: false,
     numRuns: 1,
     numCompletedRuns: 1,
-    handleDownloadCsv: jest.fn(),
+    handleDownloadCsv: jest.fn()
   };
-  const minimalPropsForBarChart = { ...minimalPropsForLineChart, chartType: CHART_TYPE_BAR };
+  const minimalPropsForBarChart = {
+    ...minimalPropsForLineChart,
+    chartType: CHART_TYPE_BAR
+  };
 
   test('should render with minimal props without exploding', () => {
-    wrapper = shallowWithInjectIntl(<MetricsPlotControls {...minimalPropsForLineChart} />);
+    wrapper = shallowWithInjectIntl(
+      <MetricsPlotControls {...minimalPropsForLineChart} />
+    );
     expect(wrapper.length).toBe(1);
-    wrapper = shallowWithInjectIntl(<MetricsPlotControls {...minimalPropsForBarChart} />);
+    wrapper = shallowWithInjectIntl(
+      <MetricsPlotControls {...minimalPropsForBarChart} />
+    );
     expect(wrapper.length).toBe(1);
   });
 
   test('should show x-axis controls for line chart', () => {
-    wrapper = shallowWithInjectIntl(<MetricsPlotControls {...minimalPropsForLineChart} />);
+    wrapper = shallowWithInjectIntl(
+      <MetricsPlotControls {...minimalPropsForLineChart} />
+    );
     expect(wrapper.find('[data-testid="show-point-toggle"]')).toHaveLength(1);
     expect(wrapper.find('[data-testid="smoothness-toggle"]')).toHaveLength(1);
     expect(wrapper.find('[data-testid="x-axis-radio"]')).toHaveLength(3);
   });
 
   test('should not show x-axis controls for bar chart', () => {
-    wrapper = shallowWithInjectIntl(<MetricsPlotControls {...minimalPropsForBarChart} />);
+    wrapper = shallowWithInjectIntl(
+      <MetricsPlotControls {...minimalPropsForBarChart} />
+    );
     expect(wrapper.find('[data-testid="show-point-toggle"]')).toHaveLength(0);
     expect(wrapper.find('[data-testid="smoothness-toggle"]')).toHaveLength(0);
     expect(wrapper.find('[data-testid="x-axis-radio"]')).toHaveLength(0);
@@ -49,7 +60,10 @@ describe('unit tests', () => {
 
   test('should hide smoothness controls when disabled', () => {
     wrapper = shallowWithInjectIntl(
-      <MetricsPlotControls {...minimalPropsForLineChart} disableSmoothnessControl />,
+      <MetricsPlotControls
+        {...minimalPropsForLineChart}
+        disableSmoothnessControl
+      />
     );
     expect(wrapper.find('[data-testid="smoothness-toggle"]')).toHaveLength(0);
   });

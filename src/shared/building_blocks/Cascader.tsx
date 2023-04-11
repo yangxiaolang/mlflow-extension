@@ -9,7 +9,12 @@ import { useContext } from 'react';
 export const DuboisCascader = (props: CascaderProps) => {
   const designSystemContext = useContext(DesignSystemContext);
   if (designSystemContext) {
-    return <Cascader getPopupContainer={designSystemContext.getPopupContainer} {...props} />;
+    return (
+      <Cascader
+        getPopupContainer={designSystemContext.getPopupContainer}
+        {...props}
+      />
+    );
   }
 
   return <Cascader {...props} />;

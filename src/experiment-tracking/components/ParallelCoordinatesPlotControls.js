@@ -13,7 +13,7 @@ export class ParallelCoordinatesPlotControls extends React.Component {
     selectedMetricKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
     handleParamsSelectChange: PropTypes.func.isRequired,
     handleMetricsSelectChange: PropTypes.func.isRequired,
-    onClearAllSelect: PropTypes.func.isRequired,
+    onClearAllSelect: PropTypes.func.isRequired
   };
 
   render() {
@@ -24,29 +24,31 @@ export class ParallelCoordinatesPlotControls extends React.Component {
       selectedMetricKeys,
       handleParamsSelectChange,
       handleMetricsSelectChange,
-      onClearAllSelect,
+      onClearAllSelect
     } = this.props;
     return (
       <div css={styles.wrapper}>
         <div>
           <FormattedMessage
-            defaultMessage='Parameters:'
-            description='Label text for parameters in parallel coordinates plot in MLflow'
+            defaultMessage="Parameters:"
+            id="7zNDHj"
+            description="Label text for parameters in parallel coordinates plot in MLflow"
           />
         </div>
         <Select
-          mode='multiple'
+          mode="multiple"
           css={styles.select}
           placeholder={
             <FormattedMessage
-              defaultMessage='Please select parameters'
-              description='Placeholder text for parameters in parallel coordinates plot in MLflow'
+              defaultMessage="Please select parameters"
+              id="OzyPl3"
+              description="Placeholder text for parameters in parallel coordinates plot in MLflow"
             />
           }
           value={selectedParamKeys}
           onChange={handleParamsSelectChange}
         >
-          {paramKeys.map((key) => (
+          {paramKeys.map(key => (
             <Select.Option value={key} key={key}>
               {key}
             </Select.Option>
@@ -54,33 +56,36 @@ export class ParallelCoordinatesPlotControls extends React.Component {
         </Select>
         <div style={{ marginTop: 20 }}>
           <FormattedMessage
-            defaultMessage='Metrics:'
-            description='Label text for metrics in parallel coordinates plot in MLflow'
+            defaultMessage="Metrics:"
+            id="EKyt+3"
+            description="Label text for metrics in parallel coordinates plot in MLflow"
           />
         </div>
         <Select
-          mode='multiple'
+          mode="multiple"
           css={styles.select}
           placeholder={
             <FormattedMessage
-              defaultMessage='Please select metrics'
-              description='Placeholder text for metrics in parallel coordinates plot in MLflow'
+              defaultMessage="Please select metrics"
+              id="r5JI+N"
+              description="Placeholder text for metrics in parallel coordinates plot in MLflow"
             />
           }
           value={selectedMetricKeys}
           onChange={handleMetricsSelectChange}
         >
-          {metricKeys.map((key) => (
+          {metricKeys.map(key => (
             <Select.Option value={key} key={key}>
               {key}
             </Select.Option>
           ))}
         </Select>
         <div style={{ marginTop: 20 }}>
-          <Button dataTestId='clear-button' onClick={onClearAllSelect}>
+          <Button dataTestId="clear-button" onClick={onClearAllSelect}>
             <FormattedMessage
-              defaultMessage='Clear All'
-              description='String for the clear button to clear any selected parameters and metrics'
+              defaultMessage="Clear All"
+              id="FdDWTo"
+              description="String for the clear button to clear any selected parameters and metrics"
             />
           </Button>
         </div>
@@ -90,6 +95,6 @@ export class ParallelCoordinatesPlotControls extends React.Component {
 }
 
 const styles = {
-  wrapper: (theme) => ({ padding: `0 ${theme.spacing.xs}px` }),
-  select: { width: '100%' },
+  wrapper: theme => ({ padding: `0 ${theme.spacing.xs}px` }),
+  select: { width: '100%' }
 };

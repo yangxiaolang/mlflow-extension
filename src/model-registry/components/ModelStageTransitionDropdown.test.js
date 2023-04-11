@@ -13,10 +13,10 @@ describe('ModelStageTransitionDropdown', () => {
 
   beforeEach(() => {
     minimalProps = {
-      currentStage: Stages.NONE,
+      currentStage: Stages.NONE
     };
     commonProps = {
-      ...minimalProps,
+      ...minimalProps
     };
   });
 
@@ -28,11 +28,13 @@ describe('ModelStageTransitionDropdown', () => {
   test('should omit current stage in dropdown', () => {
     const props = {
       ...commonProps,
-      currentStage: Stages.STAGING,
+      currentStage: Stages.STAGING
     };
     wrapper = mountWithIntl(<ModelStageTransitionDropdown {...props} />);
     wrapper.find('.stage-transition-dropdown').first().simulate('click');
-    const menuHtml = mountWithIntl(wrapper.find(Dropdown).props().overlay).html();
+    const menuHtml = mountWithIntl(
+      wrapper.find(Dropdown).props().overlay
+    ).html();
 
     expect(menuHtml).not.toContain(Stages.STAGING);
     expect(menuHtml).toContain(Stages.PRODUCTION);
@@ -44,23 +46,26 @@ describe('ModelStageTransitionDropdown', () => {
     const mockOnSelect = jest.fn();
     const props = {
       ...commonProps,
-      onSelect: mockOnSelect,
+      onSelect: mockOnSelect
     };
     const activity = {};
     wrapper = shallow(<ModelStageTransitionDropdown {...props} />);
     const mockArchiveFieldValues = [true, false, undefined];
-    mockArchiveFieldValues.forEach((fieldValue) => {
+    mockArchiveFieldValues.forEach(fieldValue => {
       const expectArchiveFieldValue = Boolean(fieldValue); // undefined should become false also
       const instance = wrapper.instance();
       instance.transitionFormRef = {
         current: {
           getFieldValue: mockGetFieldValue('', fieldValue),
-          resetFields: () => {},
-        },
+          resetFields: () => {}
+        }
       };
       instance.handleMenuItemClick(activity);
       instance.state.handleConfirm();
-      expect(mockOnSelect).toHaveBeenCalledWith(activity, expectArchiveFieldValue);
+      expect(mockOnSelect).toHaveBeenCalledWith(
+        activity,
+        expectArchiveFieldValue
+      );
     });
   });
 });

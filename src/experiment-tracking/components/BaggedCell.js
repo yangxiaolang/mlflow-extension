@@ -9,8 +9,8 @@ import Utils from '../../common/utils/Utils';
 const styles = {
   metricParamCellContent: {
     display: 'inline-block',
-    maxWidth: 120,
-  },
+    maxWidth: 120
+  }
 };
 
 export default class BaggedCell extends PureComponent {
@@ -21,7 +21,7 @@ export default class BaggedCell extends PureComponent {
     isParam: PropTypes.bool.isRequired,
     isMetric: PropTypes.bool.isRequired,
     onRemoveBagged: PropTypes.func.isRequired,
-    sortIcon: PropTypes.node,
+    sortIcon: PropTypes.node
   };
 
   handleSortAscending = () => {
@@ -45,28 +45,41 @@ export default class BaggedCell extends PureComponent {
 
   render() {
     const { isMetric, keyName, value, sortIcon } = this.props;
-    const cellClass = classNames('metric-param-content', 'metric-param-cell', 'BaggedCell');
+    const cellClass = classNames(
+      'metric-param-content',
+      'metric-param-cell',
+      'BaggedCell'
+    );
     return (
       <span className={cellClass}>
         <Dropdown
           overlay={
             <Menu>
-              <Menu.Item data-test-id='sort-ascending' onClick={this.handleSortAscending}>
+              <Menu.Item
+                data-test-id="sort-ascending"
+                onClick={this.handleSortAscending}
+              >
                 Sort ascending
               </Menu.Item>
-              <Menu.Item data-test-id='sort-descending' onClick={this.handleSortDescending}>
+              <Menu.Item
+                data-test-id="sort-descending"
+                onClick={this.handleSortDescending}
+              >
                 Sort descending
               </Menu.Item>
-              <Menu.Item data-test-id='remove-bagged' onClick={this.handleRemoveBagged}>
+              <Menu.Item
+                data-test-id="remove-bagged"
+                onClick={this.handleRemoveBagged}
+              >
                 Display as a separate column
               </Menu.Item>
             </Menu>
           }
           trigger={['click']}
         >
-          <span className='flex'>
+          <span className="flex">
             <span
-              className='run-table-container underline-on-hover metric-param-sort-toggle'
+              className="run-table-container underline-on-hover metric-param-sort-toggle"
               style={styles.metricParamCellContent}
               title={keyName}
             >
@@ -74,7 +87,7 @@ export default class BaggedCell extends PureComponent {
               {keyName}:
             </span>
             <span
-              className='metric-param-value run-table-container'
+              className="metric-param-value run-table-container"
               style={styles.metricParamCellContent}
               title={value}
             >

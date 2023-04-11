@@ -1,10 +1,12 @@
 module.exports = {
-    presets: [
-        ['@babel/preset-env', { targets: { node: 'current' } }],
-        [
-          '@babel/preset-react',
-          { runtime: 'automatic', importSource: '@emotion/react' },
-        ],
-      ],
-      plugins: ['@emotion']
+  presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+  plugins: [
+    [
+      'formatjs',
+      {
+        idInterpolationPattern: '[sha512:contenthash:base64:6]',
+        ast: true
+      }
+    ]
+  ]
 };

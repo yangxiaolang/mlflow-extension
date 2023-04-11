@@ -4,7 +4,14 @@ import { Button, Dropdown } from '@databricks/design-system';
 import expandIcon from '../static/expand-more.svg';
 import { getUUID } from '../utils/ActionUtils';
 
-export const StyledDropdown = ({ id, className, title, triggers, dropdownOptions, buttonSize }) => {
+export const StyledDropdown = ({
+  id,
+  className,
+  title,
+  triggers,
+  dropdownOptions,
+  buttonSize
+}) => {
   return (
     <div css={classNames.wrapper}>
       <Dropdown
@@ -14,9 +21,17 @@ export const StyledDropdown = ({ id, className, title, triggers, dropdownOptions
         trigger={triggers}
         overlay={dropdownOptions}
       >
-        <Button className='StyledDropdown-button' size={buttonSize} css={classNames.button}>
+        <Button
+          className="StyledDropdown-button"
+          size={buttonSize}
+          css={classNames.button}
+        >
           <span>{title}</span>{' '}
-          <img className='StyledDropdown-chevron' src={expandIcon} alt='Expand' />
+          <img
+            className="StyledDropdown-chevron"
+            src={expandIcon}
+            alt="Expand"
+          />
         </Button>
       </Dropdown>
     </div>
@@ -24,16 +39,16 @@ export const StyledDropdown = ({ id, className, title, triggers, dropdownOptions
 };
 
 const classNames = {
-  button: (theme) => ({
-    fontSize: theme.typography.fontSizeBase,
+  button: theme => ({
+    fontSize: theme.typography.fontSizeBase
   }),
   wrapper: {
     display: 'inline-block',
     '.StyledDropdown-button': {
       padding: 0,
-      color: '#1D2528',
-    },
-  },
+      color: '#1D2528'
+    }
+  }
 };
 
 StyledDropdown.propTypes = {
@@ -43,12 +58,12 @@ StyledDropdown.propTypes = {
   triggers: PropTypes.array,
   className: PropTypes.string,
   id: PropTypes.string,
-  restProps: PropTypes.object,
+  restProps: PropTypes.object
 };
 
 StyledDropdown.defaultProps = {
   triggers: ['click'],
   className: 'StyledDropdown',
   id: 'StyledDropdown' + getUUID(),
-  buttonSize: 'default',
+  buttonSize: 'default'
 };

@@ -6,7 +6,7 @@ interface CompareRunPlotContainerProps {
 }
 
 export const CompareRunPlotContainer = (
-  props: React.PropsWithChildren<CompareRunPlotContainerProps>,
+  props: React.PropsWithChildren<CompareRunPlotContainerProps>
 ) => (
   <div css={styles.wrapper}>
     <div css={styles.controls}>{props.controls}</div>
@@ -19,14 +19,14 @@ const styles = {
     overflow: 'hidden',
     width: '100%',
     height: '100%',
-    minHeight: 450,
+    minHeight: 450
   },
   wrapper: {
     display: 'grid',
-    gridTemplateColumns: 'minmax(300px, 1fr) 3fr',
+    gridTemplateColumns: 'minmax(300px, 1fr) 3fr'
   },
   controls: (theme: Theme) => ({
     padding: `0 ${theme.spacing.xs}px`,
-    [Select.toString()]: '100%',
-  }),
+    [Select.toString()]: '100%'
+  })
 };

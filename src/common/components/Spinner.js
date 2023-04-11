@@ -6,17 +6,17 @@ import './Spinner.css';
 
 export class Spinner extends Component {
   static propTypes = {
-    showImmediately: PropTypes.bool,
+    showImmediately: PropTypes.bool
   };
 
   render() {
     const className = classNames({
       Spinner: true,
-      'Spinner-immediate': this.props.showImmediately,
+      'Spinner-immediate': this.props.showImmediately
     });
     return (
       <div className={className}>
-        <img alt='Page loading...' src={spinner} />
+        <img alt="Page loading..." src={spinner} />
       </div>
     );
   }

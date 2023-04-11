@@ -10,7 +10,7 @@ import { SEARCH_MODEL_VERSIONS } from '../../model-registry/actions';
 import {
   ModelVersionStatus,
   Stages,
-  MODEL_VERSION_STATUS_POLL_INTERVAL as POLL_INTERVAL,
+  MODEL_VERSION_STATUS_POLL_INTERVAL as POLL_INTERVAL
 } from '../../model-registry/constants';
 import Utils from '../../common/utils/Utils';
 import { mockModelVersionDetailed } from '../../model-registry/test-utils';
@@ -30,7 +30,11 @@ describe('ArtifactPage', () => {
   beforeEach(() => {
     // TODO: remove global fetch mock by explicitly mocking all the service API calls
     global.fetch = jest.fn(() =>
-      Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('') }),
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('')
+      })
     );
     const node = getTestArtifactNode();
     minimalProps = {
@@ -40,25 +44,30 @@ describe('ArtifactPage', () => {
       artifactRootUri: 'test_root',
       listArtifactsApi: jest.fn(() => Promise.resolve({})),
       match: {
-        params: {},
-      },
+        params: {}
+      }
     };
 
     minimalStore = mockStore({
       apis: {},
       entities: {
         artifactsByRunUuid: {
-          fakeUuid: node,
+          fakeUuid: node
         },
         artifactRootUriByRunUuid: {
-          fakeUuid: '8',
+          fakeUuid: '8'
         },
         modelVersionsByModel: {
           'Model A': {
-            1: mockModelVersionDetailed('Model A', 1, Stages.PRODUCTION, ModelVersionStatus.READY),
-          },
-        },
-      },
+            1: mockModelVersionDetailed(
+              'Model A',
+              1,
+              Stages.PRODUCTION,
+              ModelVersionStatus.READY
+            )
+          }
+        }
+      }
     });
   });
 
@@ -66,7 +75,11 @@ describe('ArtifactPage', () => {
     const rootNode = new ArtifactNode(true, undefined);
     rootNode.isLoaded = true;
     const dir1 = new ArtifactNode(false, { path: 'dir1', is_dir: true });
-    const file1 = new ArtifactNode(false, { path: 'file1', is_dir: false, file_size: '159' });
+    const file1 = new ArtifactNode(false, {
+      path: 'file1',
+      is_dir: false,
+      file_size: '159'
+    });
     rootNode.children = { dir1, file1 };
     return rootNode;
   };
@@ -77,7 +90,7 @@ describe('ArtifactPage', () => {
         <BrowserRouter>
           <ConnectedArtifactPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     return mountedComponent.find(ArtifactPageImpl).instance();
@@ -89,7 +102,7 @@ describe('ArtifactPage', () => {
         <BrowserRouter>
           <ConnectedArtifactPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.length).toBe(1);
   });
@@ -100,19 +113,19 @@ describe('ArtifactPage', () => {
         <BrowserRouter>
           <ConnectedArtifactPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find('.Spinner').length).toBe(1);
   });
 
-  test('should make correct number of API requests if artifact path specified in url', (done) => {
+  test('should make correct number of API requests if artifact path specified in url', done => {
     const mock = jest.fn();
     const props = {
       ...minimalProps,
       apis: {},
       listArtifactsApi: mock,
       initialSelectedArtifactPath: 'some/test/directory/file',
-      searchModelVersionsApi: jest.fn(),
+      searchModelVersionsApi: jest.fn()
     };
     wrapper = shallowWithIntl(<ArtifactPageImpl {...props} />).dive();
     setImmediate(() => {
@@ -123,40 +136,52 @@ describe('ArtifactPage', () => {
 
   test('ArtifactPage renders error message when listArtifacts request fails', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
-    const props = { ...minimalProps, apis: {}, searchModelVersionsApi: jest.fn() };
+    const props = {
+      ...minimalProps,
+      apis: {},
+      searchModelVersionsApi: jest.fn()
+    };
     wrapper = shallowWithIntl(<ArtifactPageImpl {...props} />).dive();
     const responseErrorWrapper = new ErrorWrapper(
       `{'error_code': '${ErrorCodes.PERMISSION_DENIED}', 'message': 'request failed'}`,
-      403,
+      403
     );
     const artifactPageInstance = wrapper.instance();
     const listArtifactsErrorRequest = {
       id: artifactPageInstance.listArtifactsRequestId,
       active: false,
-      error: responseErrorWrapper,
+      error: responseErrorWrapper
     };
     const artifactViewInstance = shallowWithIntl(
-      artifactPageInstance.renderArtifactView(false, true, [listArtifactsErrorRequest]),
+      artifactPageInstance.renderArtifactView(false, true, [
+        listArtifactsErrorRequest
+      ])
     );
     expect(artifactViewInstance.find('.mlflow-artifact-error').length).toBe(1);
     jest.clearAllMocks();
   });
 
   test('ArtifactPage renders ArtifactView when listArtifacts request succeeds', () => {
-    const props = { ...minimalProps, apis: {}, searchModelVersionsApi: jest.fn() };
+    const props = {
+      ...minimalProps,
+      apis: {},
+      searchModelVersionsApi: jest.fn()
+    };
     wrapper = shallowWithIntl(<ArtifactPageImpl {...props} />).dive();
     const artifactPageInstance = wrapper.instance();
     const listArtifactsSuccessRequest = {
       id: artifactPageInstance.listArtifactsRequestId,
       active: true,
-      payload: {},
+      payload: {}
     };
     const artifactViewInstance = shallowWithIntl(
       <Provider store={minimalStore}>
         <BrowserRouter>
-          {artifactPageInstance.renderArtifactView(false, false, [listArtifactsSuccessRequest])}
+          {artifactPageInstance.renderArtifactView(false, false, [
+            listArtifactsSuccessRequest
+          ])}
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(artifactViewInstance.find(ArtifactView).length).toBe(1);
   });
@@ -167,7 +192,7 @@ describe('ArtifactPage', () => {
 
     getArtifactPageInstance().handleActiveNodeChange(true);
     jest.advanceTimersByTime(POLL_INTERVAL * 3);
-    const expectedActions = minimalStore.getActions().filter((action) => {
+    const expectedActions = minimalStore.getActions().filter(action => {
       return action.type === pending(SEARCH_MODEL_VERSIONS);
     });
     expect(expectedActions).toHaveLength(3);
@@ -175,11 +200,13 @@ describe('ArtifactPage', () => {
 
   test('should not poll for model versions if registry is disabled', () => {
     jest.useFakeTimers();
-    const enabledSpy = jest.spyOn(Utils, 'isModelRegistryEnabled').mockImplementation(() => false);
+    const enabledSpy = jest
+      .spyOn(Utils, 'isModelRegistryEnabled')
+      .mockImplementation(() => false);
     expect(Utils.isModelRegistryEnabled()).toEqual(false);
     getArtifactPageInstance().handleActiveNodeChange(true);
     jest.advanceTimersByTime(POLL_INTERVAL * 3);
-    const expectedActions = minimalStore.getActions().filter((action) => {
+    const expectedActions = minimalStore.getActions().filter(action => {
       return action.type === pending(SEARCH_MODEL_VERSIONS);
     });
     expect(expectedActions).toHaveLength(0);
@@ -189,10 +216,12 @@ describe('ArtifactPage', () => {
 
   test('should not poll for model versions if active node is not directory', () => {
     jest.useFakeTimers();
-    expect(getArtifactPageInstance().state.activeNodeIsDirectory).toEqual(false);
+    expect(getArtifactPageInstance().state.activeNodeIsDirectory).toEqual(
+      false
+    );
 
     jest.advanceTimersByTime(POLL_INTERVAL * 3);
-    const expectedActions = minimalStore.getActions().filter((action) => {
+    const expectedActions = minimalStore.getActions().filter(action => {
       return action.type === pending(SEARCH_MODEL_VERSIONS);
     });
     expect(expectedActions).toHaveLength(0);
@@ -209,7 +238,7 @@ describe('ArtifactPage', () => {
       apis: {},
       searchModelVersionsApi: jest.fn(() => {
         throw Error('err');
-      }),
+      })
     };
 
     // Create our wrapper with the intial props
@@ -218,7 +247,7 @@ describe('ArtifactPage', () => {
         <BrowserRouter>
           <ArtifactPageImpl {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     wrapper.find(ArtifactPageImpl).setState({ activeNodeIsDirectory: true });
 
@@ -235,9 +264,9 @@ describe('ArtifactPage', () => {
     wrapper.setProps({
       children: (
         <BrowserRouter>
-          <ArtifactPageImpl {...props} runUuid='anotherFakeUuid' />
+          <ArtifactPageImpl {...props} runUuid="anotherFakeUuid" />
         </BrowserRouter>
-      ),
+      )
     });
 
     // Wait another multiple poll intervals
@@ -250,20 +279,23 @@ describe('ArtifactPage', () => {
   });
 
   describe('autoselect logged model', () => {
-    const generateLoggedModel = ({ time = '2021-05-01', path = 'someRunPath' } = {}) => ({
-      run_id: `run-uuid`,
+    const generateLoggedModel = ({
+      time = '2021-05-01',
+      path = 'someRunPath'
+    } = {}) => ({
+      run_id: 'run-uuid',
       artifact_path: path,
       utc_time_created: time,
-      flavors: { keras: {}, python_function: {} },
+      flavors: { keras: {}, python_function: {} }
     });
 
-    const getLoggedModelRunTag = (models) =>
+    const getLoggedModelRunTag = models =>
       models.length > 0
         ? {
             'mlflow.log-model.history': RunTag.fromJs({
               key: 'mlflow.log-model.history',
-              value: JSON.stringify(models),
-            }),
+              value: JSON.stringify(models)
+            })
           }
         : {};
 
@@ -274,10 +306,10 @@ describe('ArtifactPage', () => {
         ...(initialPath && {
           match: {
             params: {
-              initialSelectedArtifactPath: initialPath,
-            },
-          },
-        }),
+              initialSelectedArtifactPath: initialPath
+            }
+          }
+        })
       };
 
       const artifactPageWrapper = mountWithIntl(
@@ -285,7 +317,7 @@ describe('ArtifactPage', () => {
           <BrowserRouter>
             <ConnectedArtifactPage {...props} />
           </BrowserRouter>
-        </Provider>,
+        </Provider>
       );
 
       return artifactPageWrapper.find(ArtifactPageImpl).instance();
@@ -293,14 +325,16 @@ describe('ArtifactPage', () => {
 
     it('selects path from route when present', () => {
       const instance = getInstance({
-        initialPath: 'passedInPath',
+        initialPath: 'passedInPath'
       });
-      expect(instance.props['initialSelectedArtifactPath']).toBe('passedInPath');
+      expect(instance.props['initialSelectedArtifactPath']).toBe(
+        'passedInPath'
+      );
     });
 
     it('autoselects from runtag if no path is present', () => {
       const instance = getInstance({
-        models: [generateLoggedModel()],
+        models: [generateLoggedModel()]
       });
       expect(instance.props['initialSelectedArtifactPath']).toBe('someRunPath');
     });
@@ -310,15 +344,17 @@ describe('ArtifactPage', () => {
         models: [
           generateLoggedModel({
             path: 'reallyOldRunPath',
-            time: '1776-07-04',
+            time: '1776-07-04'
           }),
           generateLoggedModel({
             path: 'moreRecentRunPath',
-            time: '2021-07-04',
-          }),
-        ],
+            time: '2021-07-04'
+          })
+        ]
       });
-      expect(instance.props['initialSelectedArtifactPath']).toBe('moreRecentRunPath');
+      expect(instance.props['initialSelectedArtifactPath']).toBe(
+        'moreRecentRunPath'
+      );
     });
   });
 });

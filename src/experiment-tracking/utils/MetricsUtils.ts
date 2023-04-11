@@ -11,33 +11,45 @@ interface MetricHistoryEntry {
 const nonNumericLabels = defineMessages({
   positiveInfinity: {
     defaultMessage: 'Positive infinity ({metricKey})',
-    description: 'Label indicating positive infinity used as a hover text in a plot UI element',
+    id: 'zWGmon',
+    description:
+      'Label indicating positive infinity used as a hover text in a plot UI element'
   },
 
   positiveInfinitySymbol: {
     defaultMessage: '+∞',
-    description: 'Label displaying positive infinity symbol displayed on a plot UI element',
+    id: 'hcDB9U',
+    description:
+      'Label displaying positive infinity symbol displayed on a plot UI element'
   },
 
   negativeInfinity: {
     defaultMessage: 'Negative infinity ({metricKey})',
-    description: 'Label indicating negative infinity used as a hover text in a plot UI element',
+    id: 'YRFAGK',
+    description:
+      'Label indicating negative infinity used as a hover text in a plot UI element'
   },
 
   negativeInfinitySymbol: {
     defaultMessage: '-∞',
-    description: 'Label displaying negative infinity symbol displayed on a plot UI element',
+    id: 'C4y1fv',
+    description:
+      'Label displaying negative infinity symbol displayed on a plot UI element'
   },
 
   nan: {
     defaultMessage: 'Not a number ({metricKey})',
-    description: 'Label indicating "not-a-number" used as a hover text in a plot UI element',
+    id: 'ES952j',
+    description:
+      'Label indicating "not-a-number" used as a hover text in a plot UI element'
   },
 
   nanSymbol: {
     defaultMessage: 'NaN',
-    description: 'Label displaying "not-a-number" symbol displayed on a plot UI element',
-  },
+    id: 'yL9JKm',
+    description:
+      'Label displaying "not-a-number" symbol displayed on a plot UI element'
+  }
 });
 
 /**
@@ -47,8 +59,12 @@ const nonNumericLabels = defineMessages({
  */
 export const normalizeInfinity = (value: number | string) => {
   const normalizedValue = typeof value === 'string' ? parseFloat(value) : value;
-  if (normalizedValue === Number.MAX_VALUE) return Number.POSITIVE_INFINITY;
-  if (normalizedValue === -Number.MAX_VALUE) return Number.NEGATIVE_INFINITY;
+  if (normalizedValue === Number.MAX_VALUE) {
+    return Number.POSITIVE_INFINITY;
+  }
+  if (normalizedValue === -Number.MAX_VALUE) {
+    return Number.NEGATIVE_INFINITY;
+  }
   return normalizedValue;
 };
 
@@ -62,12 +78,12 @@ export const normalizeMetricsHistoryEntry = ({
   key,
   timestamp,
   value,
-  step,
+  step
 }: MetricHistoryEntry) => ({
   key: key,
   value: normalizeInfinity(value),
   step: step || 0,
-  timestamp: timestamp,
+  timestamp: timestamp
 });
 
 /**
@@ -93,7 +109,7 @@ const numberEqual = (n1: number, n2: number) => {
 export const findNumberChunks = <T extends number = number>(
   arr: T[],
   needle: T,
-  indexDelta = 0,
+  indexDelta = 0
 ): {
   startIndex: number;
   endIndex: number;
@@ -102,7 +118,7 @@ export const findNumberChunks = <T extends number = number>(
     return [];
   }
 
-  const startIndex = arr.findIndex((value) => numberEqual(needle, value));
+  const startIndex = arr.findIndex(value => numberEqual(needle, value));
   if (startIndex === -1) {
     return [];
   }
@@ -120,9 +136,13 @@ export const findNumberChunks = <T extends number = number>(
   return [
     {
       startIndex: startIndex + indexDelta,
-      endIndex: endIndex + indexDelta,
+      endIndex: endIndex + indexDelta
     },
-    ...findNumberChunks(arr.slice(endIndex + 1), needle, endIndex + 1 + indexDelta),
+    ...findNumberChunks(
+      arr.slice(endIndex + 1),
+      needle,
+      endIndex + 1 + indexDelta
+    )
   ];
 };
 
@@ -139,8 +159,8 @@ const INFINITY_LINE_TEMPLATE = {
   y0: 0,
   line: {
     width: 1,
-    color: 'red',
-  },
+    color: 'red'
+  }
 };
 
 /**
@@ -153,7 +173,7 @@ export const getAveragedPositionOnXAxis = (
     startIndex: number;
     endIndex: number;
   },
-  xValues: (number | string)[],
+  xValues: (number | string)[]
 ) => {
   const startIndex = clampIndex(xValues, chunk.startIndex - 1);
   const endIndex = clampIndex(xValues, chunk.endIndex + 1);
@@ -167,7 +187,10 @@ export const getAveragedPositionOnXAxis = (
     const d2msecs = new Date(date2).getTime(); // get milliseconds
 
     const avgTime = (d1msecs + d2msecs) / 2;
-    return Utils.formatTimestamp(new Date(avgTime).getTime(), 'yyyy-mm-dd HH:MM:ss.l');
+    return Utils.formatTimestamp(
+      new Date(avgTime).getTime(),
+      'yyyy-mm-dd HH:MM:ss.l'
+    );
   }
 
   return ((xValues[startIndex] as number) + (xValues[endIndex] as number)) / 2;
@@ -176,7 +199,12 @@ export const getAveragedPositionOnXAxis = (
 /**
  * Internal helper method - creates plotly annotation for an infinity
  */
-const createInfinityAnnotation = (label: string, text: string, x: number, y: number) => ({
+const createInfinityAnnotation = (
+  label: string,
+  text: string,
+  x: number,
+  y: number
+) => ({
   hoverlabel: { bgcolor: 'red' },
   align: 'center',
   yref: 'paper',
@@ -184,12 +212,12 @@ const createInfinityAnnotation = (label: string, text: string, x: number, y: num
   showarrow: false,
   font: {
     size: 15,
-    color: 'red',
+    color: 'red'
   },
   y,
   text,
   x,
-  hovertext: label,
+  hovertext: label
 });
 
 export interface GenerateInfinityAnnotationsProps {
@@ -223,13 +251,13 @@ export const generateInfinityAnnotations = ({
   xValues,
   yValues,
   isLogScale = false,
-  stringFormatter = (str) => str.toString(),
+  stringFormatter = str => str.toString()
 }: GenerateInfinityAnnotationsProps) => {
   const nanChunks = findNumberChunks(yValues, NaN);
   const posInfChunks = findNumberChunks(yValues, Number.POSITIVE_INFINITY);
   const negInfChunks = findNumberChunks(yValues, Number.NEGATIVE_INFINITY);
 
-  const nanAnnotations = nanChunks.map((chunk) => ({
+  const nanAnnotations = nanChunks.map(chunk => ({
     hovertext: stringFormatter(nonNumericLabels.nan),
     text: stringFormatter(nonNumericLabels.nanSymbol),
     align: 'center',
@@ -237,30 +265,30 @@ export const generateInfinityAnnotations = ({
     showarrow: false,
     font: {
       size: 12,
-      color: 'blue',
+      color: 'blue'
     },
     x: getAveragedPositionOnXAxis(chunk, xValues),
-    y: 0,
+    y: 0
   }));
-  const posInfAnnotations = posInfChunks.map((chunk) =>
+  const posInfAnnotations = posInfChunks.map(chunk =>
     createInfinityAnnotation(
       stringFormatter(nonNumericLabels.positiveInfinity),
       stringFormatter(nonNumericLabels.positiveInfinitySymbol),
       getAveragedPositionOnXAxis(chunk, xValues),
-      1,
-    ),
+      1
+    )
   );
 
-  const negInfAnnotations = negInfChunks.map((chunk) =>
+  const negInfAnnotations = negInfChunks.map(chunk =>
     createInfinityAnnotation(
       stringFormatter(nonNumericLabels.negativeInfinity),
       stringFormatter(nonNumericLabels.negativeInfinitySymbol),
       getAveragedPositionOnXAxis(chunk, xValues),
-      0,
-    ),
+      0
+    )
   );
 
-  const nanShapes = nanChunks.map((chunk) => {
+  const nanShapes = nanChunks.map(chunk => {
     return {
       fillcolor: 'blue',
       opacity: 0.1,
@@ -268,10 +296,10 @@ export const generateInfinityAnnotations = ({
       y0: 0,
       y1: 1,
       line: {
-        width: 0,
+        width: 0
       },
       x0: xValues[clampIndex(xValues, chunk.startIndex - 1)],
-      x1: xValues[clampIndex(xValues, chunk.endIndex + 1)],
+      x1: xValues[clampIndex(xValues, chunk.endIndex + 1)]
     };
   });
 
@@ -281,7 +309,7 @@ export const generateInfinityAnnotations = ({
       y1: 1000,
       x0: xValues[clampIndex(xValues, chunk.startIndex - 1)],
       x1: xValues[clampIndex(xValues, chunk.startIndex - 1)],
-      yanchor: yValues[clampIndex(yValues, chunk.startIndex - 1)],
+      yanchor: yValues[clampIndex(yValues, chunk.startIndex - 1)]
     });
     if (chunk.endIndex + 1 < xValues.length) {
       shapes.push({
@@ -289,7 +317,7 @@ export const generateInfinityAnnotations = ({
         y1: 1000,
         x0: xValues[clampIndex(xValues, chunk.endIndex + 1)],
         x1: xValues[clampIndex(xValues, chunk.endIndex + 1)],
-        yanchor: yValues[clampIndex(yValues, chunk.endIndex + 1)],
+        yanchor: yValues[clampIndex(yValues, chunk.endIndex + 1)]
       });
     }
     return shapes;
@@ -304,7 +332,7 @@ export const generateInfinityAnnotations = ({
         yanchor: yValues[clampIndex(yValues, chunk.startIndex - 1)],
 
         x0: xValues[clampIndex(xValues, chunk.startIndex - 1)],
-        x1: xValues[clampIndex(xValues, chunk.startIndex - 1)],
+        x1: xValues[clampIndex(xValues, chunk.startIndex - 1)]
       });
       shapes.push({
         ...INFINITY_LINE_TEMPLATE,
@@ -314,7 +342,7 @@ export const generateInfinityAnnotations = ({
         yanchor: yValues[clampIndex(yValues, chunk.endIndex + 1)],
 
         x0: xValues[clampIndex(xValues, chunk.endIndex + 1)],
-        x1: xValues[clampIndex(xValues, chunk.endIndex + 1)],
+        x1: xValues[clampIndex(xValues, chunk.endIndex + 1)]
       });
     } else {
       shapes.push({
@@ -322,20 +350,20 @@ export const generateInfinityAnnotations = ({
         y1: -1000,
         x0: xValues[clampIndex(xValues, chunk.startIndex - 1)],
         x1: xValues[clampIndex(xValues, chunk.startIndex - 1)],
-        yanchor: yValues[clampIndex(yValues, chunk.startIndex - 1)],
+        yanchor: yValues[clampIndex(yValues, chunk.startIndex - 1)]
       });
       shapes.push({
         ...INFINITY_LINE_TEMPLATE,
         y1: -1000,
         x0: xValues[clampIndex(xValues, chunk.endIndex + 1)],
         x1: xValues[clampIndex(xValues, chunk.endIndex + 1)],
-        yanchor: yValues[clampIndex(yValues, chunk.endIndex + 1)],
+        yanchor: yValues[clampIndex(yValues, chunk.endIndex + 1)]
       });
     }
     return shapes;
   }, []);
   return {
     shapes: [...nanShapes, ...negInfinityShapes, ...posInfinityShapes],
-    annotations: [...nanAnnotations, ...posInfAnnotations, ...negInfAnnotations],
+    annotations: [...nanAnnotations, ...posInfAnnotations, ...negInfAnnotations]
   };
 };

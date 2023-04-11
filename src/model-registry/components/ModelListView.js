@@ -12,13 +12,13 @@ import {
   EMPTY_CELL_PLACEHOLDER,
   REGISTERED_MODELS_PER_PAGE,
   REGISTERED_MODELS_SEARCH_NAME_FIELD,
-  REGISTERED_MODELS_SEARCH_TIMESTAMP_FIELD,
+  REGISTERED_MODELS_SEARCH_TIMESTAMP_FIELD
 } from '../constants';
 import {
   ExperimentSearchSyntaxDocUrl,
   ModelRegistryDocUrl,
   ModelRegistryOnboardingString,
-  onboarding,
+  onboarding
 } from '../../common/constants';
 import { SimplePagination } from '../../common/components/SimplePagination';
 import { Spinner } from '../../common/components/Spinner';
@@ -32,16 +32,21 @@ import { Spacer } from '../../shared/building_blocks/Spacer';
 import { SearchBox } from '../../shared/building_blocks/SearchBox';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { PageContainer } from '../../common/components/PageContainer';
-import { Button, Popover, QuestionMarkFillIcon } from '@databricks/design-system';
+import {
+  Button,
+  Popover,
+  QuestionMarkFillIcon
+} from '@databricks/design-system';
 
 const NAME_COLUMN_INDEX = 'name';
 const LAST_MODIFIED_COLUMN_INDEX = 'last_updated_timestamp';
 
-const getOverallLatestVersionNumber = (latest_versions) =>
-  latest_versions && Math.max(...latest_versions.map((v) => v.version));
+const getOverallLatestVersionNumber = latest_versions =>
+  latest_versions && Math.max(...latest_versions.map(v => v.version));
 
 const getLatestVersionNumberByStage = (latest_versions, stage) => {
-  const modelVersion = latest_versions && latest_versions.find((v) => v.current_stage === stage);
+  const modelVersion =
+    latest_versions && latest_versions.find(v => v.current_stage === stage);
   return modelVersion && modelVersion.version;
 };
 
@@ -52,7 +57,7 @@ export class ModelListViewImpl extends React.Component {
       loading: false,
       lastNavigationActionWasClickPrev: false,
       maxResultsSelection: REGISTERED_MODELS_PER_PAGE,
-      showOnboardingHelper: this.showOnboardingHelper(),
+      showOnboardingHelper: this.showOnboardingHelper()
     };
   }
 
@@ -74,21 +79,23 @@ export class ModelListViewImpl extends React.Component {
     onClickSortableColumn: PropTypes.func.isRequired,
     onSetMaxResult: PropTypes.func.isRequired,
     getMaxResultValue: PropTypes.func.isRequired,
-    intl: PropTypes.any,
+    intl: PropTypes.any
   };
 
   static defaultProps = {
     models: [],
-    searchInput: '',
+    searchInput: ''
   };
 
   showOnboardingHelper() {
-    const onboardingInformationStore = ModelListViewImpl.getLocalStore(onboarding);
+    const onboardingInformationStore =
+      ModelListViewImpl.getLocalStore(onboarding);
     return onboardingInformationStore.getItem('showRegistryHelper') === null;
   }
 
   disableOnboardingHelper() {
-    const onboardingInformationStore = ModelListViewImpl.getLocalStore(onboarding);
+    const onboardingInformationStore =
+      ModelListViewImpl.getLocalStore(onboarding);
     onboardingInformationStore.setItem('showRegistryHelper', 'false');
   }
 
@@ -108,24 +115,29 @@ export class ModelListViewImpl extends React.Component {
   renderModelVersionLink(name, versionNumber) {
     return (
       <FormattedMessage
-        defaultMessage='<link>Version {versionNumber}</link>'
-        description='Row entry for version columns in the registered model page'
+        defaultMessage="<link>Version {versionNumber}</link>"
+        id="U+Jzcv"
+        description="Row entry for version columns in the registered model page"
         values={{
           versionNumber: versionNumber,
-          link: (chunks) => (
-            <Link to={getModelVersionPageRoute(name, versionNumber)}>{chunks}</Link>
-          ),
+          link: chunks => (
+            <Link to={getModelVersionPageRoute(name, versionNumber)}>
+              {chunks}
+            </Link>
+          )
         }}
       />
     );
   }
 
-  getSortOrder = (key) => {
+  getSortOrder = key => {
     const { orderByKey, orderByAsc } = this.props;
     if (key !== orderByKey) {
       return null;
     }
-    return { sortOrder: orderByAsc ? AntdTableSortOrder.ASC : AntdTableSortOrder.DESC };
+    return {
+      sortOrder: orderByAsc ? AntdTableSortOrder.ASC : AntdTableSortOrder.DESC
+    };
   };
 
   handleCellToggle = () => {
@@ -137,7 +149,8 @@ export class ModelListViewImpl extends React.Component {
       {
         title: this.props.intl.formatMessage({
           defaultMessage: 'Name',
-          description: 'Column title for model name in the registered model page',
+          description:
+            'Column title for model name in the registered model page'
         }),
         className: 'model-name',
         dataIndex: NAME_COLUMN_INDEX,
@@ -145,12 +158,13 @@ export class ModelListViewImpl extends React.Component {
           return <Link to={getModelPageRoute(row.name)}>{text}</Link>;
         },
         sorter: true,
-        ...this.getSortOrder(REGISTERED_MODELS_SEARCH_NAME_FIELD),
+        ...this.getSortOrder(REGISTERED_MODELS_SEARCH_NAME_FIELD)
       },
       {
         title: this.props.intl.formatMessage({
           defaultMessage: 'Latest Version',
-          description: 'Column title for latest model version in the registered model page',
+          description:
+            'Column title for latest model version in the registered model page'
         }),
         className: 'latest-version',
         render: ({ name, latest_versions }) => {
@@ -158,64 +172,75 @@ export class ModelListViewImpl extends React.Component {
           return versionNumber
             ? this.renderModelVersionLink(name, versionNumber)
             : EMPTY_CELL_PLACEHOLDER;
-        },
+        }
       },
       {
         title: StageTagComponents[Stages.STAGING],
         className: 'latest-staging',
         render: ({ name, latest_versions }) => {
-          const versionNumber = getLatestVersionNumberByStage(latest_versions, Stages.STAGING);
+          const versionNumber = getLatestVersionNumberByStage(
+            latest_versions,
+            Stages.STAGING
+          );
           return versionNumber
             ? this.renderModelVersionLink(name, versionNumber)
             : EMPTY_CELL_PLACEHOLDER;
-        },
+        }
       },
       {
         title: StageTagComponents[Stages.PRODUCTION],
         className: 'latest-production',
         render: ({ name, latest_versions }) => {
-          const versionNumber = getLatestVersionNumberByStage(latest_versions, Stages.PRODUCTION);
+          const versionNumber = getLatestVersionNumberByStage(
+            latest_versions,
+            Stages.PRODUCTION
+          );
           return versionNumber
             ? this.renderModelVersionLink(name, versionNumber)
             : EMPTY_CELL_PLACEHOLDER;
-        },
+        }
       },
       {
         title: this.props.intl.formatMessage({
           defaultMessage: 'Last Modified',
           description:
-            'Column title for last modified timestamp for a model in the registered model page',
+            'Column title for last modified timestamp for a model in the registered model page'
         }),
         className: 'last-modified',
         dataIndex: LAST_MODIFIED_COLUMN_INDEX,
-        render: (text, row) => <span>{Utils.formatTimestamp(row.last_updated_timestamp)}</span>,
+        render: (text, row) => (
+          <span>{Utils.formatTimestamp(row.last_updated_timestamp)}</span>
+        ),
         sorter: true,
-        ...this.getSortOrder(REGISTERED_MODELS_SEARCH_TIMESTAMP_FIELD),
+        ...this.getSortOrder(REGISTERED_MODELS_SEARCH_TIMESTAMP_FIELD)
       },
       {
         title: this.props.intl.formatMessage({
           defaultMessage: 'Tags',
-          description: 'Column title for model tags in the registered model page',
+          description:
+            'Column title for model tags in the registered model page'
         }),
         className: 'table-tag-container',
         render: (row, index) => {
           return index.tags && index.tags.length > 0 ? (
             <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
               <CollapsibleTagsCell
-                tags={{ ...index.tags.map((tag) => RegisteredModelTag.fromJs(tag)) }}
+                tags={{
+                  ...index.tags.map(tag => RegisteredModelTag.fromJs(tag))
+                }}
                 onToggle={this.handleCellToggle}
               />
             </div>
           ) : (
             EMPTY_CELL_PLACEHOLDER
           );
-        },
-      },
+        }
+      }
     ];
     return columns;
   };
 
-  getRowKey = (record) => record.name;
+  getRowKey = record => record.name;
 
   setLoadingFalse = () => {
     this.setState({ loading: false });
@@ -224,10 +249,14 @@ export class ModelListViewImpl extends React.Component {
   handleSearch = (event, searchInput) => {
     event.preventDefault();
     this.setState({ loading: true, lastNavigationActionWasClickPrev: false });
-    this.props.onSearch(this.setLoadingFalse, this.setLoadingFalse, searchInput);
+    this.props.onSearch(
+      this.setLoadingFalse,
+      this.setLoadingFalse,
+      searchInput
+    );
   };
 
-  static getSortFieldName = (column) => {
+  static getSortFieldName = column => {
     switch (column) {
       case NAME_COLUMN_INDEX:
         return REGISTERED_MODELS_SEARCH_NAME_FIELD;
@@ -244,30 +273,32 @@ export class ModelListViewImpl extends React.Component {
       ModelListViewImpl.getSortFieldName(sorter.field),
       sorter.order,
       this.setLoadingFalse,
-      this.setLoadingFalse,
+      this.setLoadingFalse
     );
   };
 
   renderOnboardingContent() {
     const learnMoreLinkUrl = ModelListViewImpl.getLearnMoreLinkUrl();
-    const learnMoreDisplayString = ModelListViewImpl.getLearnMoreDisplayString();
+    const learnMoreDisplayString =
+      ModelListViewImpl.getLearnMoreDisplayString();
     const content = (
       <div>
         {learnMoreDisplayString}{' '}
         <FormattedMessage
-          defaultMessage='<link>Learn more</link>'
-          description='Learn more link on the model list page with cloud-specific link'
+          defaultMessage="<link>Learn more</link>"
+          id="aYsI8a"
+          description="Learn more link on the model list page with cloud-specific link"
           values={{
-            link: (chunks) => (
+            link: chunks => (
               <a
                 href={learnMoreLinkUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='LinkColor'
+                target="_blank"
+                rel="noopener noreferrer"
+                className="LinkColor"
               >
                 {chunks}
               </a>
-            ),
+            )
           }}
         />
       </div>
@@ -277,7 +308,7 @@ export class ModelListViewImpl extends React.Component {
       <Alert
         css={styles.alert}
         message={content}
-        type='info'
+        type="info"
         showIcon
         closable
         onClose={() => this.disableOnboardingHelper()}
@@ -303,10 +334,13 @@ export class ModelListViewImpl extends React.Component {
       <div>
         <span>
           <FormattedMessage
-            defaultMessage='No models yet. <link>Create a model</link> to get started.'
-            description='Placeholder text for empty models table in the registered model list page'
+            defaultMessage="No models yet. <link>Create a model</link> to get started."
+            id="/YdNM8"
+            description="Placeholder text for empty models table in the registered model list page"
             values={{
-              link: (chunks) => <CreateModelButton buttonType='link' buttonText={chunks} />,
+              link: chunks => (
+                <CreateModelButton buttonType="link" buttonText={chunks} />
+              )
             }}
           />
         </span>
@@ -333,7 +367,7 @@ export class ModelListViewImpl extends React.Component {
     this.props.onSetMaxResult(key, this.setLoadingFalse, this.setLoadingFalse);
   };
 
-  handleSearchInput = (event) => {
+  handleSearchInput = event => {
     this.props.onSearchInputChange(event.target.value);
   };
 
@@ -343,15 +377,20 @@ export class ModelListViewImpl extends React.Component {
 
   searchInputHelpTooltipContent = () => {
     return (
-      <div className='search-input-tooltip-content'>
+      <div className="search-input-tooltip-content">
         <FormattedMessage
           // eslint-disable-next-line max-len
-          defaultMessage='To search by tags or by names and tags, please use <link>MLflow Search Syntax</link>.{newline}Examples:{examples}'
-          description='Tooltip string to explain how to search models from the model registry table'
+          defaultMessage="To search by tags or by names and tags, please use <link>MLflow Search Syntax</link>.{newline}Examples:{examples}"
+          id="aGxvDa"
+          description="Tooltip string to explain how to search models from the model registry table"
           values={{
             newline: <br />,
-            link: (chunks) => (
-              <a href={ExperimentSearchSyntaxDocUrl} target='_blank' rel='noopener noreferrer'>
+            link: chunks => (
+              <a
+                href={ExperimentSearchSyntaxDocUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {chunks}
               </a>
             ),
@@ -360,7 +399,7 @@ export class ModelListViewImpl extends React.Component {
                 <li>tags.key = "value"</li>
                 <li>name ilike "%my_model_name%" and tags.key = "value"</li>
               </ul>
-            ),
+            )
           }}
         />
       </div>
@@ -372,17 +411,18 @@ export class ModelListViewImpl extends React.Component {
     const { loading } = this.state;
 
     const title = (
-      <Spacer size='small' direction='horizontal'>
+      <Spacer size="small" direction="horizontal">
         <span>
           <FormattedMessage
-            defaultMessage='Registered Models'
-            description='Header for displaying models in the model registry'
+            defaultMessage="Registered Models"
+            id="qMwRy3"
+            description="Header for displaying models in the model registry"
           />
         </span>
       </Spacer>
     );
     return (
-      <PageContainer data-test-id='ModelListView-container'>
+      <PageContainer data-test-id="ModelListView-container">
         <PageHeader title={title}>
           <></>
         </PageHeader>
@@ -390,23 +430,23 @@ export class ModelListViewImpl extends React.Component {
         <div css={styles.searchFlexBar}>
           <FlexBar
             left={
-              <Spacer size='small' direction='horizontal'>
+              <Spacer size="small" direction="horizontal">
                 <CreateModelButton />
               </Spacer>
             }
             right={
-              <Spacer direction='horizontal' size='small'>
-                <Spacer direction='horizontal' size='large'>
+              <Spacer direction="horizontal" size="small">
+                <Spacer direction="horizontal" size="large">
                   <Popover
-                    overlayClassName='search-input-tooltip'
+                    overlayClassName="search-input-tooltip"
                     content={this.searchInputHelpTooltipContent}
-                    placement='bottom'
+                    placement="bottom"
                   >
                     <QuestionMarkFillIcon />
                   </Popover>
                 </Spacer>
 
-                <Spacer direction='horizontal' size='large'>
+                <Spacer direction="horizontal" size="large">
                   <div css={styles.nameSearchBox}>
                     <SearchBox
                       onChange={this.handleSearchInput}
@@ -414,15 +454,16 @@ export class ModelListViewImpl extends React.Component {
                       onSearch={this.handleSearch}
                       placeholder={this.props.intl.formatMessage({
                         defaultMessage: 'Search by model names or tags',
-                        description: 'Placeholder text inside model search bar',
+                        description: 'Placeholder text inside model search bar'
                       })}
                     />
                   </div>
-                  <Button dataTestId='clear-button' onClick={this.handleClear}>
+                  <Button dataTestId="clear-button" onClick={this.handleClear}>
                     <FormattedMessage
-                      defaultMessage='Clear'
+                      defaultMessage="Clear"
+                      id="ECH4Hu"
                       // eslint-disable-next-line max-len
-                      description='String for the clear button to clear the text for searching models'
+                      description="String for the clear button to clear the text for searching models"
                     />
                   </Button>
                 </Spacer>
@@ -431,15 +472,15 @@ export class ModelListViewImpl extends React.Component {
           />
         </div>
         <Table
-          size='middle'
+          size="middle"
           rowKey={this.getRowKey}
-          className='model-version-table'
+          className="model-version-table"
           dataSource={models}
           columns={this.getColumns()}
           locale={{ emptyText: this.getEmptyTextComponent() }}
           pagination={{
             hideOnSinglePage: true,
-            pageSize: this.props.getMaxResultValue(),
+            pageSize: this.props.getMaxResultValue()
           }}
           loading={loading && { indicator: <Spinner /> }}
           onChange={this.handleTableChange}
@@ -453,7 +494,12 @@ export class ModelListViewImpl extends React.Component {
             onClickNext={this.handleClickNext}
             onClickPrev={this.handleClickPrev}
             handleSetMaxResult={this.handleSetMaxResult}
-            maxResultOptions={[String(REGISTERED_MODELS_PER_PAGE), '25', '50', '100']}
+            maxResultOptions={[
+              String(REGISTERED_MODELS_PER_PAGE),
+              '25',
+              '50',
+              '100'
+            ]}
             getSelectedPerPageSelection={this.props.getMaxResultValue}
           />
         </div>
@@ -466,10 +512,10 @@ export const ModelListView = injectIntl(ModelListViewImpl);
 
 const styles = {
   nameSearchBox: {
-    width: '446px',
+    width: '446px'
   },
   searchFlexBar: {
-    marginBottom: '24px',
+    marginBottom: '24px'
   },
   // TODO: Convert this into Dubois Alert
   alert: {
@@ -478,11 +524,11 @@ const styles = {
     background: '#edfafe' /* Gray-background */,
     border: '1px solid #eeeeee',
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.12)' /* Dropshadow */,
-    borderRadius: 4,
+    borderRadius: 4
   },
   questionMark: {
     marginLeft: 4,
     cursor: 'pointer',
-    color: '#888',
-  },
+    color: '#888'
+  }
 };

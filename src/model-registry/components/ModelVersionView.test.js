@@ -30,7 +30,7 @@ describe('ModelVersionView', () => {
         'Model A',
         1,
         Stages.PRODUCTION,
-        ModelVersionStatus.READY,
+        ModelVersionStatus.READY
       ),
       handleStageTransitionDropdownSelect: jest.fn(),
       deleteModelVersionApi: jest.fn(() => Promise.resolve()),
@@ -41,8 +41,8 @@ describe('ModelVersionView', () => {
       tags: {},
       schema: {
         inputs: [],
-        outputs: [],
-      },
+        outputs: []
+      }
     };
     minimalStoreRaw = {
       entities: {
@@ -51,16 +51,16 @@ describe('ModelVersionView', () => {
             1: {
               'special key': ModelVersionTag.fromJs({
                 key: 'special key',
-                value: 'not so special value',
-              }),
-            },
-          },
-        },
+                value: 'not so special value'
+              })
+            }
+          }
+        }
       },
-      apis: {},
+      apis: {}
     };
     minimalStore = mockStore(minimalStoreRaw);
-    createComponentInstance = (props) =>
+    createComponentInstance = props =>
       mountWithIntl(
         <DesignSystemProvider>
           <Provider store={minimalStore}>
@@ -68,7 +68,7 @@ describe('ModelVersionView', () => {
               <ModelVersionView {...props} />
             </BrowserRouter>
           </Provider>
-        </DesignSystemProvider>,
+        </DesignSystemProvider>
       );
   });
 
@@ -80,10 +80,17 @@ describe('ModelVersionView', () => {
   test('should render delete dropdown item when model version is ready', () => {
     const props = {
       ...minimalProps,
-      modelVersion: mockModelVersionDetailed('Model A', 1, Stages.NONE, ModelVersionStatus.READY),
+      modelVersion: mockModelVersionDetailed(
+        'Model A',
+        1,
+        Stages.NONE,
+        ModelVersionStatus.READY
+      )
     };
     wrapper = createComponentInstance(props);
-    expect(wrapper.find('button[data-test-id="overflow-menu-trigger"]').length).toBe(1);
+    expect(
+      wrapper.find('button[data-test-id="overflow-menu-trigger"]').length
+    ).toBe(1);
   });
 
   test('should disable dropdown delete menu item when model version is in active stage', () => {
@@ -95,18 +102,24 @@ describe('ModelVersionView', () => {
           'Model A',
           1,
           ACTIVE_STAGES[i],
-          ModelVersionStatus.READY,
-        ),
+          ModelVersionStatus.READY
+        )
       };
       wrapper = createComponentInstance(props);
-      wrapper.find("button[data-test-id='overflow-menu-trigger']").simulate('click');
+      wrapper
+        .find("button[data-test-id='overflow-menu-trigger']")
+        .simulate('click');
       // The antd `Menu.Item` component converts the `disabled` attribute to `aria-disabled`
       // when generating HTML. Accordingly, we check for the presence of the `aria-disabled`
       // attribute within the rendered HTML.
-      const deleteMenuItem = wrapper.find('[data-test-id="delete"]').hostNodes();
+      const deleteMenuItem = wrapper
+        .find('[data-test-id="delete"]')
+        .hostNodes();
       expect(deleteMenuItem.prop('aria-disabled')).toBe(true);
       deleteMenuItem.simulate('click');
-      expect(wrapper.find(ModelVersionViewImpl).instance().state.isDeleteModalVisible).toBe(false);
+      expect(
+        wrapper.find(ModelVersionViewImpl).instance().state.isDeleteModalVisible
+      ).toBe(false);
     }
   });
 
@@ -120,18 +133,25 @@ describe('ModelVersionView', () => {
           'Model A',
           1,
           inactiveStages[i],
-          ModelVersionStatus.READY,
-        ),
+          ModelVersionStatus.READY
+        )
       };
       wrapper = createComponentInstance(props);
-      wrapper.find('button[data-test-id="overflow-menu-trigger"]').at(0).simulate('click');
+      wrapper
+        .find('button[data-test-id="overflow-menu-trigger"]')
+        .at(0)
+        .simulate('click');
       // The antd `Menu.Item` component converts the `disabled` attribute to `aria-disabled`
       // when generating HTML. Accordingly, we check for the presence of the `aria-disabled`
       // attribute within the rendered HTML.
-      const deleteMenuItem = wrapper.find('[data-test-id="delete"]').hostNodes();
+      const deleteMenuItem = wrapper
+        .find('[data-test-id="delete"]')
+        .hostNodes();
       expect(deleteMenuItem.prop('aria-disabled')).toBeFalsy();
       deleteMenuItem.simulate('click');
-      expect(wrapper.find(ModelVersionViewImpl).instance().state.isDeleteModalVisible).toBe(true);
+      expect(
+        wrapper.find(ModelVersionViewImpl).instance().state.isDeleteModalVisible
+      ).toBe(true);
     }
   });
 
@@ -145,7 +165,7 @@ describe('ModelVersionView', () => {
       Stages.NONE,
       ModelVersionStatus.READY,
       [],
-      runLink,
+      runLink
     );
     const runId = 'somerunid';
     const experimentId = 'experiment_id';
@@ -155,7 +175,7 @@ describe('ModelVersionView', () => {
       ...minimalProps,
       modelVersion: modelVersion,
       runInfo: runInfo,
-      runDisplayName: expectedRunDisplayName,
+      runDisplayName: expectedRunDisplayName
     };
     wrapper = createComponentInstance(props);
     const linkedRun = wrapper.find('.linked-run').at(0); // TODO: Figure out why it returns 2.
@@ -172,7 +192,7 @@ describe('ModelVersionView', () => {
     const props = {
       ...minimalProps,
       runInfo: runInfo,
-      runDisplayName: expectedRunDisplayName,
+      runDisplayName: expectedRunDisplayName
     };
     wrapper = createComponentInstance(props);
     const linkedRun = wrapper.find('.linked-run').at(0); // TODO: Figure out why it returns 2.
@@ -184,7 +204,9 @@ describe('ModelVersionView', () => {
     const mockUpdatePageTitle = jest.fn();
     Utils.updatePageTitle = mockUpdatePageTitle;
     wrapper = createComponentInstance(minimalProps);
-    expect(mockUpdatePageTitle.mock.calls[0][0]).toBe('Model A v1 - MLflow Model');
+    expect(mockUpdatePageTitle.mock.calls[0][0]).toBe(
+      'Model A v1 - MLflow Model'
+    );
   });
 
   test('should tags rendered in the UI', () => {
@@ -204,44 +226,75 @@ describe('ModelVersionView', () => {
         [],
         null,
         'b99a0fc567ae4d32994392c800c0b6ce',
-        null,
-      ),
+        null
+      )
     };
     wrapper = createComponentInstance(props);
 
-    expect(wrapper.find('.metadata-list td.ant-descriptions-item').length).toBe(4);
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(0).text()).toBe(
-      'Registered At',
+    expect(wrapper.find('.metadata-list td.ant-descriptions-item').length).toBe(
+      4
     );
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(1).text()).toBe(
-      'Stage',
-    );
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(2).text()).toBe(
-      'Last Modified',
-    );
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(3).text()).toBe(
-      'Source Run',
-    );
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(0)
+        .text()
+    ).toBe('Registered At');
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(1)
+        .text()
+    ).toBe('Stage');
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(2)
+        .text()
+    ).toBe('Last Modified');
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(3)
+        .text()
+    ).toBe('Source Run');
   });
 
   test('creator description rendered if user_id is available', () => {
     wrapper = createComponentInstance(minimalProps);
 
-    expect(wrapper.find('.metadata-list td.ant-descriptions-item').length).toBe(5);
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(0).text()).toBe(
-      'Registered At',
+    expect(wrapper.find('.metadata-list td.ant-descriptions-item').length).toBe(
+      5
     );
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(1).text()).toBe(
-      'Creator',
-    );
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(2).text()).toBe(
-      'Stage',
-    );
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(3).text()).toBe(
-      'Last Modified',
-    );
-    expect(wrapper.find('.metadata-list span.ant-descriptions-item-label').at(4).text()).toBe(
-      'Source Run',
-    );
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(0)
+        .text()
+    ).toBe('Registered At');
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(1)
+        .text()
+    ).toBe('Creator');
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(2)
+        .text()
+    ).toBe('Stage');
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(3)
+        .text()
+    ).toBe('Last Modified');
+    expect(
+      wrapper
+        .find('.metadata-list span.ant-descriptions-item-label')
+        .at(4)
+        .text()
+    ).toBe('Source Run');
   });
 });

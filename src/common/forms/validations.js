@@ -1,7 +1,7 @@
 import { MlflowService } from '../../experiment-tracking/sdk/MlflowService';
 import { Services as ModelRegistryService } from '../../model-registry/services';
 
-export const getExperimentNameValidator = (getExistingExperimentNames) => {
+export const getExperimentNameValidator = getExistingExperimentNames => {
   return (rule, value, callback) => {
     if (value.length === 0) {
       // no need to execute below validations when no value is entered
@@ -15,13 +15,13 @@ export const getExperimentNameValidator = (getExistingExperimentNames) => {
     } else {
       // on-demand validation whether experiment already exists in deleted state
       MlflowService.getExperimentByName({ experiment_name: value })
-        .then((res) =>
+        .then(res =>
           callback(`Experiment "${value}" already exists in deleted state.
                                  You can restore the experiment, or permanently delete the
                                  experiment from the .trash folder (under tracking server's
-                                 root folder) in order to use this experiment name again.`),
+                                 root folder) in order to use this experiment name again.`)
         )
-        .catch((e) => callback(undefined)); // no experiment returned
+        .catch(e => callback(undefined)); // no experiment returned
     }
   };
 };
@@ -33,5 +33,5 @@ export const modelNameValidator = (rule, name, callback) => {
   }
   ModelRegistryService.getRegisteredModel({ data: { name } })
     .then(() => callback(`Model "${name}" already exists.`))
-    .catch((e) => callback(undefined));
+    .catch(e => callback(undefined));
 };

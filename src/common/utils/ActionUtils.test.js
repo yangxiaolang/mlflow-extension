@@ -5,7 +5,7 @@ import {
   isPendingApi,
   isRejectedApi,
   pending,
-  rejected,
+  rejected
 } from './ActionUtils';
 
 describe('ActionUtils', () => {
@@ -16,10 +16,14 @@ describe('ActionUtils', () => {
 
   it('apiActionTypes', () => {
     const actionType = 'GRAB_ME_A_COKE';
-    [pending(actionType), fulfilled(actionType), rejected(actionType)].forEach((type) => {
-      expect(isPendingApi({ type })).toEqual(type === pending(actionType));
-      expect(isFulfilledApi({ type })).toEqual(type === fulfilled(actionType));
-      expect(isRejectedApi({ type })).toEqual(type === rejected(actionType));
-    });
+    [pending(actionType), fulfilled(actionType), rejected(actionType)].forEach(
+      type => {
+        expect(isPendingApi({ type })).toEqual(type === pending(actionType));
+        expect(isFulfilledApi({ type })).toEqual(
+          type === fulfilled(actionType)
+        );
+        expect(isRejectedApi({ type })).toEqual(type === rejected(actionType));
+      }
+    );
   });
 });

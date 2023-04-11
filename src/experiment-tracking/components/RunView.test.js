@@ -21,7 +21,11 @@ describe('RunView', () => {
   beforeEach(() => {
     // TODO: remove global fetch mock by explicitly mocking all the service API calls
     global.fetch = jest.fn(() =>
-      Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('') }),
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('')
+      })
     );
     minimalProps = {
       runUuid: 'uuid-1234-5678-9012',
@@ -29,13 +33,13 @@ describe('RunView', () => {
       getMetricPagePath: jest.fn(),
       handleSetRunTag: jest.fn(),
       setTagApi: jest.fn(),
-      deleteTagApi: jest.fn(),
+      deleteTagApi: jest.fn()
     };
     const modelVersion = mockModelVersionDetailed(
       'Model A',
       1,
       Stages.PRODUCTION,
-      ModelVersionStatus.READY,
+      ModelVersionStatus.READY
     );
     minimalStoreRaw = {
       entities: {
@@ -46,8 +50,8 @@ describe('RunView', () => {
             user_id: 'me@me.com',
             status: 'RUNNING',
             artifact_uri: 'dbfs:/databricks/abc/uuid-1234-5678-9012',
-            lifecycle_stage: 'active',
-          }),
+            lifecycle_stage: 'active'
+          })
         },
         artifactsByRunUuid: { 'uuid-1234-5678-9012': new ArtifactNode(true) },
         experimentsById: {
@@ -58,21 +62,21 @@ describe('RunView', () => {
             lifecycle_stage: 'active',
             last_update_time: 12345678999,
             creation_time: 12345678900,
-            tags: [],
-          }),
+            tags: []
+          })
         },
         modelVersionsByModel: {
           'Model A': {
-            1: modelVersion,
-          },
+            1: modelVersion
+          }
         },
         tagsByRunUuid: { 'uuid-1234-5678-9012': {} },
         paramsByRunUuid: { 'uuid-1234-5678-9012': {} },
         latestMetricsByRunUuid: { 'uuid-1234-5678-9012': {} },
-        artifactRootUriByRunUuid: { 'uuid-1234-5678-9012': 'root/uri' },
+        artifactRootUriByRunUuid: { 'uuid-1234-5678-9012': 'root/uri' }
       },
       apis: {},
-      compareExperiments: {},
+      compareExperiments: {}
     };
     minimalStore = mockStore(minimalStoreRaw);
   });
@@ -83,7 +87,7 @@ describe('RunView', () => {
         <BrowserRouter>
           <RunView {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find(RunView).length).toBe(1);
   });
@@ -94,7 +98,7 @@ describe('RunView', () => {
         <BrowserRouter>
           <RunView {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     ).find(RunView);
 
     const instance = wrapper.find(RunViewImpl).instance();
@@ -122,54 +126,60 @@ describe('RunView', () => {
             start_time: 12345678990,
             end_time: 12345678999,
             artifact_uri: 'dbfs:/databricks/abc/uuid-1234-5678-9012',
-            lifecycle_stage: 'active',
-          }),
+            lifecycle_stage: 'active'
+          })
         },
         tagsByRunUuid: {
           'uuid-1234-5678-9012': {
-            'mlflow.source.type': RunTag.fromJs({ key: 'mlflow.source.type', value: 'PROJECT' }),
-            'mlflow.source.name': RunTag.fromJs({ key: 'mlflow.source.name', value: 'notebook' }),
+            'mlflow.source.type': RunTag.fromJs({
+              key: 'mlflow.source.type',
+              value: 'PROJECT'
+            }),
+            'mlflow.source.name': RunTag.fromJs({
+              key: 'mlflow.source.name',
+              value: 'notebook'
+            }),
             'mlflow.source.git.commit': RunTag.fromJs({
               key: 'mlflow.source.git.commit',
-              value: 'abc',
+              value: 'abc'
             }),
             'mlflow.project.entryPoint': RunTag.fromJs({
               key: 'mlflow.project.entryPoint',
-              value: 'entry',
+              value: 'entry'
             }),
             'mlflow.project.backend': RunTag.fromJs({
               key: 'mlflow.project.backend',
-              value: 'databricks',
+              value: 'databricks'
             }),
             'mlflow.parentRunId': RunTag.fromJs({
               key: 'mlflow.parentRunId',
-              value: 'run2-5656-7878-9090',
+              value: 'run2-5656-7878-9090'
             }),
             'mlflow.databricks.runURL': RunTag.fromJs({
               key: 'mlflow.databricks.runURL',
-              value: 'https:/databricks.com/jobs_url/123',
-            }),
-          },
+              value: 'https:/databricks.com/jobs_url/123'
+            })
+          }
         },
         paramsByRunUuid: {
           'uuid-1234-5678-9012': {
             p1: Param.fromJs({ key: 'p1', value: 'v1' }),
-            p2: Param.fromJs({ key: 'p2', value: 'v2' }),
-          },
-        },
-      },
+            p2: Param.fromJs({ key: 'p2', value: 'v2' })
+          }
+        }
+      }
     });
     wrapper = mountWithIntl(
       <Provider store={store}>
         <BrowserRouter>
           <RunView {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     ).find(RunView);
 
     const instance = wrapper.find(RunViewImpl).instance();
     expect(instance.getRunCommand()).toEqual(
-      'mlflow run notebook -v abc -e entry -b databricks -P p1=v1 -P p2=v2',
+      'mlflow run notebook -v abc -e entry -b databricks -P p1=v1 -P p2=v2'
     );
 
     expect(wrapper.html()).toContain('Git Commit');
@@ -185,7 +195,7 @@ describe('RunView', () => {
         <BrowserRouter>
           <RunView {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     ).find(RunView);
 
     expect(wrapper.html()).toContain('edit-description-button');
@@ -200,12 +210,21 @@ describe('RunView', () => {
         <BrowserRouter>
           <RunView {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
-    expect(wrapper.find(RunViewImpl).instance().state.showRunRenameModal).toBe(false);
-    wrapper.find("button[data-test-id='overflow-menu-trigger']").simulate('click');
-    wrapper.find('[data-test-id="overflow-rename-button"]').hostNodes().simulate('click');
-    expect(wrapper.find(RunViewImpl).instance().state.showRunRenameModal).toBe(true);
+    expect(wrapper.find(RunViewImpl).instance().state.showRunRenameModal).toBe(
+      false
+    );
+    wrapper
+      .find("button[data-test-id='overflow-menu-trigger']")
+      .simulate('click');
+    wrapper
+      .find('[data-test-id="overflow-rename-button"]')
+      .hostNodes()
+      .simulate('click');
+    expect(wrapper.find(RunViewImpl).instance().state.showRunRenameModal).toBe(
+      true
+    );
   });
 });

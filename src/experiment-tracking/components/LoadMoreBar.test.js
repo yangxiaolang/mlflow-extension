@@ -6,12 +6,13 @@ describe('unit tests', () => {
   let wrapper;
   let mininumProps;
 
-  const getWrapper = (props) => shallowWithInjectIntl(<LoadMoreBar {...props} />).dive();
+  const getWrapper = props =>
+    shallowWithInjectIntl(<LoadMoreBar {...props} />).dive();
 
   beforeEach(() => {
     mininumProps = {
       loadingMore: false,
-      onLoadMore: jest.fn(),
+      onLoadMore: jest.fn()
     };
   });
 
@@ -49,7 +50,9 @@ describe('unit tests', () => {
   test('should show nested info tooltip when nestChildren is true', () => {
     const props = { ...mininumProps, disableButton: false, nestChildren: true };
     wrapper = getWrapper(props);
-    expect(wrapper.find('.load-more-button-nested-info-tooltip').length).toBe(1);
+    expect(wrapper.find('.load-more-button-nested-info-tooltip').length).toBe(
+      1
+    );
     expect(wrapper.find('.load-more-button').props().disabled).toBe(false);
   });
 });

@@ -4,7 +4,7 @@ describe('ErrorWrapper', () => {
   it('renderHttpError works on DatabricksServiceExceptions', () => {
     const error = new ErrorWrapper(
       '{ "error_code": "INVALID_REQUEST", "message": "Foo!" }',
-      400,
+      400
     ).renderHttpError();
     expect(error).toEqual('INVALID_REQUEST: Foo!');
   });
@@ -12,13 +12,16 @@ describe('ErrorWrapper', () => {
   it('renderHttpError works on DatabricksServiceExceptions with stack traces', () => {
     const error = new ErrorWrapper(
       '{ "error_code": "INVALID_REQUEST", "message": "Foo!", "stack_trace": "Boop!" }',
-      400,
+      400
     ).renderHttpError();
     expect(error).toEqual('INVALID_REQUEST: Foo!\n\nBoop!');
   });
 
   it('renderHttpError works on HTML', () => {
-    const error = new ErrorWrapper('<div>This\n\n\n</div>Is an error!<br/>', 400).renderHttpError();
+    const error = new ErrorWrapper(
+      '<div>This\n\n\n</div>Is an error!<br/>',
+      400
+    ).renderHttpError();
     expect(error).toEqual('This\nIs an error!');
   });
 

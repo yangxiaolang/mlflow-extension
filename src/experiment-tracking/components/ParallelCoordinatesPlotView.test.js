@@ -5,7 +5,7 @@ import {
   generateAttributesForCategoricalDimension,
   createDimension,
   inferType,
-  UNKNOWN_TERM,
+  UNKNOWN_TERM
 } from './ParallelCoordinatesPlotView';
 
 describe('unit tests', () => {
@@ -22,26 +22,26 @@ describe('unit tests', () => {
         {
           label: 'param_0',
           values: [1, 2],
-          tickformat: '.5f',
+          tickformat: '.5f'
         },
         {
           label: 'param_1',
           values: [2, 3],
-          tickformat: '.5f',
-        },
+          tickformat: '.5f'
+        }
       ],
       metricDimensions: [
         {
           label: 'metric_0',
           values: [1, 2],
-          tickformat: '.5f',
+          tickformat: '.5f'
         },
         {
           label: 'metric_1',
           values: [2, 3],
-          tickformat: '.5f',
-        },
-      ],
+          tickformat: '.5f'
+        }
+      ]
     };
   });
 
@@ -53,25 +53,29 @@ describe('unit tests', () => {
   test('getDerivedStateFromProps should return null when the selections do not change', () => {
     const props = {
       paramKeys: ['param_0', 'param_1'],
-      metricKeys: ['metric_0', 'metric_1'],
+      metricKeys: ['metric_0', 'metric_1']
     };
     // state with different order but same selections
     const state = {
-      sequence: ['param_0', 'metric_0', 'metric_1', 'param_1'],
+      sequence: ['param_0', 'metric_0', 'metric_1', 'param_1']
     };
-    expect(ParallelCoordinatesPlotView.getDerivedStateFromProps(props, state)).toBe(null);
+    expect(
+      ParallelCoordinatesPlotView.getDerivedStateFromProps(props, state)
+    ).toBe(null);
   });
 
   test('getDerivedStateFromProps should return state when the selections changes', () => {
     const props = {
       paramKeys: ['param_0', 'param_1'],
-      metricKeys: ['metric_0', 'metric_1', 'metric_2'], // props comes with an extra metric_2
+      metricKeys: ['metric_0', 'metric_1', 'metric_2'] // props comes with an extra metric_2
     };
     const state = {
-      sequence: ['param_0', 'metric_0', 'metric_1', 'param_1'],
+      sequence: ['param_0', 'metric_0', 'metric_1', 'param_1']
     };
-    expect(ParallelCoordinatesPlotView.getDerivedStateFromProps(props, state)).toEqual({
-      sequence: ['param_0', 'param_1', 'metric_0', 'metric_1', 'metric_2'],
+    expect(
+      ParallelCoordinatesPlotView.getDerivedStateFromProps(props, state)
+    ).toEqual({
+      sequence: ['param_0', 'param_1', 'metric_0', 'metric_1', 'metric_2']
     });
   });
 
@@ -94,10 +98,12 @@ describe('unit tests', () => {
   });
 
   test('generateAttributesForCategoricalDimension', () => {
-    expect(generateAttributesForCategoricalDimension(['A', 'B', 'C', 'B', 'C'])).toEqual({
+    expect(
+      generateAttributesForCategoricalDimension(['A', 'B', 'C', 'B', 'C'])
+    ).toEqual({
       values: [0, 1, 2, 1, 2],
       tickvals: [0, 1, 2],
-      ticktext: ['A', 'B', 'C'],
+      ticktext: ['A', 'B', 'C']
     });
   });
 
@@ -106,11 +112,11 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: 1 },
+        metric_0: { value: 1 }
       },
       runUuid_1: {
-        metric_0: { value: 2 },
-      },
+        metric_0: { value: 2 }
+      }
     };
     expect(inferType(key, runUuids, entryByRunUuid)).toBe('number');
   });
@@ -120,11 +126,11 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: 'B' },
+        metric_0: { value: 'B' }
       },
       runUuid_1: {
-        metric_0: { value: 'A' },
-      },
+        metric_0: { value: 'A' }
+      }
     };
     expect(inferType(key, runUuids, entryByRunUuid)).toBe('string');
   });
@@ -134,11 +140,11 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: NaN },
+        metric_0: { value: NaN }
       },
       runUuid_1: {
-        metric_0: { value: NaN },
-      },
+        metric_0: { value: NaN }
+      }
     };
     expect(inferType(key, runUuids, entryByRunUuid)).toBe('number');
   });
@@ -148,11 +154,11 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: '1.0' },
+        metric_0: { value: '1.0' }
       },
       runUuid_1: {
-        metric_0: { value: 'NaN' },
-      },
+        metric_0: { value: 'NaN' }
+      }
     };
     expect(inferType(key, runUuids, entryByRunUuid)).toBe('number');
   });
@@ -162,11 +168,11 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: '1.0' },
+        metric_0: { value: '1.0' }
       },
       runUuid_1: {
-        metric_0: { value: 'this thing is a string' },
-      },
+        metric_0: { value: 'this thing is a string' }
+      }
     };
     expect(inferType(key, runUuids, entryByRunUuid)).toBe('string');
   });
@@ -176,16 +182,16 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: 1 },
+        metric_0: { value: 1 }
       },
       runUuid_1: {
-        metric_0: { value: 2 },
-      },
+        metric_0: { value: 2 }
+      }
     };
     expect(createDimension(key, runUuids, entryByRunUuid)).toEqual({
       label: 'metric_0',
       values: [1, 2],
-      tickformat: '.5f',
+      tickformat: '.5f'
     });
   });
 
@@ -194,17 +200,17 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: 'B' },
+        metric_0: { value: 'B' }
       },
       runUuid_1: {
-        metric_0: { value: 'A' },
-      },
+        metric_0: { value: 'A' }
+      }
     };
     expect(createDimension(key, runUuids, entryByRunUuid)).toEqual({
       label: 'metric_0',
       values: [1, 0],
       tickvals: [0, 1],
-      ticktext: ['A', 'B'],
+      ticktext: ['A', 'B']
     });
   });
 
@@ -213,14 +219,14 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: 1 },
+        metric_0: { value: 1 }
       },
-      runUuid_1: {},
+      runUuid_1: {}
     };
     expect(createDimension(key, runUuids, entryByRunUuid)).toEqual({
       label: 'metric_0',
       values: [1, 1.01],
-      tickformat: '.5f',
+      tickformat: '.5f'
     });
   });
 
@@ -229,16 +235,16 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: 1 },
+        metric_0: { value: 1 }
       },
       runUuid_1: {
-        metric_0: { value: NaN },
-      },
+        metric_0: { value: NaN }
+      }
     };
     expect(createDimension(key, runUuids, entryByRunUuid)).toEqual({
       label: 'metric_0',
       values: [1, NaN],
-      tickformat: '.5f',
+      tickformat: '.5f'
     });
   });
 
@@ -247,15 +253,15 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: 'True' },
+        metric_0: { value: 'True' }
       },
-      runUuid_1: {},
+      runUuid_1: {}
     };
     expect(createDimension(key, runUuids, entryByRunUuid)).toEqual({
       label: 'metric_0',
       ticktext: ['True', UNKNOWN_TERM],
       tickvals: [0, 1],
-      values: [0, 1],
+      values: [0, 1]
     });
   });
 
@@ -264,14 +270,14 @@ describe('unit tests', () => {
     const runUuids = ['runUuid_0', 'runUuid_1'];
     const entryByRunUuid = {
       runUuid_0: {
-        metric_0: { value: 1 },
+        metric_0: { value: 1 }
       },
-      runUuid_1: {},
+      runUuid_1: {}
     };
     expect(createDimension(key, runUuids, entryByRunUuid)).toEqual({
       label: 'metric_0',
       values: [1, 1.01],
-      tickformat: '.5f',
+      tickformat: '.5f'
     });
   });
 
@@ -280,14 +286,16 @@ describe('unit tests', () => {
     instance = wrapper.instance();
     const dimension = {
       label: 'metric_0',
-      values: [3, 1, 2, 3, 0, 2],
+      values: [3, 1, 2, 3, 0, 2]
     };
-    expect(ParallelCoordinatesPlotView.getColorScaleConfigsForDimension(dimension)).toEqual({
+    expect(
+      ParallelCoordinatesPlotView.getColorScaleConfigsForDimension(dimension)
+    ).toEqual({
       showscale: true,
       colorscale: 'Jet',
       cmin: 0,
       cmax: 3,
-      color: [3, 1, 2, 3, 0, 2],
+      color: [3, 1, 2, 3, 0, 2]
     });
   });
 });

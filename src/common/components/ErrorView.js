@@ -14,7 +14,7 @@ const altMessages = {
   409: '409 Conflict',
   500: '500 Internal Server Error',
   502: '502 Bad Gateway',
-  503: '503 Service Unavailable',
+  503: '503 Service Unavailable'
 };
 
 function ErrorImage(props) {
@@ -25,7 +25,7 @@ function ErrorImage(props) {
     case 404:
       return (
         <img
-          className='center'
+          className="center"
           alt={alt}
           style={{ height: '300px', marginTop: '80px' }}
           src={error404Img}
@@ -34,12 +34,12 @@ function ErrorImage(props) {
     default:
       return (
         <img
-          className='center'
+          className="center"
           alt={alt}
           src={errorDefaultImg}
           style={{
             margin: '12% auto 60px',
-            display: 'block',
+            display: 'block'
           }}
         />
       );
@@ -53,47 +53,49 @@ export class ErrorViewImpl extends Component {
     statusCode: PropTypes.number.isRequired,
     subMessage: PropTypes.string,
     fallbackHomePageReactRoute: PropTypes.string,
-    designSystemThemeApi: PropTypes.any,
+    designSystemThemeApi: PropTypes.any
   };
 
   static centerMessages = {
     400: 'Bad Request',
-    404: 'Page Not Found',
+    404: 'Page Not Found'
   };
 
   renderErrorMessage(subMessage, fallbackHomePageReactRoute) {
     if (subMessage) {
       return (
         <FormattedMessage
-          defaultMessage='{subMessage}, go back to <link>the home page.</link>'
-          description='Default error message for error views in MLflow'
+          defaultMessage="{subMessage}, go back to <link>the home page.</link>"
+          id="ss//L4"
+          description="Default error message for error views in MLflow"
           values={{
-            link: (chunks) => (
+            link: chunks => (
               <Link
-                data-test-id='error-view-link'
+                data-test-id="error-view-link"
                 to={fallbackHomePageReactRoute || Routes.rootRoute}
               >
                 {chunks}
               </Link>
             ),
-            subMessage: subMessage,
+            subMessage: subMessage
           }}
         />
       );
     } else {
       return (
         <FormattedMessage
-          defaultMessage='Go back to <link>the home page.</link>'
-          description='Default error message for error views in MLflow'
+          defaultMessage="Go back to <link>the home page.</link>"
+          id="656rRX"
+          description="Default error message for error views in MLflow"
           values={{
-            link: (chunks) => (
+            link: chunks => (
               <Link
-                data-test-id='error-view-link'
+                data-test-id="error-view-link"
                 to={fallbackHomePageReactRoute || Routes.rootRoute}
               >
                 {chunks}
               </Link>
-            ),
+            )
           }}
         />
       );
@@ -101,12 +103,18 @@ export class ErrorViewImpl extends Component {
   }
 
   render() {
-    const { statusCode, subMessage, fallbackHomePageReactRoute, designSystemThemeApi } = this.props;
+    const {
+      statusCode,
+      subMessage,
+      fallbackHomePageReactRoute,
+      designSystemThemeApi
+    } = this.props;
     const { theme } = designSystemThemeApi;
-    const centerMessage = ErrorViewImpl.centerMessages[statusCode] || 'HTTP Request Error';
+    const centerMessage =
+      ErrorViewImpl.centerMessages[statusCode] || 'HTTP Request Error';
 
     return (
-      <div className='center'>
+      <div className="center">
         <ErrorImage statusCode={statusCode} />
         <h1 style={{ paddingTop: '10px' }}>{centerMessage}</h1>
         <h2 style={{ color: theme.colors.textSecondary }}>

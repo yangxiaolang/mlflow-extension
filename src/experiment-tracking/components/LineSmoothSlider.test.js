@@ -11,7 +11,7 @@ describe('LineSmoothSlider', () => {
       min: 0,
       max: 1,
       handleLineSmoothChange: jest.fn(),
-      defaultValue: 0,
+      defaultValue: 0
     };
   });
 
@@ -25,7 +25,7 @@ describe('LineSmoothSlider', () => {
       min: 0,
       max: 10,
       handleLineSmoothChange: jest.fn(),
-      defaultValue: 5,
+      defaultValue: 5
     };
     wrapper = shallow(<LineSmoothSlider {...props} />);
     expect(wrapper.state('inputValue')).toBe(5);
@@ -46,7 +46,7 @@ describe('LineSmoothSlider', () => {
       min: 0,
       max: 10,
       handleLineSmoothChange: jest.fn(),
-      defaultValue: 5,
+      defaultValue: 5
     };
     wrapper = shallow(<LineSmoothSlider {...props} />);
     const inputNumber = wrapper.find('[data-test-id="InputNumber"]');
@@ -60,7 +60,7 @@ describe('LineSmoothSlider', () => {
       min: 0,
       max: 10,
       handleLineSmoothChange: jest.fn(),
-      defaultValue: 5,
+      defaultValue: 5
     };
     wrapper = shallow(<LineSmoothSlider {...props} />);
     const slider = wrapper.find('Slider');

@@ -16,16 +16,18 @@ export class DeleteRunModalImpl extends Component {
     onClose: PropTypes.func.isRequired,
     selectedRunIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     openErrorModal: PropTypes.func.isRequired,
-    deleteRunApi: PropTypes.func.isRequired,
+    deleteRunApi: PropTypes.func.isRequired
   };
 
   handleSubmit() {
     const deletePromises = [];
-    this.props.selectedRunIds.forEach((runId) => {
+    this.props.selectedRunIds.forEach(runId => {
       deletePromises.push(this.props.deleteRunApi(runId));
     });
     return Promise.all(deletePromises).catch(() => {
-      this.props.openErrorModal('While deleting an experiment run, an error occurred.');
+      this.props.openErrorModal(
+        'While deleting an experiment run, an error occurred.'
+      );
     });
   }
 
@@ -41,13 +43,15 @@ export class DeleteRunModalImpl extends Component {
           <div>
             <p>
               <b>
-                {number} experiment {Utils.pluralize('run', number)} will be deleted.
+                {number} experiment {Utils.pluralize('run', number)} will be
+                deleted.
               </b>
             </p>
             {process.env.SHOW_GDPR_PURGING_MESSAGES === 'true' ? (
               <p>
-                Deleted runs are restorable for 30 days, after which they are purged along with
-                associated metrics, params, tags, and artifacts.
+                Deleted runs are restorable for 30 days, after which they are
+                purged along with associated metrics, params, tags, and
+                artifacts.
               </p>
             ) : (
               ''
@@ -62,7 +66,7 @@ export class DeleteRunModalImpl extends Component {
 
 const mapDispatchToProps = {
   deleteRunApi,
-  openErrorModal,
+  openErrorModal
 };
 
 export default connect(null, mapDispatchToProps)(DeleteRunModalImpl);

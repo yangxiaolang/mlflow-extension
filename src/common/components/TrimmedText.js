@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@databricks/design-system';
 
-export const TrimmedText = ({ text, maxSize, className, allowShowMore = false }) => {
+export const TrimmedText = ({
+  text,
+  maxSize,
+  className,
+  allowShowMore = false
+}) => {
   if (text.length <= maxSize) {
     return <span className={className}>{text}</span>;
   }
@@ -15,11 +20,11 @@ export const TrimmedText = ({ text, maxSize, className, allowShowMore = false })
       {showMore ? text : trimmedText}
       {allowShowMore && (
         <Button
-          type='link'
+          type="link"
           onClick={() => setShowMore(!showMore)}
-          size='small'
+          size="small"
           css={styles.expandButton}
-          data-test-id='trimmed-text-button'
+          data-test-id="trimmed-text-button"
         >
           {showMore ? 'collapse' : 'expand'}
         </Button>
@@ -30,13 +35,13 @@ export const TrimmedText = ({ text, maxSize, className, allowShowMore = false })
 
 const styles = {
   expandButton: {
-    display: 'inline-block',
-  },
+    display: 'inline-block'
+  }
 };
 
 TrimmedText.propTypes = {
   text: PropTypes.string.isRequired,
   maxSize: PropTypes.number.isRequired,
   className: PropTypes.string.isRequired,
-  allowShowMore: PropTypes.bool,
+  allowShowMore: PropTypes.bool
 };

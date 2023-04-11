@@ -68,19 +68,19 @@ const sanitizerOptions = {
     'iframe',
     'img',
     'caption',
-    'figure',
+    'figure'
   ],
   allowedAttributes: {
     a: ['href', 'name', 'target'],
     img: ['src', 'longdesc'],
-    div: ['itemscope', 'itemtype'],
-  },
+    div: ['itemscope', 'itemtype']
+  }
 };
 
-export const sanitizeConvertedHtml = (dirtyHtml) => {
+export const sanitizeConvertedHtml = dirtyHtml => {
   return sanitizeHtml(dirtyHtml, sanitizerOptions);
 };
 
-export const forceAnchorTagNewTab = (html) => {
+export const forceAnchorTagNewTab = html => {
   return html.replace(new RegExp('<a', 'g'), '<a target="_blank"');
 };

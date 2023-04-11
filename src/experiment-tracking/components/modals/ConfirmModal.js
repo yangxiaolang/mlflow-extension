@@ -16,11 +16,11 @@ export class ConfirmModal extends Component {
     onClose: PropTypes.func.isRequired,
     title: PropTypes.node.isRequired,
     helpText: PropTypes.node.isRequired,
-    confirmButtonText: PropTypes.node.isRequired,
+    confirmButtonText: PropTypes.node.isRequired
   };
 
   state = {
-    isSubmitting: false,
+    isSubmitting: false
   };
 
   onRequestCloseHandler() {
@@ -40,7 +40,7 @@ export class ConfirmModal extends Component {
   render() {
     return (
       <Modal
-        data-testid='confirm-modal'
+        data-testid="confirm-modal"
         title={this.props.title}
         visible={this.props.isOpen}
         onOk={this.handleSubmitWrapper}
@@ -49,7 +49,7 @@ export class ConfirmModal extends Component {
         onCancel={this.onRequestCloseHandler}
         centered
       >
-        <div className='modal-explanatory-text'>{this.props.helpText}</div>
+        <div className="modal-explanatory-text">{this.props.helpText}</div>
       </Modal>
     );
   }

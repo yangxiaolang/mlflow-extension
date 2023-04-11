@@ -22,8 +22,12 @@ flavors:
     '  outputs: \'[{"type": "long"}]\'';
 
   beforeEach(() => {
-    minimalProps = { path: 'fakePath', runUuid: 'fakeUuid', artifactRootUri: 'fakeRootUri' };
-    const getArtifact = jest.fn((artifactLocation) => {
+    minimalProps = {
+      path: 'fakePath',
+      runUuid: 'fakeUuid',
+      artifactRootUri: 'fakeRootUri'
+    };
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve(minimumFlavors);
     });
     commonProps = { ...minimalProps, getArtifact };
@@ -34,8 +38,8 @@ flavors:
     expect(wrapper.length).toBe(1);
   });
 
-  test('should render error message when error occurs', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render error message when error occurs', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.reject(new Error('my error text'));
     });
     const props = { ...minimalProps, getArtifact };
@@ -54,122 +58,142 @@ flavors:
     expect(wrapper.find('.artifact-logged-model-view-loading').length).toBe(1);
   });
 
-  test('should render schema table when valid signature in MLmodel file', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render schema table when valid signature in MLmodel file', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve(validMlModelFile);
     });
     const props = { ...minimalProps, getArtifact };
     wrapper = mountWithIntl(<ShowArtifactLoggedModelView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-schema-table').length).toBe(1);
+      expect(
+        wrapper.find('.artifact-logged-model-view-schema-table').length
+      ).toBe(1);
       done();
     });
   });
 
-  test('should not render schema table when invalid signature in MLmodel file', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should not render schema table when invalid signature in MLmodel file', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve(validMlModelFile + '\nhahaha');
     });
     const props = { ...minimalProps, getArtifact };
     wrapper = mountWithIntl(<ShowArtifactLoggedModelView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-schema-table').length).toBe(0);
+      expect(
+        wrapper.find('.artifact-logged-model-view-schema-table').length
+      ).toBe(0);
       done();
     });
   });
 
-  test('should not break schema table when inputs only in MLmodel file', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should not break schema table when inputs only in MLmodel file', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve(
         minimumFlavors +
           'signature:\n' +
           '  inputs: \'[{"name": "sepal length (cm)", "type": "double"}, {"name": "sepal width\n' +
           '    (cm)", "type": "double"}, {"name": "petal length (cm)", "type": "double"}, {"name":\n' +
-          '    "petal width (cm)", "type": "double"}]\'\n',
+          '    "petal width (cm)", "type": "double"}]\'\n'
       );
     });
     const props = { ...minimalProps, getArtifact };
     wrapper = mountWithIntl(<ShowArtifactLoggedModelView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-schema-table').length).toBe(1);
+      expect(
+        wrapper.find('.artifact-logged-model-view-schema-table').length
+      ).toBe(1);
       done();
     });
   });
 
-  test('should not break schema table when outputs only in MLmodel file', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should not break schema table when outputs only in MLmodel file', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve(
         minimumFlavors +
           'signature:\n' +
           '  outputs: \'[{"name": "sepal length (cm)", "type": "double"}, {"name": "sepal width\n' +
           '    (cm)", "type": "double"}, {"name": "petal length (cm)", "type": "double"}, {"name":\n' +
-          '    "petal width (cm)", "type": "double"}]\'\n',
+          '    "petal width (cm)", "type": "double"}]\'\n'
       );
     });
     const props = { ...minimalProps, getArtifact };
     wrapper = mountWithIntl(<ShowArtifactLoggedModelView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-schema-table').length).toBe(1);
+      expect(
+        wrapper.find('.artifact-logged-model-view-schema-table').length
+      ).toBe(1);
       done();
     });
   });
 
-  test('should not break schema table when no inputs or outputs in MLmodel file', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should not break schema table when no inputs or outputs in MLmodel file', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve(minimumFlavors + 'signature:');
     });
     const props = { ...minimalProps, getArtifact };
     wrapper = mountWithIntl(<ShowArtifactLoggedModelView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-schema-table').length).toBe(1);
+      expect(
+        wrapper.find('.artifact-logged-model-view-schema-table').length
+      ).toBe(1);
       done();
     });
   });
 
-  test('should render code group and code snippet', (done) => {
+  test('should render code group and code snippet', done => {
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-code-group').length).toBe(1);
-      expect(wrapper.find('.artifact-logged-model-view-code-content').length).toBe(1);
+      expect(
+        wrapper.find('.artifact-logged-model-view-code-group').length
+      ).toBe(1);
+      expect(
+        wrapper.find('.artifact-logged-model-view-code-content').length
+      ).toBe(1);
       done();
     });
   });
 
-  test('should find model path in code snippet', (done) => {
-    const props = { ...commonProps, path: 'modelPath', artifactRootUri: 'some/root' };
+  test('should find model path in code snippet', done => {
+    const props = {
+      ...commonProps,
+      path: 'modelPath',
+      artifactRootUri: 'some/root'
+    };
     wrapper = mountWithIntl(<ShowArtifactLoggedModelView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-code-content').html()).toContain(
-        'runs:/fakeUuid/modelPath',
-      );
+      expect(
+        wrapper.find('.artifact-logged-model-view-code-content').html()
+      ).toContain('runs:/fakeUuid/modelPath');
       done();
     });
   });
 
-  test('should suggest registration when model not registered', (done) => {
+  test('should suggest registration when model not registered', done => {
     const props = { ...commonProps };
     wrapper = mountWithIntl(<ShowArtifactLoggedModelView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-header').html()).toContain('You can also');
+      expect(
+        wrapper.find('.artifact-logged-model-view-header').html()
+      ).toContain('You can also');
       done();
     });
   });
 
-  test('should not suggest registration when model already registered', (done) => {
+  test('should not suggest registration when model already registered', done => {
     const props = { ...commonProps, registeredModelLink: 'someLink' };
     wrapper = mountWithIntl(<ShowArtifactLoggedModelView {...props} />);
     setImmediate(() => {
       wrapper.update();
-      expect(wrapper.find('.artifact-logged-model-view-header').html()).toContain(
-        'This model is also registered to the',
-      );
+      expect(
+        wrapper.find('.artifact-logged-model-view-header').html()
+      ).toContain('This model is also registered to the');
       done();
     });
   });
@@ -182,8 +206,8 @@ flavors:
     expect(instance.props.getArtifact).toBeCalled();
   });
 
-  test('should render code snippet with original flavor when no pyfunc flavor', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render code snippet with original flavor when no pyfunc flavor', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve(`
 flavors:
   sklearn:
@@ -195,15 +219,19 @@ flavors:
     setImmediate(() => {
       wrapper.update();
       expect(wrapper.state().flavor).toBe('sklearn');
-      const codeContent = wrapper.find('.artifact-logged-model-view-code-content');
+      const codeContent = wrapper.find(
+        '.artifact-logged-model-view-code-content'
+      );
       expect(codeContent.length).toBe(1);
-      expect(codeContent.text().includes('mlflow.sklearn.load_model')).toBe(true);
+      expect(codeContent.text().includes('mlflow.sklearn.load_model')).toBe(
+        true
+      );
       done();
     });
   });
 
-  test('should not render code snippet for mleap flavor', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should not render code snippet for mleap flavor', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve(`
 flavors:
   mleap:
@@ -215,7 +243,9 @@ flavors:
     setImmediate(() => {
       wrapper.update();
       expect(wrapper.state().flavor).toBe('mleap');
-      expect(wrapper.find('.artifact-logged-model-view-code-content').length).toBe(0);
+      expect(
+        wrapper.find('.artifact-logged-model-view-code-content').length
+      ).toBe(0);
       done();
     });
   });

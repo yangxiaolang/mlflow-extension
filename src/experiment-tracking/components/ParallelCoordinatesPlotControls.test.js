@@ -13,7 +13,7 @@ describe('unit tests', () => {
       selectedParamKeys: ['param_0', 'param_1'],
       selectedMetricKeys: ['metric_0', 'metric_1'],
       handleParamsSelectChange: jest.fn(),
-      handleMetricsSelectChange: jest.fn(),
+      handleMetricsSelectChange: jest.fn()
     };
   });
 

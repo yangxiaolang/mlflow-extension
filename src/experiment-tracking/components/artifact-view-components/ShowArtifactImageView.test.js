@@ -10,7 +10,7 @@ describe('ShowArtifactImageView', () => {
   beforeEach(() => {
     minimalProps = {
       path: 'fakePath',
-      runUuid: 'fakeUuid',
+      runUuid: 'fakeUuid'
     };
     commonProps = { ...minimalProps };
     wrapper = shallow(<ShowArtifactImageView {...commonProps} />);

@@ -11,17 +11,17 @@ export class SimplePagination extends React.Component {
     loading: PropTypes.bool,
     maxResultOptions: PropTypes.array,
     handleSetMaxResult: PropTypes.func,
-    getSelectedPerPageSelection: PropTypes.func,
+    getSelectedPerPageSelection: PropTypes.func
   };
 
   constructDropdown() {
     return (
       <Menu
-        className='pagination-dropdown'
+        className="pagination-dropdown"
         css={classNames.paginationDropdownMenuWrapper}
         onClick={this.props.handleSetMaxResult}
       >
-        {this.props.maxResultOptions.map((num_models) => (
+        {this.props.maxResultOptions.map(num_models => (
           <Menu.Item key={num_models.toString()} title={num_models.toString()}>
             {num_models}
           </Menu.Item>
@@ -31,7 +31,13 @@ export class SimplePagination extends React.Component {
   }
 
   render() {
-    const { currentPage, isLastPage, onClickNext, onClickPrev, maxResultOptions } = this.props;
+    const {
+      currentPage,
+      isLastPage,
+      onClickNext,
+      onClickPrev,
+      maxResultOptions
+    } = this.props;
     const numEntries = this.props.getSelectedPerPageSelection();
     let total;
 
@@ -46,16 +52,20 @@ export class SimplePagination extends React.Component {
     }
 
     return (
-      <div className='pagination-section' css={classNames.wrapper}>
+      <div className="pagination-section" css={classNames.wrapper}>
         <Pagination
           css={classNames.paginationOverride}
           current={currentPage}
           total={total}
-          onChange={(nextPage) => (nextPage > currentPage ? onClickNext() : onClickPrev())}
+          onChange={nextPage =>
+            nextPage > currentPage ? onClickNext() : onClickPrev()
+          }
           showSizeChanger
           pageSize={numEntries}
           pageSizeOptions={maxResultOptions}
-          onShowSizeChange={(current, size) => this.props.handleSetMaxResult({ key: size })}
+          onShowSizeChange={(current, size) =>
+            this.props.handleSetMaxResult({ key: size })
+          }
         />
       </div>
     );
@@ -65,16 +75,16 @@ export class SimplePagination extends React.Component {
 const classNames = {
   wrapper: {
     textAlign: 'right',
-    paddingBottom: 30,
+    paddingBottom: 30
   },
   paginationDropdownMenuWrapper: {
     '.ant-dropdown-menu-item': {
-      textAlign: 'center',
-    },
+      textAlign: 'center'
+    }
   },
   paginationOverride: {
     '.ant-pagination-item:not(.ant-pagination-item-active)': {
-      display: 'none',
-    },
-  },
+      display: 'none'
+    }
+  }
 };

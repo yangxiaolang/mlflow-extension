@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import {
   ExperimentRunsTableMultiColumnView2Impl,
-  ModelsCellRenderer,
+  ModelsCellRenderer
 } from './ExperimentRunsTableMultiColumnView2';
 import { COLUMN_TYPES, ATTRIBUTE_COLUMN_LABELS } from '../constants';
 import { MemoryRouter as Router } from 'react-router-dom';
@@ -16,22 +16,25 @@ import { mountWithIntl } from '../../common/utils/TestUtils';
  */
 /* eslint-disable global-require */
 jest.mock('../../common/components/ag-grid/AgGridLoader', () => ({
-  MLFlowAgGridLoader: (props) => {
+  MLFlowAgGridLoader: props => {
     const AgGridReactImpl = require('@ag-grid-community/react').AgGridReact;
     return (
       <AgGridReactImpl
-        modules={[require('@ag-grid-community/client-side-row-model').ClientSideRowModelModule]}
+        modules={[
+          require('@ag-grid-community/client-side-row-model')
+            .ClientSideRowModelModule
+        ]}
         {...props}
       />
     );
-  },
+  }
 }));
 /* eslint-enable global-require */
 
 function getChildColumnNames(columnDefs, parentName) {
   return columnDefs
-    .find((header) => header.headerName === parentName)
-    .children.map((childHeader) => {
+    .find(header => header.headerName === parentName)
+    .children.map(childHeader => {
       return childHeader.headerName;
     });
 }
@@ -45,8 +48,8 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
     {
       artifactPath: 'somePath',
       flavors: ['keras'],
-      utcTimeCreated: new Date('2020-10-22').getTime() / 1000,
-    },
+      utcTimeCreated: new Date('2020-10-22').getTime() / 1000
+    }
   ];
 
   beforeEach(() => {
@@ -72,9 +75,9 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
         [COLUMN_TYPES.ATTRIBUTES]: [],
         [COLUMN_TYPES.PARAMS]: [],
         [COLUMN_TYPES.METRICS]: [],
-        [COLUMN_TYPES.TAGS]: [],
+        [COLUMN_TYPES.TAGS]: []
       },
-      designSystemThemeApi: { theme: { colors: {} } },
+      designSystemThemeApi: { theme: { colors: {} } }
     };
     commonProps = {
       ...minimalProps,
@@ -82,14 +85,19 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
       paramKeyList: ['param1', 'param2'],
       visibleTagKeyList: ['tag1', 'tag2'],
       categorizedUncheckedKeys: {
-        [COLUMN_TYPES.ATTRIBUTES]: [ATTRIBUTE_COLUMN_LABELS.DATE, ATTRIBUTE_COLUMN_LABELS.DURATION],
-      },
+        [COLUMN_TYPES.ATTRIBUTES]: [
+          ATTRIBUTE_COLUMN_LABELS.DATE,
+          ATTRIBUTE_COLUMN_LABELS.DURATION
+        ]
+      }
     };
     setColumnDefsSpy = jest.fn();
   });
 
   test('should render with minimal props without exploding', () => {
-    wrapper = shallow(<ExperimentRunsTableMultiColumnView2Impl {...minimalProps} />);
+    wrapper = shallow(
+      <ExperimentRunsTableMultiColumnView2Impl {...minimalProps} />
+    );
     expect(wrapper.length).toBe(1);
   });
 
@@ -99,8 +107,8 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
         runUuid: 'runUuid',
         experimentId: 'experimentId',
         registeredModels: [],
-        loggedModels: [],
-      },
+        loggedModels: []
+      }
     };
     const output = ModelsCellRenderer(props);
     expect(output).toEqual('-');
@@ -119,8 +127,8 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
           start_time: 0,
           status: 'FINISHED',
           user_id: 'user_id',
-          getRunUuid: () => '123',
-        }),
+          getRunUuid: () => '123'
+        })
       ],
       metricsList: [[]],
       paramsList: [[]],
@@ -132,15 +140,19 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
               "run_id": "123",
               "artifact_path": "model",
               "utc_time_created": "2022-01-01 00:00:00.000000"
-            }]`,
-          },
-        },
-      ],
+            }]`
+          }
+        }
+      ]
     };
-    wrapper = mountWithIntl(<ExperimentRunsTableMultiColumnView2Impl {...props} />);
+    wrapper = mountWithIntl(
+      <ExperimentRunsTableMultiColumnView2Impl {...props} />
+    );
     const loggedModelLink = wrapper.find('.logged-model-link');
     expect(loggedModelLink).toHaveLength(1);
-    expect(loggedModelLink.prop('href')).toEqual('./#/experiments/0/runs/123/artifactPath/model');
+    expect(loggedModelLink.prop('href')).toEqual(
+      './#/experiments/0/runs/123/artifactPath/model'
+    );
   });
 
   test('should show only logged model link if no registered models', () => {
@@ -149,8 +161,8 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
         runUuid: 'runUuid',
         experimentId: 'experimentId',
         loggedModels: loggedModels,
-        registeredModels: [],
-      },
+        registeredModels: []
+      }
     };
     const output = ModelsCellRenderer(props);
     wrapper = shallow(<Router>{output}</Router>);
@@ -167,8 +179,8 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
           runUuid: 'runUuid',
           experimentId: 'experimentId',
           loggedModels: loggedModels,
-          registeredModels: modelVersions,
-        },
+          registeredModels: modelVersions
+        }
       };
       let output = ModelsCellRenderer(props);
       wrapper = shallow(<Router>{output}</Router>);
@@ -189,18 +201,22 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
       expect(href.indexOf('http')).toEqual(href.lastIndexOf('http'));
       window.isTestingIframe = false;
     };
-    tester([], 'experiments/experimentId/runs/runUuid/artifactPath/somePath', '.logged-model-link');
+    tester(
+      [],
+      'experiments/experimentId/runs/runUuid/artifactPath/somePath',
+      '.logged-model-link'
+    );
 
     tester(
       [
         {
           name: 'someModel',
           source: 'dbfs/runUuid/artifacts/somePath',
-          version: 2,
-        },
+          version: 2
+        }
       ],
       'models/someModel/versions/2',
-      '.registered-model-link',
+      '.registered-model-link'
     );
   });
 
@@ -214,16 +230,20 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
           {
             name: 'someName',
             source: 'dbfs/someUuid/artifacts/somePath',
-            version: 2,
-          },
-        ],
-      },
+            version: 2
+          }
+        ]
+      }
     };
     const output = ModelsCellRenderer(props);
     wrapper = shallow(<Router>{output}</Router>);
     expect(wrapper.html()).toContain('someName');
-    expect(wrapper.find('img[data-test-id="logged-model-icon"]')).toHaveLength(0);
-    expect(wrapper.find('img[data-test-id="registered-model-icon"]')).toHaveLength(1);
+    expect(wrapper.find('img[data-test-id="logged-model-icon"]')).toHaveLength(
+      0
+    );
+    expect(
+      wrapper.find('img[data-test-id="registered-model-icon"]')
+    ).toHaveLength(1);
   });
 
   /**
@@ -238,8 +258,8 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
       {
         artifactPath: 'somePath////subdir///',
         flavors: ['keras'],
-        utcTimeCreated: new Date('2020-10-22').getTime() / 1000,
-      },
+        utcTimeCreated: new Date('2020-10-22').getTime() / 1000
+      }
     ];
 
     const props = {
@@ -250,16 +270,20 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
           {
             name: 'someName',
             source: 'dbfs:///someUuid/artifacts///somePath///subdir/',
-            version: 2,
-          },
-        ],
-      },
+            version: 2
+          }
+        ]
+      }
     };
     const output = ModelsCellRenderer(props);
     wrapper = shallow(<Router>{output}</Router>);
     expect(wrapper.html()).toContain('someName');
-    expect(wrapper.find('img[data-test-id="logged-model-icon"]')).toHaveLength(0);
-    expect(wrapper.find('img[data-test-id="registered-model-icon"]')).toHaveLength(1);
+    expect(wrapper.find('img[data-test-id="logged-model-icon"]')).toHaveLength(
+      0
+    );
+    expect(
+      wrapper.find('img[data-test-id="registered-model-icon"]')
+    ).toHaveLength(1);
   });
 
   test('should show 1 more if two logged models', () => {
@@ -267,21 +291,21 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
       {
         artifactPath: 'somePath',
         flavors: ['keras'],
-        utcTimeCreated: new Date('2020-10-22').getTime() / 1000,
+        utcTimeCreated: new Date('2020-10-22').getTime() / 1000
       },
       {
         artifactPath: 'someOtherPath',
         flavors: ['keras'],
-        utcTimeCreated: new Date('2020-10-22').getTime() / 1000,
-      },
+        utcTimeCreated: new Date('2020-10-22').getTime() / 1000
+      }
     ];
     const props = {
       value: {
         runUuid: 'runUuid',
         experimentId: 'experimentId',
         loggedModels: runLoggedModels,
-        registeredModels: [],
-      },
+        registeredModels: []
+      }
     };
     const output = ModelsCellRenderer(props);
     wrapper = shallow(<Router>{output}</Router>);
@@ -298,20 +322,31 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
       ATTRIBUTE_COLUMN_LABELS.MODELS,
       'Metrics',
       'Parameters',
-      'Tags',
+      'Tags'
     ];
     const expectedMetricColumnNames = ['metric1', 'metric2'];
     const expectedParameterColumnNames = ['param1', 'param2'];
     const expectedTagColumnNames = ['tag1', 'tag2'];
 
-    wrapper = shallow(<ExperimentRunsTableMultiColumnView2Impl {...commonProps} />);
+    wrapper = shallow(
+      <ExperimentRunsTableMultiColumnView2Impl {...commonProps} />
+    );
     const instance = wrapper.instance();
-    const columnNames = instance.state.columnDefs.map((column) => {
+    const columnNames = instance.state.columnDefs.map(column => {
       return column.headerName;
     });
-    const metricColumnNames = getChildColumnNames(instance.state.columnDefs, 'Metrics');
-    const paramColumnNames = getChildColumnNames(instance.state.columnDefs, 'Parameters');
-    const tagColumnNames = getChildColumnNames(instance.state.columnDefs, 'Tags');
+    const metricColumnNames = getChildColumnNames(
+      instance.state.columnDefs,
+      'Metrics'
+    );
+    const paramColumnNames = getChildColumnNames(
+      instance.state.columnDefs,
+      'Parameters'
+    );
+    const tagColumnNames = getChildColumnNames(
+      instance.state.columnDefs,
+      'Tags'
+    );
 
     expect(columnNames).toEqual(expectedColumnNames);
     expect(metricColumnNames).toEqual(expectedMetricColumnNames);
@@ -328,13 +363,15 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
       ATTRIBUTE_COLUMN_LABELS.MODELS,
       'Metrics',
       'Parameters',
-      'Tags',
+      'Tags'
     ];
     const expectedMetricColumnNames = ['metric1'];
     const expectedParameterColumnNames = ['param1'];
     const expectedTagColumnNames = ['tag1'];
 
-    wrapper = shallow(<ExperimentRunsTableMultiColumnView2Impl {...commonProps} />);
+    wrapper = shallow(
+      <ExperimentRunsTableMultiColumnView2Impl {...commonProps} />
+    );
     const instance = wrapper.instance();
     instance.setColumnDefs = setColumnDefsSpy;
 
@@ -346,17 +383,26 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
         [COLUMN_TYPES.ATTRIBUTES]: [
           ATTRIBUTE_COLUMN_LABELS.RUN_NAME,
           ATTRIBUTE_COLUMN_LABELS.DATE,
-          ATTRIBUTE_COLUMN_LABELS.DURATION,
-        ],
-      },
+          ATTRIBUTE_COLUMN_LABELS.DURATION
+        ]
+      }
     });
 
-    const columnNames = instance.getColumnDefs().map((column) => {
+    const columnNames = instance.getColumnDefs().map(column => {
       return column.headerName;
     });
-    const metricColumnNames = getChildColumnNames(instance.getColumnDefs(), 'Metrics');
-    const paramColumnNames = getChildColumnNames(instance.getColumnDefs(), 'Parameters');
-    const tagColumnNames = getChildColumnNames(instance.getColumnDefs(), 'Tags');
+    const metricColumnNames = getChildColumnNames(
+      instance.getColumnDefs(),
+      'Metrics'
+    );
+    const paramColumnNames = getChildColumnNames(
+      instance.getColumnDefs(),
+      'Parameters'
+    );
+    const tagColumnNames = getChildColumnNames(
+      instance.getColumnDefs(),
+      'Tags'
+    );
 
     expect(columnNames).toEqual(expectedColumnNames);
     expect(metricColumnNames).toEqual(expectedMetricColumnNames);
@@ -376,13 +422,15 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
       ATTRIBUTE_COLUMN_LABELS.MODELS,
       'Metrics',
       'Parameters',
-      'Tags',
+      'Tags'
     ];
     const expectedMetricColumnNames = ['metric1', 'metric2', 'metric3'];
     const expectedParameterColumnNames = ['param1', 'param2', 'param3'];
     const expectedTagColumnNames = ['tag1', 'tag2', 'tag3'];
 
-    wrapper = shallow(<ExperimentRunsTableMultiColumnView2Impl {...commonProps} />);
+    wrapper = shallow(
+      <ExperimentRunsTableMultiColumnView2Impl {...commonProps} />
+    );
     const instance = wrapper.instance();
     instance.setColumnDefs = setColumnDefsSpy;
 
@@ -391,16 +439,25 @@ describe('ExperimentRunsTableMultiColumnView2', () => {
       paramKeyList: expectedParameterColumnNames,
       visibleTagKeyList: expectedTagColumnNames,
       categorizedUncheckedKeys: {
-        [COLUMN_TYPES.ATTRIBUTES]: [ATTRIBUTE_COLUMN_LABELS.DURATION],
-      },
+        [COLUMN_TYPES.ATTRIBUTES]: [ATTRIBUTE_COLUMN_LABELS.DURATION]
+      }
     });
 
-    const columnNames = instance.getColumnDefs().map((column) => {
+    const columnNames = instance.getColumnDefs().map(column => {
       return column.headerName;
     });
-    const metricColumnNames = getChildColumnNames(instance.getColumnDefs(), 'Metrics');
-    const paramColumnNames = getChildColumnNames(instance.getColumnDefs(), 'Parameters');
-    const tagColumnNames = getChildColumnNames(instance.getColumnDefs(), 'Tags');
+    const metricColumnNames = getChildColumnNames(
+      instance.getColumnDefs(),
+      'Metrics'
+    );
+    const paramColumnNames = getChildColumnNames(
+      instance.getColumnDefs(),
+      'Parameters'
+    );
+    const tagColumnNames = getChildColumnNames(
+      instance.getColumnDefs(),
+      'Tags'
+    );
 
     expect(columnNames).toEqual(expectedColumnNames);
     expect(metricColumnNames).toEqual(expectedMetricColumnNames);

@@ -23,9 +23,9 @@ export class RecordUtils {
             'clientsideEvent',
             {
               eventType: 'nullValueForNestedProto',
-              property: key,
+              property: key
             },
-            pojo,
+            pojo
           );
         }
         record[key] = fromJsReviver(key, pojo[key]);

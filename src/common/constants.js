@@ -5,7 +5,7 @@ export const ErrorCodes = {
   INTERNAL_ERROR: 'INTERNAL_ERROR',
   INVALID_PARAMETER_VALUE: 'INVALID_PARAMETER_VALUE',
   RESOURCE_DOES_NOT_EXIST: 'RESOURCE_DOES_NOT_EXIST',
-  PERMISSION_DENIED: 'PERMISSION_DENIED',
+  PERMISSION_DENIED: 'PERMISSION_DENIED'
 };
 
 export const Version = '1.28.0';
@@ -20,13 +20,15 @@ export const ModelRegistryDocUrl = `${DOCS_ROOT}/model-registry.html`;
 
 export const ModelRegistryOnboardingString = (
   <FormattedMessage
-    defaultMessage='Share and manage machine learning models.'
-    description='Default text for model registry onboarding on the model list page'
+    defaultMessage="Share and manage machine learning models."
+    id="/g45Xz"
+    description="Default text for model registry onboarding on the model list page"
   />
 );
 
 export const RegisteringModelDocUrl =
-  DOCS_ROOT + '/model-registry.html#adding-an-mlflow-model-to-the-model-registry';
+  DOCS_ROOT +
+  '/model-registry.html#adding-an-mlflow-model-to-the-model-registry';
 
 export const ExperimentCliDocUrl = `${DOCS_ROOT}/cli.html#mlflow-experiments`;
 

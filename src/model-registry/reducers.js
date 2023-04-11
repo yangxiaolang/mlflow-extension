@@ -10,12 +10,15 @@ import {
   DELETE_REGISTERED_MODEL_TAG,
   SET_MODEL_VERSION_TAG,
   DELETE_MODEL_VERSION_TAG,
-  PARSE_MLMODEL_FILE,
+  PARSE_MLMODEL_FILE
 } from './actions';
 import { getProtoField } from './utils';
 import _ from 'lodash';
 import { fulfilled, rejected } from '../common/utils/ActionUtils';
-import { RegisteredModelTag, ModelVersionTag } from './sdk/ModelRegistryMessages';
+import {
+  RegisteredModelTag,
+  ModelVersionTag
+} from './sdk/ModelRegistryMessages';
 
 const modelByName = (state = {}, action) => {
   switch (action.type) {
@@ -25,10 +28,10 @@ const modelByName = (state = {}, action) => {
       const models = action.payload[getProtoField('registered_models')];
       const nameToModelMap = {};
       if (models) {
-        models.forEach((model) => (nameToModelMap[model.name] = model));
+        models.forEach(model => (nameToModelMap[model.name] = model));
       }
       return {
-        ...nameToModelMap,
+        ...nameToModelMap
       };
     }
     case rejected(SEARCH_REGISTERED_MODELS): {
@@ -39,14 +42,14 @@ const modelByName = (state = {}, action) => {
       const { modelName } = action.meta;
       const modelWithUpdatedMetadata = {
         ...state[modelName],
-        ...detailedModel,
+        ...detailedModel
       };
       if (_.isEqual(modelWithUpdatedMetadata, state[modelName])) {
         return state;
       }
       return {
         ...state,
-        ...{ [modelName]: modelWithUpdatedMetadata },
+        ...{ [modelName]: modelWithUpdatedMetadata }
       };
     }
     case fulfilled(DELETE_REGISTERED_MODEL): {
@@ -66,14 +69,14 @@ const modelVersionsByModel = (state = {}, action) => {
       const { modelName } = action.meta;
       const updatedMap = {
         ...state[modelName],
-        [modelVersion.version]: modelVersion,
+        [modelVersion.version]: modelVersion
       };
       if (_.isEqual(state[modelName], updatedMap)) {
         return state;
       }
       return {
         ...state,
-        [modelName]: updatedMap,
+        [modelName]: updatedMap
       };
     }
     case fulfilled(SEARCH_MODEL_VERSIONS): {
@@ -89,11 +92,11 @@ const modelVersionsByModel = (state = {}, action) => {
             ...newState,
             [name]: {
               ...newState[name],
-              [version]: modelVersion,
-            },
+              [version]: modelVersion
+            }
           };
         },
-        { ...state },
+        { ...state }
       );
 
       if (_.isEqual(state, newModelVersions)) {
@@ -106,7 +109,7 @@ const modelVersionsByModel = (state = {}, action) => {
       const modelVersionByVersion = state[modelName];
       return {
         ...state,
-        [modelName]: _.omit(modelVersionByVersion, version),
+        [modelName]: _.omit(modelVersionByVersion, version)
       };
     }
     case fulfilled(DELETE_REGISTERED_MODEL): {
@@ -127,8 +130,8 @@ const mlModelArtifactByModelVersion = (state = {}, action) => {
         ...state,
         [modelName]: {
           ...state[modelName],
-          [version]: artifact,
-        },
+          [version]: artifact
+        }
       };
     }
     default:
@@ -144,11 +147,14 @@ export const getModelVersionSchemas = (state, modelName, version) => {
     state.entities.mlModelArtifactByModelVersion[modelName] &&
     state.entities.mlModelArtifactByModelVersion[modelName][version]
   ) {
-    const artifact = state.entities.mlModelArtifactByModelVersion[modelName][version];
+    const artifact =
+      state.entities.mlModelArtifactByModelVersion[modelName][version];
     if (artifact.signature) {
       if (artifact.signature.inputs) {
         try {
-          schemaMap['inputs'] = JSON.parse(artifact.signature.inputs.replace(/(\r\n|\n|\r)/gm, ''));
+          schemaMap['inputs'] = JSON.parse(
+            artifact.signature.inputs.replace(/(\r\n|\n|\r)/gm, '')
+          );
         } catch (error) {
           console.error(error);
         }
@@ -156,7 +162,7 @@ export const getModelVersionSchemas = (state, modelName, version) => {
       if (artifact.signature.outputs) {
         try {
           schemaMap['outputs'] = JSON.parse(
-            artifact.signature.outputs.replace(/(\r\n|\n|\r)/gm, ''),
+            artifact.signature.outputs.replace(/(\r\n|\n|\r)/gm, '')
           );
         } catch (error) {
           console.error(error);
@@ -177,16 +183,17 @@ export const getModelVersions = (state, modelName) => {
   return modelVersions && Object.values(modelVersions);
 };
 
-export const getAllModelVersions = (state) => {
-  return _.flatMap(Object.values(state.entities.modelVersionsByModel), (modelVersionByVersion) =>
-    Object.values(modelVersionByVersion),
+export const getAllModelVersions = state => {
+  return _.flatMap(
+    Object.values(state.entities.modelVersionsByModel),
+    modelVersionByVersion => Object.values(modelVersionByVersion)
   );
 };
 
 const tagsByRegisteredModel = (state = {}, action) => {
-  const tagArrToObject = (tags) => {
+  const tagArrToObject = tags => {
     const tagObj = {};
-    tags.forEach((tag) => (tagObj[tag.key] = RegisteredModelTag.fromJs(tag)));
+    tags.forEach(tag => (tagObj[tag.key] = RegisteredModelTag.fromJs(tag)));
     return tagObj;
   };
   switch (action.type) {
@@ -206,7 +213,7 @@ const tagsByRegisteredModel = (state = {}, action) => {
       const { modelName, key, value } = action.meta;
       const tag = RegisteredModelTag.fromJs({
         key: key,
-        value: value,
+        value: value
       });
       let newState = { ...state };
       const oldTags = newState[modelName] || {};
@@ -214,8 +221,8 @@ const tagsByRegisteredModel = (state = {}, action) => {
         ...newState,
         [modelName]: {
           ...oldTags,
-          [tag.getKey()]: tag,
-        },
+          [tag.getKey()]: tag
+        }
       };
       return newState;
     }
@@ -238,9 +245,9 @@ export const getRegisteredModelTags = (modelName, state) =>
   state.entities.tagsByRegisteredModel[modelName] || {};
 
 const tagsByModelVersion = (state = {}, action) => {
-  const tagArrToObject = (tags) => {
+  const tagArrToObject = tags => {
     const tagObj = {};
-    tags.forEach((tag) => (tagObj[tag.key] = ModelVersionTag.fromJs(tag)));
+    tags.forEach(tag => (tagObj[tag.key] = ModelVersionTag.fromJs(tag)));
     return tagObj;
   };
   switch (action.type) {
@@ -261,7 +268,7 @@ const tagsByModelVersion = (state = {}, action) => {
       const { modelName, version, key, value } = action.meta;
       const tag = ModelVersionTag.fromJs({
         key: key,
-        value: value,
+        value: value
       });
       const newState = { ...state };
       newState[modelName] = newState[modelName] || {};
@@ -271,9 +278,9 @@ const tagsByModelVersion = (state = {}, action) => {
         [modelName]: {
           [version]: {
             ...oldTags,
-            [tag.getKey()]: tag,
-          },
-        },
+            [tag.getKey()]: tag
+          }
+        }
       };
     }
     case fulfilled(DELETE_MODEL_VERSION_TAG): {
@@ -292,8 +299,8 @@ const tagsByModelVersion = (state = {}, action) => {
         return {
           ...newState,
           [modelName]: {
-            [version]: newTags,
-          },
+            [version]: newTags
+          }
         };
       }
     }
@@ -315,7 +322,7 @@ const reducers = {
   modelVersionsByModel,
   tagsByRegisteredModel,
   tagsByModelVersion,
-  mlModelArtifactByModelVersion,
+  mlModelArtifactByModelVersion
 };
 
 export default reducers;

@@ -14,7 +14,7 @@ class RenameFormComponent extends Component {
     name: PropTypes.string.isRequired,
     visible: PropTypes.bool.isRequired,
     validator: PropTypes.func,
-    innerRef: PropTypes.any.isRequired,
+    innerRef: PropTypes.any.isRequired
   };
 
   componentDidUpdate(prevProps) {
@@ -22,13 +22,13 @@ class RenameFormComponent extends Component {
     this.resetFields(prevProps);
   }
 
-  autoFocusInputRef = (inputToAutoFocus) => {
+  autoFocusInputRef = inputToAutoFocus => {
     this.inputToAutoFocus = inputToAutoFocus;
     inputToAutoFocus && inputToAutoFocus.focus();
     inputToAutoFocus && inputToAutoFocus.select();
   };
 
-  autoFocus = (prevProps) => {
+  autoFocus = prevProps => {
     if (prevProps.visible === false && this.props.visible === true) {
       // focus on input field
       this.inputToAutoFocus && this.inputToAutoFocus.focus();
@@ -37,7 +37,7 @@ class RenameFormComponent extends Component {
     }
   };
 
-  resetFields = (prevProps) => {
+  resetFields = prevProps => {
     const formRef = this.props.innerRef;
     if (prevProps.name !== this.props.name) {
       // reset input field to reset displayed initialValue
@@ -47,17 +47,23 @@ class RenameFormComponent extends Component {
 
   render() {
     return (
-      <Form ref={this.props.innerRef} layout='vertical'>
+      <Form ref={this.props.innerRef} layout="vertical">
         <Form.Item
           name={NEW_NAME_FIELD}
           initialValue={this.props.name}
           rules={[
-            { required: true, message: `Please input a new name for the ${this.props.type}.` },
-            { validator: this.props.validator },
+            {
+              required: true,
+              message: `Please input a new name for the ${this.props.type}.`
+            },
+            { validator: this.props.validator }
           ]}
           label={`New ${this.props.type} name`}
         >
-          <Input placeholder={`Input a ${this.props.type} name`} ref={this.autoFocusInputRef} />
+          <Input
+            placeholder={`Input a ${this.props.type} name`}
+            ref={this.autoFocusInputRef}
+          />
         </Form.Item>
       </Form>
     );

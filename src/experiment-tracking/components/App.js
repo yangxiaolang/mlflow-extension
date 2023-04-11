@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { HashRouter as Router, Link, NavLink, Route, Switch } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Link,
+  NavLink,
+  Route,
+  Switch
+} from 'react-router-dom';
 import AppErrorBoundary from '../../common/components/error-boundaries/AppErrorBoundary';
 import { HomePageDocsUrl, Version } from '../../common/constants';
 import logo from '../../common/static/home-logo.png';
@@ -15,7 +21,7 @@ import {
   modelPageRoute,
   modelSubpageRoute,
   modelSubpageRouteWithName,
-  modelVersionPageRoute,
+  modelVersionPageRoute
 } from '../../model-registry/routes';
 import Routes from '../routes';
 import './App.css';
@@ -37,7 +43,7 @@ export function setMLFlowHashRouting() {
 }
 
 const classNames = {
-  activeNavLink: { borderBottom: '4px solid #43C9ED' },
+  activeNavLink: { borderBottom: '4px solid #43C9ED' }
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -53,22 +59,22 @@ class App extends Component {
         <div style={{ height: '100vh' }}>
           <ErrorModal />
           {process.env.HIDE_HEADER === 'true' ? null : (
-            <header className='App-header'>
-              <div className='mlflow-logo'>
-                <Link to={Routes.rootRoute} className='App-mlflow'>
-                  <img className='mlflow-logo' alt='MLflow' src={logo} />
+            <header className="App-header">
+              <div className="mlflow-logo">
+                <Link to={Routes.rootRoute} className="App-mlflow">
+                  <img className="mlflow-logo" alt="MLflow" src={logo} />
                 </Link>
                 <span className={'mlflow-version'}>{Version}</span>
               </div>
-              <div className='header-route-links'>
+              <div className="header-route-links">
                 <NavLink
                   strict
                   to={Routes.rootRoute}
                   activeStyle={classNames.activeNavLink}
                   isActive={isExperimentsActive}
-                  className='header-nav-link'
+                  className="header-nav-link"
                 >
-                  <div className='experiments'>
+                  <div className="experiments">
                     <span>实验追踪</span>
                   </div>
                 </NavLink>
@@ -76,44 +82,79 @@ class App extends Component {
                   strict
                   to={modelListPageRoute}
                   activeStyle={classNames.activeNavLink}
-                  className='header-nav-link header-nav-link-models'
+                  className="header-nav-link header-nav-link-models"
                 >
-                  <div className='models'>
+                  <div className="models">
                     <span>模型仓库</span>
                   </div>
                 </NavLink>
               </div>
-              <div className='header-links'>
+              <div className="header-links">
                 <a href={'https://github.com/mlflow/mlflow'}>
-                  <div className='github'>
+                  <div className="github">
                     <span>源码</span>
                   </div>
                 </a>
                 <a href={HomePageDocsUrl}>
-                  <div className='docs'>
+                  <div className="docs">
                     <span>文档</span>
                   </div>
                 </a>
               </div>
             </header>
           )}
-          <AppErrorBoundary service='mlflow'>
+          <AppErrorBoundary service="mlflow">
             <InteractionTracker>
               <Switch>
                 <Route exact path={Routes.rootRoute} component={HomePage} />
-                <Route exact path={Routes.experimentPageRoute} component={HomePage} />
-                <Route exact path={Routes.runPageWithArtifactSelectedRoute} component={RunPage} />
+                <Route
+                  exact
+                  path={Routes.experimentPageRoute}
+                  component={HomePage}
+                />
+                <Route
+                  exact
+                  path={Routes.runPageWithArtifactSelectedRoute}
+                  component={RunPage}
+                />
                 <Route exact path={Routes.runPageRoute} component={RunPage} />
-                <Route exact path={Routes.metricPageRoute} component={MetricPage} />
-                <Route exact path={Routes.compareRunPageRoute} component={CompareRunPage} />
-                <Route exact path={Routes.compareExperimentsSearchPageRoute} component={HomePage} />
-                <Route path={Routes.experimentPageSearchRoute} component={HomePage} />
+                <Route
+                  exact
+                  path={Routes.metricPageRoute}
+                  component={MetricPage}
+                />
+                <Route
+                  exact
+                  path={Routes.compareRunPageRoute}
+                  component={CompareRunPage}
+                />
+                <Route
+                  exact
+                  path={Routes.compareExperimentsSearchPageRoute}
+                  component={HomePage}
+                />
+                <Route
+                  path={Routes.experimentPageSearchRoute}
+                  component={HomePage}
+                />
                 {/* TODO(Zangr) see if route component can be injected here */}
-                <Route exact path={modelListPageRoute} component={ModelListPage} />
-                <Route exact path={modelVersionPageRoute} component={ModelVersionPage} />
+                <Route
+                  exact
+                  path={modelListPageRoute}
+                  component={ModelListPage}
+                />
+                <Route
+                  exact
+                  path={modelVersionPageRoute}
+                  component={ModelVersionPage}
+                />
                 <Route exact path={modelPageRoute} component={ModelPage} />
                 <Route exact path={modelSubpageRoute} component={ModelPage} />
-                <Route exact path={modelSubpageRouteWithName} component={ModelPage} />
+                <Route
+                  exact
+                  path={modelSubpageRouteWithName}
+                  component={ModelPage}
+                />
                 <Route
                   exact
                   path={compareModelVersionsPageRoute}
@@ -129,9 +170,9 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    experiments: Object.values(state.entities.experimentsById),
+    experiments: Object.values(state.entities.experimentsById)
   };
 };
 

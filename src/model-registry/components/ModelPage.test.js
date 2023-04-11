@@ -2,7 +2,10 @@ import React from 'react';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
-import { mockModelVersionDetailed, mockRegisteredModelDetailed } from '../test-utils';
+import {
+  mockModelVersionDetailed,
+  mockRegisteredModelDetailed
+} from '../test-utils';
 import { ModelVersionStatus, Stages } from '../constants';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -22,30 +25,40 @@ describe('ModelPage', () => {
     minimalProps = {
       match: {
         params: {
-          modelName: encodeURIComponent('Model A'),
-        },
+          modelName: encodeURIComponent('Model A')
+        }
       },
       history: {
-        push: jest.fn(),
+        push: jest.fn()
       },
       searchModelVersionsApi: jest.fn(() => Promise.resolve({})),
-      getRegisteredModelDetailsApi: jest.fn(() => Promise.resolve({})),
+      getRegisteredModelDetailsApi: jest.fn(() => Promise.resolve({}))
     };
     const versions = [
-      mockModelVersionDetailed('Model A', 1, Stages.PRODUCTION, ModelVersionStatus.READY),
+      mockModelVersionDetailed(
+        'Model A',
+        1,
+        Stages.PRODUCTION,
+        ModelVersionStatus.READY
+      )
     ];
     minimalStore = mockStore({
       entities: {
         modelByName: {
-          'Model A': mockRegisteredModelDetailed('Model A', versions),
+          'Model A': mockRegisteredModelDetailed('Model A', versions)
         },
         modelVersionsByModel: {
           'Model A': {
-            1: mockModelVersionDetailed('Model A', 1, Stages.PRODUCTION, ModelVersionStatus.READY),
-          },
-        },
+            1: mockModelVersionDetailed(
+              'Model A',
+              1,
+              Stages.PRODUCTION,
+              ModelVersionStatus.READY
+            )
+          }
+        }
       },
-      apis: {},
+      apis: {}
     });
   });
 
@@ -55,7 +68,7 @@ describe('ModelPage', () => {
         <BrowserRouter>
           <ModelPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find(ModelPage).length).toBe(1);
   });
@@ -66,18 +79,20 @@ describe('ModelPage', () => {
         <BrowserRouter>
           <ModelPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     instance = wrapper.find(ModelPageImpl).instance();
     const mockError = {
       getErrorCode() {
         return 'RESOURCE_DOES_NOT_EXIST';
-      },
+      }
     };
     Utils.isBrowserTabVisible = jest.fn(() => true);
     instance.loadData = jest.fn().mockReturnValue(Promise.reject(mockError));
     return instance.pollData().then(() => {
-      expect(minimalProps.history.push).toHaveBeenCalledWith(modelListPageRoute);
+      expect(minimalProps.history.push).toHaveBeenCalledWith(
+        modelListPageRoute
+      );
     });
   });
 });

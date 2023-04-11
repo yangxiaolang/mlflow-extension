@@ -17,7 +17,7 @@ describe('RestoreRunModal', () => {
       onClose: jest.fn(() => Promise.resolve({})),
       selectedRunIds: ['run1', 'run2'],
       openErrorModal: mockOpenErrorModal,
-      restoreRunApi: mockRestoreRunApi,
+      restoreRunApi: mockRestoreRunApi
     };
 
     wrapper = shallow(<RestoreRunModalImpl {...minimalProps} />);
@@ -28,7 +28,7 @@ describe('RestoreRunModal', () => {
     expect(wrapper.find(ConfirmModal).length).toBe(1);
   });
 
-  test('test handleRenameExperiment', (done) => {
+  test('test handleRenameExperiment', done => {
     const promise = wrapper.find(ConfirmModal).prop('handleSubmit')();
     promise.finally(() => {
       expect(mockRestoreRunApi).toHaveBeenCalledTimes(2);
@@ -36,16 +36,19 @@ describe('RestoreRunModal', () => {
     });
   });
 
-  test('test handleRenameExperiment errors correctly', (done) => {
+  test('test handleRenameExperiment errors correctly', done => {
     const mockFailRestoreRunApi = jest.fn(
       () =>
         new Promise((resolve, reject) => {
           window.setTimeout(() => {
             reject();
           }, 1000);
-        }),
+        })
     );
-    const failRunApiProps = { ...minimalProps, restoreRunApi: mockFailRestoreRunApi };
+    const failRunApiProps = {
+      ...minimalProps,
+      restoreRunApi: mockFailRestoreRunApi
+    };
     wrapper = shallow(<RestoreRunModalImpl {...failRunApiProps} />);
 
     const promise = wrapper.find(ConfirmModal).prop('handleSubmit')();

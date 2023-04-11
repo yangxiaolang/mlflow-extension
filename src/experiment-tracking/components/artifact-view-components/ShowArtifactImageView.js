@@ -29,7 +29,7 @@ const ShowArtifactImageView = ({ runUuid, path }) => {
         <Image.PreviewGroup
           preview={{
             visible: previewVisible,
-            onVisibleChange: (visible) => setPreviewVisible(visible),
+            onVisibleChange: visible => setPreviewVisible(visible)
           }}
         >
           <Image src={src} />
@@ -41,22 +41,22 @@ const ShowArtifactImageView = ({ runUuid, path }) => {
 
 ShowArtifactImageView.propTypes = {
   runUuid: PropTypes.string.isRequired,
-  path: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired
 };
 
 const classNames = {
   imageOuterContainer: {
     padding: '10px',
-    overflow: 'scroll',
+    overflow: 'scroll'
   },
   imageWrapper: { display: 'inline-block' },
   image: {
     cursor: 'pointer',
     '&:hover': {
-      boxShadow: '0 0 4px gray',
-    },
+      boxShadow: '0 0 4px gray'
+    }
   },
-  hidden: { display: 'none' },
+  hidden: { display: 'none' }
 };
 
 export default ShowArtifactImageView;

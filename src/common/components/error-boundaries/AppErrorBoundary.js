@@ -11,7 +11,7 @@ class AppErrorBoundary extends Component {
   }
 
   static propTypes = {
-    children: PropTypes.node,
+    children: PropTypes.node
   };
 
   componentDidCatch(error, errorInfo) {
@@ -23,12 +23,13 @@ class AppErrorBoundary extends Component {
     if (this.state.hasError) {
       return (
         <div>
-          <img className='error-image' alt='Error' src={defaultErrorImg} />
+          <img className="error-image" alt="Error" src={defaultErrorImg} />
           <h1 className={'center'}>Something went wrong</h1>
           <h4 className={'center'}>
-            If this error persists, please report an issue {/* Reported during ESLint upgrade */}
+            If this error persists, please report an issue{' '}
+            {/* Reported during ESLint upgrade */}
             {/* eslint-disable-next-line react/jsx-no-target-blank */}
-            <a href={Utils.getSupportPageUrl()} target='_blank'>
+            <a href={Utils.getSupportPageUrl()} target="_blank">
               here
             </a>
             .

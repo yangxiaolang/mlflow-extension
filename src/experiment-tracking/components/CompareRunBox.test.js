@@ -11,13 +11,13 @@ describe('CompareRunBox', () => {
   const runUuids = ['1', '2', '3'];
   const commonProps = {
     runUuids,
-    runInfos: runUuids.map((run_uuid) =>
+    runInfos: runUuids.map(run_uuid =>
       RunInfo.fromJs({
         run_uuid,
-        experiment_id: '0',
-      }),
+        experiment_id: '0'
+      })
     ),
-    runDisplayNames: runUuids,
+    runDisplayNames: runUuids
   };
 
   test('should render with minimal props without exploding', () => {
@@ -26,13 +26,13 @@ describe('CompareRunBox', () => {
       paramLists: [
         [{ key: 'param', value: 1 }],
         [{ key: 'param', value: 2 }],
-        [{ key: 'param', value: 3 }],
+        [{ key: 'param', value: 3 }]
       ],
       metricLists: [
         [{ key: 'metric', value: 4 }],
         [{ key: 'metric', value: 5 }],
-        [{ key: 'metric', value: 6 }],
-      ],
+        [{ key: 'metric', value: 6 }]
+      ]
     };
 
     wrapper = mountWithIntl(<CompareRunBox {...props} />);

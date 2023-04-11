@@ -11,10 +11,14 @@ import {
   CHART_TYPE_LINE,
   METRICS_PLOT_POLLING_INTERVAL_MS,
   METRICS_PLOT_HANGING_RUN_THRESHOLD_MS,
-  convertMetricsToCsv,
+  convertMetricsToCsv
 } from './MetricsPlotPanel';
 import MetricsSummaryTable from './MetricsSummaryTable';
-import { X_AXIS_RELATIVE, X_AXIS_STEP, X_AXIS_WALL } from './MetricsPlotControls';
+import {
+  X_AXIS_RELATIVE,
+  X_AXIS_STEP,
+  X_AXIS_WALL
+} from './MetricsPlotControls';
 import Utils from '../../common/utils/Utils';
 import { mountWithIntl } from '../../common/utils/TestUtils';
 import { RunLinksPopover } from './RunLinksPopover';
@@ -34,12 +38,12 @@ describe('unit tests', () => {
     const location = {
       search:
         '?runs=["runUuid1","runUuid2"]&experiments=["1"]' +
-        '&plot_metric_keys=["metric_1","metric_2"]&plot_layout={}',
+        '&plot_metric_keys=["metric_1","metric_2"]&plot_layout={}'
     };
     const history = {
-      replace: (url) => {
+      replace: url => {
         location.search = '?' + url.split('?')[1];
-      },
+      }
     };
     getMetricHistoryApi = jest.fn(() => Promise.resolve());
     getRunApi = jest.fn(() => Promise.resolve());
@@ -52,12 +56,12 @@ describe('unit tests', () => {
       latestMetricsByRunUuid: {
         runUuid1: {
           metric_1: { key: 'metric_1', value: 100, step: 2, timestamp: now },
-          metric_2: { key: 'metric_2', value: 111, step: 0, timestamp: now },
+          metric_2: { key: 'metric_2', value: 111, step: 0, timestamp: now }
         },
         runUuid2: {
           metric_1: { key: 'metric_1', value: 200, step: 4, timestamp: now },
-          metric_2: { key: 'metric_2', value: 222, step: -3, timestamp: now },
-        },
+          metric_2: { key: 'metric_2', value: 222, step: -3, timestamp: now }
+        }
       },
       distinctMetricKeys: ['metric_1', 'metric_2'],
       // An array of { metricKey, history, runUuid, runDisplayName }
@@ -68,45 +72,45 @@ describe('unit tests', () => {
           history: [
             /* Intentionally reversed timestamp and step here for testing */
             { key: 'metric_1', value: 100, step: 2, timestamp: now },
-            { key: 'metric_1', value: 50, step: 1, timestamp: now - 1 },
+            { key: 'metric_1', value: 50, step: 1, timestamp: now - 1 }
           ],
           runUuid: 'runUuid1',
-          runDisplayName: 'runDisplayName1',
+          runDisplayName: 'runDisplayName1'
         },
         {
           metricKey: 'metric_2',
           history: [
             { key: 'metric_2', value: 55, step: -1, timestamp: now - 1 },
-            { key: 'metric_2', value: 111, step: 0, timestamp: now },
+            { key: 'metric_2', value: 111, step: 0, timestamp: now }
           ],
           runUuid: 'runUuid1',
-          runDisplayName: 'runDisplayName1',
+          runDisplayName: 'runDisplayName1'
         },
         // Metrics for runUuid2
         {
           metricKey: 'metric_1',
           history: [
             { key: 'metric_1', value: 150, step: 3, timestamp: now - 1 },
-            { key: 'metric_1', value: 200, step: 4, timestamp: now },
+            { key: 'metric_1', value: 200, step: 4, timestamp: now }
           ],
           runUuid: 'runUuid2',
-          runDisplayName: 'runDisplayName2',
+          runDisplayName: 'runDisplayName2'
         },
         {
           metricKey: 'metric_2',
           history: [
             { key: 'metric_2', value: 155, step: -4, timestamp: now - 1 },
-            { key: 'metric_2', value: 222, step: -3, timestamp: now },
+            { key: 'metric_2', value: 222, step: -3, timestamp: now }
           ],
           runUuid: 'runUuid2',
-          runDisplayName: 'runDisplayName2',
-        },
+          runDisplayName: 'runDisplayName2'
+        }
       ],
       getMetricHistoryApi,
       getRunApi,
       location,
       history,
-      runDisplayNames: ['runDisplayName1', 'runDisplayName2'],
+      runDisplayNames: ['runDisplayName1', 'runDisplayName2']
     };
 
     minimalPropsForBarChart = {
@@ -117,12 +121,12 @@ describe('unit tests', () => {
       latestMetricsByRunUuid: {
         runUuid1: {
           metric_1: { key: 'metric_1', value: 50, step: 0, timestamp: now },
-          metric_2: { key: 'metric_2', value: 55, step: 0, timestamp: now },
+          metric_2: { key: 'metric_2', value: 55, step: 0, timestamp: now }
         },
         runUuid2: {
           metric_1: { key: 'metric_2', value: 55, step: 0, timestamp: now },
-          metric_2: { key: 'metric_2', value: 155, step: 0, timestamp: now },
-        },
+          metric_2: { key: 'metric_2', value: 155, step: 0, timestamp: now }
+        }
       },
       distinctMetricKeys: ['metric_1', 'metric_2'],
       // An array of { metricKey, history, runUuid, runDisplayName }
@@ -132,34 +136,34 @@ describe('unit tests', () => {
           metricKey: 'metric_1',
           history: [{ key: 'metric_1', value: 50, step: 0, timestamp: now }],
           runUuid: 'runUuid1',
-          runDisplayName: 'runDisplayName1',
+          runDisplayName: 'runDisplayName1'
         },
         {
           metricKey: 'metric_2',
           history: [{ key: 'metric_2', value: 55, step: 0, timestamp: now }],
           runUuid: 'runUuid1',
-          runDisplayName: 'runDisplayName1',
+          runDisplayName: 'runDisplayName1'
         },
         // Metrics for runUuid2
         {
           metricKey: 'metric_1',
           history: [{ key: 'metric_1', value: 150, step: 0, timestamp: now }],
           runUuid: 'runUuid2',
-          runDisplayName: 'runDisplayName2',
+          runDisplayName: 'runDisplayName2'
         },
         {
           metricKey: 'metric_2',
           history: [{ key: 'metric_2', value: 155, step: 0, timestamp: now }],
           runUuid: 'runUuid2',
-          runDisplayName: 'runDisplayName2',
-        },
+          runDisplayName: 'runDisplayName2'
+        }
       ],
       getMetricHistoryApi,
       getRunApi,
       location,
       history,
       runDisplayNames: ['runDisplayName1', 'runDisplayName2'],
-      deselectedCurves: [],
+      deselectedCurves: []
     };
 
     const mockStore = configureStore([thunk, promiseMiddleware()]);
@@ -168,8 +172,8 @@ describe('unit tests', () => {
         runInfosByUuid: {},
         latestMetricsByRunUuid: {},
         minMetricsByRunUuid: {},
-        maxMetricsByRunUuid: {},
-      },
+        maxMetricsByRunUuid: {}
+      }
     });
   });
 
@@ -182,15 +186,20 @@ describe('unit tests', () => {
 
   test('predictChartType()', () => {
     expect(
-      MetricsPlotPanel.predictChartType(minimalPropsForLineChart.metricsWithRunInfoAndHistory),
+      MetricsPlotPanel.predictChartType(
+        minimalPropsForLineChart.metricsWithRunInfoAndHistory
+      )
     ).toBe(CHART_TYPE_LINE);
     expect(
-      MetricsPlotPanel.predictChartType(minimalPropsForBarChart.metricsWithRunInfoAndHistory),
+      MetricsPlotPanel.predictChartType(
+        minimalPropsForBarChart.metricsWithRunInfoAndHistory
+      )
     ).toBe(CHART_TYPE_BAR);
   });
 
   test('isComparing()', () => {
-    const s1 = '?runs=["runUuid1","runUuid2"]&plot_metric_keys=["metric_1","metric_2"]';
+    const s1 =
+      '?runs=["runUuid1","runUuid2"]&plot_metric_keys=["metric_1","metric_2"]';
     const s2 = '?runs=["runUuid1"]&plot_metric_keys=["metric_1","metric_2"]';
     expect(MetricsPlotPanel.isComparing(s1)).toBe(true);
     expect(MetricsPlotPanel.isComparing(s2)).toBe(false);
@@ -228,7 +237,7 @@ describe('unit tests', () => {
 
   test('handleYAxisLogScale properly converts layout between log and linear scales', () => {
     const props = {
-      ...minimalPropsForLineChart,
+      ...minimalPropsForLineChart
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     instance = wrapper.instance();
@@ -236,61 +245,63 @@ describe('unit tests', () => {
     // user-specified zoom)
     instance.handleYAxisLogScaleChange(true);
     expect(instance.getUrlState().layout).toEqual({
-      yaxis: { type: 'log', autorange: true, exponentformat: 'e' },
+      yaxis: { type: 'log', autorange: true, exponentformat: 'e' }
     });
     instance.handleYAxisLogScaleChange(false);
-    expect(instance.getUrlState().layout).toEqual({ yaxis: { type: 'linear', autorange: true } });
+    expect(instance.getUrlState().layout).toEqual({
+      yaxis: { type: 'linear', autorange: true }
+    });
     // Test converting to & from log scale for a layout with specified y axis range bounds
     instance.handleLayoutChange({
       'xaxis.range[0]': 2,
       'xaxis.range[1]': 4,
       'yaxis.range[0]': 1,
-      'yaxis.range[1]': 100,
+      'yaxis.range[1]': 100
     });
     instance.handleYAxisLogScaleChange(true);
     expect(instance.getUrlState().layout).toEqual({
       xaxis: { range: [2, 4], autorange: false },
-      yaxis: { range: [0, 2], type: 'log', exponentformat: 'e' },
+      yaxis: { range: [0, 2], type: 'log', exponentformat: 'e' }
     });
     instance.handleYAxisLogScaleChange(false);
     expect(instance.getUrlState().layout).toEqual({
       xaxis: { range: [2, 4], autorange: false },
-      yaxis: { range: [1, 100], type: 'linear' },
+      yaxis: { range: [1, 100], type: 'linear' }
     });
     // Test converting to & from log scale for a layout with negative Y axis
     instance.handleLayoutChange({
       'xaxis.range[0]': -5,
       'xaxis.range[1]': 5,
       'yaxis.range[0]': -3,
-      'yaxis.range[1]': 6,
+      'yaxis.range[1]': 6
     });
     instance.handleYAxisLogScaleChange(true);
     expect(instance.getUrlState().layout).toEqual({
       xaxis: { range: [-5, 5], autorange: false },
-      yaxis: { autorange: true, type: 'log', exponentformat: 'e' },
+      yaxis: { autorange: true, type: 'log', exponentformat: 'e' }
     });
     instance.handleYAxisLogScaleChange(false);
     expect(instance.getUrlState().layout).toEqual({
       xaxis: { range: [-5, 5], autorange: false },
-      yaxis: { range: [-3, 6], type: 'linear' },
+      yaxis: { range: [-3, 6], type: 'linear' }
     });
     // Test converting to & from log scale for a layout with zero-valued Y axis bound
     instance.handleLayoutChange({ 'yaxis.range[0]': 0, 'yaxis.range[1]': 6 });
     instance.handleYAxisLogScaleChange(true);
     expect(instance.getUrlState().layout).toEqual({
       xaxis: { range: [-5, 5], autorange: false },
-      yaxis: { autorange: true, type: 'log', exponentformat: 'e' },
+      yaxis: { autorange: true, type: 'log', exponentformat: 'e' }
     });
     instance.handleYAxisLogScaleChange(false);
     expect(instance.getUrlState().layout).toEqual({
       xaxis: { range: [-5, 5], autorange: false },
-      yaxis: { range: [0, 6], type: 'linear' },
+      yaxis: { range: [0, 6], type: 'linear' }
     });
   });
 
-  test('single-click handler in metric comparison plot - line chart', (done) => {
+  test('single-click handler in metric comparison plot - line chart', done => {
     const props = {
-      ...minimalPropsForLineChart,
+      ...minimalPropsForLineChart
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     instance = wrapper.instance();
@@ -298,25 +309,30 @@ describe('unit tests', () => {
     expect(instance.getUrlState().deselectedCurves).toEqual([]);
     instance.handleLegendClick({
       curveNumber: 0,
-      data: [{ runId: 'runUuid2', metricName: 'metric_1' }],
+      data: [{ runId: 'runUuid2', metricName: 'metric_1' }]
     });
     expect(instance.getUrlState().deselectedCurves).toEqual([]);
     // Wait a second, verify first run was deselected
     window.setTimeout(() => {
-      expect(instance.getUrlState().deselectedCurves).toEqual(['runUuid2-metric_1']);
+      expect(instance.getUrlState().deselectedCurves).toEqual([
+        'runUuid2-metric_1'
+      ]);
       done();
     }, 1000);
   });
 
-  test('single-click handler in metric comparison plot - bar chart', (done) => {
+  test('single-click handler in metric comparison plot - bar chart', done => {
     const props = {
-      ...minimalPropsForBarChart,
+      ...minimalPropsForBarChart
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     instance = wrapper.instance();
     // Verify that clicking doesn't immediately update the run state
     expect(instance.getUrlState().deselectedCurves).toEqual([]);
-    instance.handleLegendClick({ curveNumber: 0, data: [{ runId: 'runUuid2', type: 'bar' }] });
+    instance.handleLegendClick({
+      curveNumber: 0,
+      data: [{ runId: 'runUuid2', type: 'bar' }]
+    });
     expect(instance.getUrlState().deselectedCurves).toEqual([]);
     // Wait a second, verify first run was deselected
     window.setTimeout(() => {
@@ -325,15 +341,15 @@ describe('unit tests', () => {
     }, 1000);
   });
 
-  test('double-click handler in metric comparison plot - line chart', (done) => {
+  test('double-click handler in metric comparison plot - line chart', done => {
     const props = {
-      ...minimalPropsForLineChart,
+      ...minimalPropsForLineChart
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     instance = wrapper.instance();
     const data = [
       { runId: 'runUuid1', metricName: 'metric_1' },
-      { runId: 'runUuid2', metricName: 'metric_2' },
+      { runId: 'runUuid2', metricName: 'metric_2' }
     ];
     // Verify that clicking doesn't immediately update the run state
     expect(instance.getUrlState().deselectedCurves).toEqual([]);
@@ -342,20 +358,22 @@ describe('unit tests', () => {
     // Double-click, verify that only the clicked run is selected (that the other one is deselected)
     instance.handleLegendClick({ curveNumber: 1, data: data });
     window.setTimeout(() => {
-      expect(instance.getUrlState().deselectedCurves).toEqual(['runUuid1-metric_1']);
+      expect(instance.getUrlState().deselectedCurves).toEqual([
+        'runUuid1-metric_1'
+      ]);
       done();
     }, 1000);
   });
 
-  test('double-click handler in metric comparison plot - bar chart', (done) => {
+  test('double-click handler in metric comparison plot - bar chart', done => {
     const props = {
-      ...minimalPropsForBarChart,
+      ...minimalPropsForBarChart
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     instance = wrapper.instance();
     const data = [
       { runId: 'runUuid1', type: 'bar' },
-      { runId: 'runUuid2', type: 'bar' },
+      { runId: 'runUuid2', type: 'bar' }
     ];
     // Verify that clicking doesn't immediately update the run state
     expect(instance.getUrlState().deselectedCurves).toEqual([]);
@@ -369,28 +387,28 @@ describe('unit tests', () => {
     }, 1000);
   });
 
-  test('click into RunLinksPopover', (done) => {
+  test('click into RunLinksPopover', done => {
     const data = {
       event: {
         clientX: 1,
-        clientY: 1,
+        clientY: 1
       },
       points: [
         {
           data: { runId: 'runUuid1', name: 'run1' },
           fullData: {
-            marker: { color: 'rgb(1, 1, 1)' },
+            marker: { color: 'rgb(1, 1, 1)' }
           },
-          y: 0.2,
+          y: 0.2
         },
         {
           data: { runId: 'runUuid2', name: 'run2' },
           fullData: {
-            marker: { color: 'rgb(2, 2, 2)' },
+            marker: { color: 'rgb(2, 2, 2)' }
           },
-          y: 0.1,
-        },
-      ],
+          y: 0.1
+        }
+      ]
     };
     const props = {
       experimentIds: ['1'],
@@ -402,18 +420,18 @@ describe('unit tests', () => {
           runId: 'runUuid1',
           name: 'run1',
           color: 'rgb(1, 1, 1)',
-          y: 0.2,
+          y: 0.2
         },
         {
           runId: 'runUuid2',
           name: 'run2',
           color: 'rgb(2, 2, 2)',
-          y: 0.1,
-        },
+          y: 0.1
+        }
       ],
       handleClose: jest.fn(),
       handleKeyDown: jest.fn(),
-      handleVisibleChange: jest.fn(),
+      handleVisibleChange: jest.fn()
     };
     wrapper = shallow(<MetricsPlotPanel {...minimalPropsForLineChart} />);
     instance = wrapper.instance();
@@ -430,7 +448,7 @@ describe('unit tests', () => {
   });
 
   test('should render the number of completed runs correctly', () => {
-    const mountWithProps = (props) => {
+    const mountWithProps = props => {
       return mountWithIntl(
         <Provider store={minimalStore}>
           <BrowserRouter>
@@ -438,34 +456,34 @@ describe('unit tests', () => {
               <MetricsPlotPanel {...props} />
             </DesignSystemProvider>
           </BrowserRouter>
-        </Provider>,
+        </Provider>
       );
     };
     // no runs completed
     wrapper = mountWithProps({
       ...minimalPropsForLineChart,
-      completedRunUuids: [],
+      completedRunUuids: []
     });
     wrapper.update();
     expect(wrapper.find(Progress).text()).toContain('0/2');
     // 1 run completed
     wrapper = mountWithProps({
       ...minimalPropsForLineChart,
-      completedRunUuids: ['runUuid1'],
+      completedRunUuids: ['runUuid1']
     });
     wrapper.update();
     expect(wrapper.find(Progress).text()).toContain('1/2');
     // all runs completed
     wrapper = mountWithProps({
       ...minimalPropsForLineChart,
-      completedRunUuids: ['runUuid1', 'runUuid2'],
+      completedRunUuids: ['runUuid1', 'runUuid2']
     });
     wrapper.update();
     expect(wrapper.find(Progress).text()).toContain('2/2');
   });
 
   test('should render the metrics summary table correctly', () => {
-    const mountWithProps = (props) => {
+    const mountWithProps = props => {
       return mountWithIntl(
         <Provider store={minimalStore}>
           <BrowserRouter>
@@ -473,17 +491,19 @@ describe('unit tests', () => {
               <MetricsPlotPanel {...props} />
             </DesignSystemProvider>
           </BrowserRouter>
-        </Provider>,
+        </Provider>
       );
     };
     wrapper = mountWithProps({
-      ...minimalPropsForLineChart,
+      ...minimalPropsForLineChart
     });
     wrapper.update();
 
     const summaryTable = wrapper.find(MetricsSummaryTable);
     expect(summaryTable.length).toBe(1);
-    expect(summaryTable.props().runUuids).toEqual(minimalPropsForLineChart.runUuids);
+    expect(summaryTable.props().runUuids).toEqual(
+      minimalPropsForLineChart.runUuids
+    );
     // Selected metric keys are set by location.search
     expect(summaryTable.props().metricKeys).toEqual(['metric_1', 'metric_2']);
   });
@@ -500,7 +520,7 @@ describe('unit tests', () => {
     jest.useFakeTimers();
     const props = {
       ...minimalPropsForLineChart,
-      completedRunUuids: ['runUuid1'],
+      completedRunUuids: ['runUuid1']
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     jest.advanceTimersByTime(METRICS_PLOT_POLLING_INTERVAL_MS);
@@ -513,14 +533,14 @@ describe('unit tests', () => {
     jest.useFakeTimers();
     const props = {
       ...minimalPropsForLineChart,
-      completedRunUuids: ['runUuid1'],
+      completedRunUuids: ['runUuid1']
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     jest.advanceTimersByTime(METRICS_PLOT_POLLING_INTERVAL_MS);
     expect(getRunApi).toHaveBeenCalledTimes(1);
     const nextProps = {
       ...minimalPropsForLineChart,
-      completedRunUuids: ['runUuid1', 'runUuid2'],
+      completedRunUuids: ['runUuid1', 'runUuid2']
     };
     wrapper.setProps(nextProps);
     jest.advanceTimersByTime(METRICS_PLOT_POLLING_INTERVAL_MS);
@@ -529,7 +549,8 @@ describe('unit tests', () => {
 
   test('should ignore hanging runs', () => {
     jest.useFakeTimers();
-    const latestTimestamp = new Date().getTime() - (METRICS_PLOT_HANGING_RUN_THRESHOLD_MS + 1000);
+    const latestTimestamp =
+      new Date().getTime() - (METRICS_PLOT_HANGING_RUN_THRESHOLD_MS + 1000);
     const props = {
       ...minimalPropsForLineChart,
       // `runUuid1` has already completed and `runUuid2` is hanging.
@@ -541,15 +562,15 @@ describe('unit tests', () => {
             key: 'metric_1',
             value: 200,
             step: 4,
-            timestamp: latestTimestamp,
+            timestamp: latestTimestamp
           },
           metric_2: {
             key: 'metric_2',
             value: 222,
             step: -3,
-            timestamp: latestTimestamp,
-          },
-        },
+            timestamp: latestTimestamp
+          }
+        }
       },
       metricsWithRunInfoAndHistory: [
         // Metrics for runUuid1
@@ -558,22 +579,37 @@ describe('unit tests', () => {
         {
           metricKey: 'metric_1',
           history: [
-            { key: 'metric_1', value: 150, step: 3, timestamp: latestTimestamp - 1 },
-            { key: 'metric_1', value: 200, step: 4, timestamp: latestTimestamp },
+            {
+              key: 'metric_1',
+              value: 150,
+              step: 3,
+              timestamp: latestTimestamp - 1
+            },
+            { key: 'metric_1', value: 200, step: 4, timestamp: latestTimestamp }
           ],
           runUuid: 'runUuid2',
-          runDisplayName: 'runDisplayName2',
+          runDisplayName: 'runDisplayName2'
         },
         {
           metricKey: 'metric_2',
           history: [
-            { key: 'metric_2', value: 155, step: -4, timestamp: latestTimestamp - 1 },
-            { key: 'metric_2', value: 222, step: -3, timestamp: latestTimestamp },
+            {
+              key: 'metric_2',
+              value: 155,
+              step: -4,
+              timestamp: latestTimestamp - 1
+            },
+            {
+              key: 'metric_2',
+              value: 222,
+              step: -3,
+              timestamp: latestTimestamp
+            }
           ],
           runUuid: 'runUuid2',
-          runDisplayName: 'runDisplayName2',
-        },
-      ],
+          runDisplayName: 'runDisplayName2'
+        }
+      ]
     };
 
     wrapper = shallow(<MetricsPlotPanel {...props} />);
@@ -587,7 +623,7 @@ describe('unit tests', () => {
     jest.useFakeTimers();
     const props = {
       ...minimalPropsForLineChart,
-      completedRunUuids: ['runUuid1'],
+      completedRunUuids: ['runUuid1']
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     expect(wrapper.state().focused).toBe(true);
@@ -607,7 +643,7 @@ describe('unit tests', () => {
     jest.useFakeTimers();
     const props = {
       ...minimalPropsForLineChart,
-      completedRunUuids: ['runUuid1'],
+      completedRunUuids: ['runUuid1']
     };
     wrapper = shallow(<MetricsPlotPanel {...props} />);
     jest.advanceTimersByTime(METRICS_PLOT_POLLING_INTERVAL_MS);
@@ -627,23 +663,23 @@ test('convertMetricsToCsv', () => {
           key: 'metric1',
           value: 0,
           step: 0,
-          timestamp: 0,
+          timestamp: 0
         },
         {
           key: 'metric1',
           value: 1,
           step: 1,
-          timestamp: 1,
+          timestamp: 1
         },
         {
           key: 'metric1',
           value: 2,
           step: 2,
-          timestamp: 2,
-        },
+          timestamp: 2
+        }
       ],
       runUuid: '1',
-      runDisplayName: 'Run 1',
+      runDisplayName: 'Run 1'
     },
     {
       metricKey: 'metric2',
@@ -652,18 +688,18 @@ test('convertMetricsToCsv', () => {
           key: 'metric2',
           value: 0,
           step: 0,
-          timestamp: 0,
+          timestamp: 0
         },
         {
           key: 'metric2',
           value: 1,
           step: 1,
-          timestamp: 1,
-        },
+          timestamp: 1
+        }
       ],
       runUuid: '2',
-      runDisplayName: 'Run 2',
-    },
+      runDisplayName: 'Run 2'
+    }
   ];
   const csv = convertMetricsToCsv(metrics);
   expect(csv).toBe(
@@ -674,6 +710,6 @@ run_id,key,value,step,timestamp
 1,metric1,2,2,2
 2,metric2,0,0,0
 2,metric2,1,1,1
-`.trim(),
+`.trim()
   );
 });

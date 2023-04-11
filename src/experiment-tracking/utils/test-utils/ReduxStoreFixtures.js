@@ -7,8 +7,8 @@ export const emptyState = {
     experimentsById: {},
     experimentTagsByExperimentId: {},
     tagsByRunUuid: {},
-    modelVersionsByRunUuid: {},
-  },
+    modelVersionsByRunUuid: {}
+  }
 };
 
 export const addApiToState = (state, api) => {
@@ -17,8 +17,8 @@ export const addApiToState = (state, api) => {
     ...state,
     apis: {
       ...oldApi,
-      [api.id]: api,
-    },
+      [api.id]: api
+    }
   };
 };
 
@@ -30,17 +30,17 @@ export const addExperimentToState = (state, experiment) => {
       ...state.entities,
       experimentsById: {
         ...oldExperiments,
-        [experiment.experiment_id]: experiment,
-      },
-    },
+        [experiment.experiment_id]: experiment
+      }
+    }
   };
 };
 
 export const addExperimentTagsToState = (state, experiment_id, tags) => {
   const oldExperimentTags = state.entities.experimentTagsByExperimentId;
-  const tagsArrToObject = (tagsArr) => {
+  const tagsArrToObject = tagsArr => {
     const tagObj = {};
-    tagsArr.forEach((tag) => (tagObj[tag.key] = RunTag.fromJs(tag)));
+    tagsArr.forEach(tag => (tagObj[tag.key] = RunTag.fromJs(tag)));
     return tagObj;
   };
   return {
@@ -49,13 +49,13 @@ export const addExperimentTagsToState = (state, experiment_id, tags) => {
       ...state.entities,
       experimentTagsByExperimentId: {
         ...oldExperimentTags,
-        [experiment_id]: tagsArrToObject(tags),
-      },
-    },
+        [experiment_id]: tagsArrToObject(tags)
+      }
+    }
   };
 };
 
-export const createPendingApi = (id) => {
+export const createPendingApi = id => {
   return { id, active: true };
 };
 
@@ -67,16 +67,16 @@ export const mockRunInfo = (
   run_id,
   experiment_id = undefined,
   artifact_uri = undefined,
-  lifecycle_stage = undefined,
+  lifecycle_stage = undefined
 ) => {
   return RunInfo.fromJs({
     run_uuid: run_id,
     experiment_id: experiment_id,
     artifact_uri: artifact_uri,
-    lifecycle_stage: lifecycle_stage,
+    lifecycle_stage: lifecycle_stage
   });
 };
 
-export const mockMetric = (params) => {
+export const mockMetric = params => {
   return Metric.fromJs(params);
 };

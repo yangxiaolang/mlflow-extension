@@ -10,7 +10,7 @@ import { ErrorWrapper } from '../../../common/utils/ErrorWrapper';
 
 // See: https://github.com/wojtekmaj/react-pdf/blob/master/README.md#enable-pdfjs-worker for how
 // workerSrc is supposed to be specified.
-pdfjs.GlobalWorkerOptions.workerSrc = `./static-files/pdf.worker.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = './static-files/pdf.worker.js';
 
 class ShowArtifactPdfView extends Component {
   state = {
@@ -18,17 +18,17 @@ class ShowArtifactPdfView extends Component {
     error: undefined,
     pdfData: undefined,
     currentPage: 1,
-    numPages: 1,
+    numPages: 1
   };
 
   static propTypes = {
     runUuid: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    getArtifact: PropTypes.func,
+    getArtifact: PropTypes.func
   };
 
   static defaultProps = {
-    getArtifact: getArtifactBytesContent,
+    getArtifact: getArtifactBytesContent
   };
 
   /** Fetches artifacts and updates component state with the result */
@@ -36,10 +36,10 @@ class ShowArtifactPdfView extends Component {
     const artifactLocation = getSrc(this.props.path, this.props.runUuid);
     this.props
       .getArtifact(artifactLocation)
-      .then((artifactPdfData) => {
+      .then(artifactPdfData => {
         this.setState({ pdfData: { data: artifactPdfData }, loading: false });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({ error: error, loading: false });
       });
   }
@@ -49,7 +49,10 @@ class ShowArtifactPdfView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.path !== prevProps.path || this.props.runUuid !== prevProps.runUuid) {
+    if (
+      this.props.path !== prevProps.path ||
+      this.props.runUuid !== prevProps.runUuid
+    ) {
       this.fetchPdf();
     }
   }
@@ -58,7 +61,7 @@ class ShowArtifactPdfView extends Component {
     this.setState({ numPages });
   };
 
-  onDocumentLoadError = (error) => {
+  onDocumentLoadError = error => {
     Utils.logErrorAndNotifyUser(new ErrorWrapper(error));
   };
 
@@ -69,8 +72,8 @@ class ShowArtifactPdfView extends Component {
   renderPdf = () => {
     return (
       <React.Fragment>
-        <div className='pdf-viewer'>
-          <div className='paginator'>
+        <div className="pdf-viewer">
+          <div className="paginator">
             <Pagination
               simple
               current={this.state.currentPage}
@@ -79,7 +82,7 @@ class ShowArtifactPdfView extends Component {
               onChange={this.onPageChange}
             />
           </div>
-          <div className='document'>
+          <div className="document">
             <Document
               file={this.state.pdfData}
               onLoadSuccess={this.onDocumentLoadSuccess}
@@ -96,16 +99,17 @@ class ShowArtifactPdfView extends Component {
 
   render() {
     if (this.state.loading) {
-      return <div className='artifact-pdf-view-loading'>Loading...</div>;
+      return <div className="artifact-pdf-view-loading">Loading...</div>;
     }
     if (this.state.error) {
       return (
-        <div className='artifact-pdf-view-error'>
-          Oops we couldn't load your file because of an error. Please reload the page to try again.
+        <div className="artifact-pdf-view-error">
+          Oops we couldn't load your file because of an error. Please reload the
+          page to try again.
         </div>
       );
     } else {
-      return <div className='pdf-outer-container'>{this.renderPdf()}</div>;
+      return <div className="pdf-outer-container">{this.renderPdf()}</div>;
     }
   }
 }

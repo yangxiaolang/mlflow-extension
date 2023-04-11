@@ -19,19 +19,19 @@ describe('MetricsSummaryTable', () => {
     entities: {
       runInfosByUuid: {
         'uuid-1234-5678-9012': RunInfo.fromJs({ experiment_id: '1' }),
-        'uuid-1234-5678-9013': RunInfo.fromJs({ experiment_id: '1' }),
+        'uuid-1234-5678-9013': RunInfo.fromJs({ experiment_id: '1' })
       },
       latestMetricsByRunUuid: { 'uuid-1234-5678-9012': {} },
       minMetricsByRunUuid: { 'uuid-1234-5678-9012': {} },
-      maxMetricsByRunUuid: { 'uuid-1234-5678-9012': {} },
-    },
+      maxMetricsByRunUuid: { 'uuid-1234-5678-9012': {} }
+    }
   };
 
   beforeEach(() => {
     minimalProps = {
       runUuids: ['uuid-1234-5678-9012'],
       runDisplayNames: ['run 0'],
-      metricKeys: ['train_loss'],
+      metricKeys: ['train_loss']
     };
 
     minimalStore = mockStore(minimalStoreRaw);
@@ -43,7 +43,7 @@ describe('MetricsSummaryTable', () => {
         <BrowserRouter>
           <MetricsSummaryTable {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find(MetricsSummaryTable).length).toBe(1);
   });
@@ -54,27 +54,27 @@ describe('MetricsSummaryTable', () => {
         ...minimalStoreRaw.entities,
         latestMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 1, step: 11 }),
-          },
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 1, step: 11 })
+          }
         },
         minMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 2, step: 12 }),
-          },
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 2, step: 12 })
+          }
         },
         maxMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 3, step: 13 }),
-          },
-        },
-      },
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 3, step: 13 })
+          }
+        }
+      }
     });
     wrapper = mountWithIntl(
       <Provider store={store}>
         <BrowserRouter>
           <MetricsSummaryTable {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     const table = wrapper.find(HtmlTableView);
@@ -99,34 +99,46 @@ describe('MetricsSummaryTable', () => {
         ...minimalStoreRaw.entities,
         latestMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 1, step: 11 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 2, step: 12 }),
-          },
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 1,
+              step: 11
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 2, step: 12 })
+          }
         },
         minMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 3, step: 13 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 4, step: 14 }),
-          },
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 3,
+              step: 13
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 4, step: 14 })
+          }
         },
         maxMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 5, step: 15 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 6, step: 16 }),
-          },
-        },
-      },
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 5,
+              step: 15
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 6, step: 16 })
+          }
+        }
+      }
     });
     const props = {
       ...minimalProps,
-      metricKeys: ['train_loss', 'val_loss'],
+      metricKeys: ['train_loss', 'val_loss']
     };
     wrapper = mountWithIntl(
       <Provider store={store}>
         <BrowserRouter>
           <MetricsSummaryTable {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     const table = wrapper.find(HtmlTableView);
@@ -152,41 +164,41 @@ describe('MetricsSummaryTable', () => {
         ...minimalStoreRaw.entities,
         latestMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 1, step: 11 }),
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 1, step: 11 })
           },
           'uuid-1234-5678-9013': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 2, step: 12 }),
-          },
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 2, step: 12 })
+          }
         },
         minMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 3, step: 13 }),
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 3, step: 13 })
           },
           'uuid-1234-5678-9013': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 4, step: 14 }),
-          },
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 4, step: 14 })
+          }
         },
         maxMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 5, step: 15 }),
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 5, step: 15 })
           },
           'uuid-1234-5678-9013': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 6, step: 16 }),
-          },
-        },
-      },
+            train_loss: Metric.fromJs({ key: 'train_loss', value: 6, step: 16 })
+          }
+        }
+      }
     });
     const props = {
       runUuids: ['uuid-1234-5678-9012', 'uuid-1234-5678-9013'],
       runDisplayNames: ['run 0', 'run 1'],
-      metricKeys: ['train_loss'],
+      metricKeys: ['train_loss']
     };
     wrapper = mountWithIntl(
       <Provider store={store}>
         <BrowserRouter>
           <MetricsSummaryTable {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     const table = wrapper.find(HtmlTableView);
@@ -214,47 +226,71 @@ describe('MetricsSummaryTable', () => {
         ...minimalStoreRaw.entities,
         latestMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 1, step: 11 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 2, step: 12 }),
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 1,
+              step: 11
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 2, step: 12 })
           },
           'uuid-1234-5678-9013': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 3, step: 13 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 4, step: 14 }),
-          },
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 3,
+              step: 13
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 4, step: 14 })
+          }
         },
         minMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 5, step: 15 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 6, step: 16 }),
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 5,
+              step: 15
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 6, step: 16 })
           },
           'uuid-1234-5678-9013': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 7, step: 17 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 8, step: 18 }),
-          },
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 7,
+              step: 17
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 8, step: 18 })
+          }
         },
         maxMetricsByRunUuid: {
           'uuid-1234-5678-9012': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 9, step: 19 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 10, step: 20 }),
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 9,
+              step: 19
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 10, step: 20 })
           },
           'uuid-1234-5678-9013': {
-            train_loss: Metric.fromJs({ key: 'train_loss', value: 11, step: 21 }),
-            val_loss: Metric.fromJs({ key: 'val_loss', value: 12, step: 22 }),
-          },
-        },
-      },
+            train_loss: Metric.fromJs({
+              key: 'train_loss',
+              value: 11,
+              step: 21
+            }),
+            val_loss: Metric.fromJs({ key: 'val_loss', value: 12, step: 22 })
+          }
+        }
+      }
     });
     const props = {
       runUuids: ['uuid-1234-5678-9012', 'uuid-1234-5678-9013'],
       runDisplayNames: ['run 0', 'run 1'],
-      metricKeys: ['train_loss', 'val_loss'],
+      metricKeys: ['train_loss', 'val_loss']
     };
     wrapper = mountWithIntl(
       <Provider store={store}>
         <BrowserRouter>
           <MetricsSummaryTable {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     const tables = wrapper.find(HtmlTableView);
@@ -285,14 +321,14 @@ describe('MetricsSummaryTable', () => {
     const props = {
       runUuids: ['uuid-1234-5678-9012'],
       runDisplayNames: ['run 0'],
-      metricKeys: [],
+      metricKeys: []
     };
     wrapper = mountWithIntl(
       <Provider store={minimalStore}>
         <BrowserRouter>
           <MetricsSummaryTable {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     const table = wrapper.find(HtmlTableView);
@@ -303,14 +339,14 @@ describe('MetricsSummaryTable', () => {
     const props = {
       runUuids: ['uuid-1234-5678-9012', 'uuid-1234-5678-9013'],
       runDisplayNames: ['run 0', 'run 1'],
-      metricKeys: [],
+      metricKeys: []
     };
     wrapper = mountWithIntl(
       <Provider store={minimalStore}>
         <BrowserRouter>
           <MetricsSummaryTable {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     const table = wrapper.find(HtmlTableView);

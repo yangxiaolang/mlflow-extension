@@ -14,17 +14,17 @@ class ShowArtifactHtmlView extends Component {
   static propTypes = {
     runUuid: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    getArtifact: PropTypes.func,
+    getArtifact: PropTypes.func
   };
 
   static defaultProps = {
-    getArtifact: getArtifactContent,
+    getArtifact: getArtifactContent
   };
 
   state = {
     loading: true,
     error: undefined,
-    html: undefined,
+    html: undefined
   };
 
   componentDidMount() {
@@ -32,35 +32,40 @@ class ShowArtifactHtmlView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.path !== prevProps.path || this.props.runUuid !== prevProps.runUuid) {
+    if (
+      this.props.path !== prevProps.path ||
+      this.props.runUuid !== prevProps.runUuid
+    ) {
       this.fetchArtifacts();
     }
   }
 
   render() {
     if (this.state.loading) {
-      return <div className='artifact-html-view-loading'>Loading...</div>;
+      return <div className="artifact-html-view-loading">Loading...</div>;
     }
     if (this.state.error) {
-      console.error('Unable to load HTML artifact, got error ' + this.state.error);
+      console.error(
+        'Unable to load HTML artifact, got error ' + this.state.error
+      );
       return (
-        <div className='artifact-html-view-error'>
+        <div className="artifact-html-view-error">
           Oops we couldn't load your file because of an error.
         </div>
       );
     } else {
       return (
-        <div className='artifact-html-view'>
+        <div className="artifact-html-view">
           <Iframe
-            url=''
+            url=""
             src={this.getBlobURL(this.state.html, 'text/html')}
-            width='100%'
-            height='100%'
-            id='html'
-            className='html-iframe'
-            display='block'
-            position='relative'
-            sandbox='allow-scripts'
+            width="100%"
+            height="100%"
+            id="html"
+            className="html-iframe"
+            display="block"
+            position="relative"
+            sandbox="allow-scripts"
           />
         </div>
       );
@@ -77,10 +82,10 @@ class ShowArtifactHtmlView extends Component {
     const artifactLocation = getSrc(this.props.path, this.props.runUuid);
     this.props
       .getArtifact(artifactLocation)
-      .then((html) => {
+      .then(html => {
         this.setState({ html: html, loading: false });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({ error: error, loading: false });
       });
   }

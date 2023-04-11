@@ -12,11 +12,11 @@ describe('ShowArtifactHtmlView', () => {
   beforeEach(() => {
     minimalProps = {
       path: 'fakepath',
-      runUuid: 'fakeUuid',
+      runUuid: 'fakeUuid'
     };
     // Mock the `getArtifact` function to avoid spurious network errors
     // during testing
-    const getArtifact = jest.fn((artifactLocation) => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('some content');
     });
     commonProps = { ...minimalProps, getArtifact: getArtifact };
@@ -34,8 +34,8 @@ describe('ShowArtifactHtmlView', () => {
     expect(wrapper.find('.artifact-html-view-loading').length).toBe(1);
   });
 
-  test('should render error message when error occurs', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render error message when error occurs', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.reject(new Error('my error text'));
     });
     const props = { ...minimalProps, getArtifact: getArtifact };
@@ -49,8 +49,8 @@ describe('ShowArtifactHtmlView', () => {
     });
   });
 
-  test('should render html content in IFrame', (done) => {
-    const getArtifact = jest.fn((artifactLocation) => {
+  test('should render html content in IFrame', done => {
+    const getArtifact = jest.fn(artifactLocation => {
       return Promise.resolve('my text');
     });
     const props = { ...minimalProps, getArtifact: getArtifact };

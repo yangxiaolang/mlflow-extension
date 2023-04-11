@@ -18,12 +18,12 @@ export async function loadMessages(locale) {
     const pseudoMessages = {};
     const { generateENXA } = await import('@formatjs/cli/src/pseudo_locale');
     Object.entries(defaultMessages).forEach(
-      ([key, value]) => (pseudoMessages[key] = generateENXA(value)),
+      ([key, value]) => (pseudoMessages[key] = generateENXA(value))
     );
     return pseudoMessages;
   }
 
-  const path = messagePaths.find((x) => x === `./${locale}.json`);
+  const path = messagePaths.find(x => x === `./${locale}.json`);
   if (path) {
     return messagesContext(path);
   }

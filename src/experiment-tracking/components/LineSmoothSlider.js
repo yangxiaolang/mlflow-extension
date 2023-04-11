@@ -7,19 +7,19 @@ export class LineSmoothSlider extends React.Component {
     min: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
     handleLineSmoothChange: PropTypes.func.isRequired,
-    defaultValue: PropTypes.number.isRequired,
+    defaultValue: PropTypes.number.isRequired
   };
 
   state = {
-    inputValue: this.props.defaultValue,
+    inputValue: this.props.defaultValue
   };
 
-  onChange = (value) => {
+  onChange = value => {
     if (Number.isNaN(value)) {
       return;
     }
     this.setState({
-      inputValue: value,
+      inputValue: value
     });
     this.props.handleLineSmoothChange(value);
   };
@@ -46,7 +46,7 @@ export class LineSmoothSlider extends React.Component {
             step={1}
             value={inputValue}
             onChange={this.onChange}
-            data-test-id='InputNumber'
+            data-test-id="InputNumber"
           />
         </Col>
       </Row>

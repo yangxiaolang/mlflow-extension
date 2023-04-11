@@ -5,7 +5,7 @@ import { ErrorView } from '../../common/components/ErrorView';
 
 export class RunNotFoundView extends Component {
   static propTypes = {
-    runId: PropTypes.string.isRequired,
+    runId: PropTypes.string.isRequired
   };
 
   render() {

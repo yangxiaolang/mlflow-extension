@@ -8,7 +8,7 @@ describe('ErrorView', () => {
     const wrapper = mountWithIntl(
       <BrowserRouter>
         <ErrorView statusCode={400} fallbackHomePageReactRoute={'/path/to'} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     const div = wrapper.childAt(0).childAt(0).childAt(0).childAt(0);
 
@@ -29,7 +29,7 @@ describe('ErrorView', () => {
     const wrapper = mountWithIntl(
       <BrowserRouter>
         <ErrorView statusCode={404} fallbackHomePageReactRoute={'/path/to'} />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     const div = wrapper.childAt(0).childAt(0).childAt(0).childAt(0);
 
@@ -54,7 +54,7 @@ describe('ErrorView', () => {
           fallbackHomePageReactRoute={'/path/to'}
           subMessage={'sub message'}
         />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
     const div = wrapper.childAt(0).childAt(0).childAt(0).childAt(0);
 
@@ -67,7 +67,9 @@ describe('ErrorView', () => {
     expect(title.name()).toBe('h1');
     expect(title.text()).toBe('Page Not Found');
     expect(subtitle.name()).toBe('h2');
-    expect(subtitle.childAt(0).render().toString()).toMatch('sub message, go back to ');
+    expect(subtitle.childAt(0).render().toString()).toMatch(
+      'sub message, go back to '
+    );
     expect(subtitle.childAt(0).render().toString()).toMatch('/path/to');
   });
 });

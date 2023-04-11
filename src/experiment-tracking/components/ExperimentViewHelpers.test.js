@@ -6,18 +6,18 @@ const getDefaultExperimentNoteProps = () => {
   return {
     showNotesEditor: true,
     noteInfo: {
-      content: 'mock-content',
+      content: 'mock-content'
     },
     handleCancelEditNote: jest.fn(),
     handleSubmitEditNote: jest.fn(),
-    startEditingDescription: jest.fn(),
+    startEditingDescription: jest.fn()
   };
 };
 
 const getExperimentNotebookPanelMock = (componentProps = {}) => {
   const mergedProps = {
     ...getDefaultExperimentNoteProps(),
-    ...componentProps,
+    ...componentProps
   };
   return shallow(<ExperimentNoteSection {...mergedProps} />);
 };
@@ -25,6 +25,8 @@ const getExperimentNotebookPanelMock = (componentProps = {}) => {
 describe('Experiment Notes', () => {
   test('Notes panel appears', () => {
     const wrapper = getExperimentNotebookPanelMock();
-    expect(wrapper.exists('[data-test-id="experiment-notes-section"]')).toBe(true);
+    expect(wrapper.exists('[data-test-id="experiment-notes-section"]')).toBe(
+      true
+    );
   });
 });

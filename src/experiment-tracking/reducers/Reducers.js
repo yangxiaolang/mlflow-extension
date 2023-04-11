@@ -11,15 +11,21 @@ import {
   SET_EXPERIMENT_TAG_API,
   SET_TAG_API,
   DELETE_TAG_API,
-  SET_COMPARE_EXPERIMENTS,
+  SET_COMPARE_EXPERIMENTS
 } from '../actions';
-import { Experiment, Param, RunInfo, RunTag, ExperimentTag } from '../sdk/MlflowMessages';
+import {
+  Experiment,
+  Param,
+  RunInfo,
+  RunTag,
+  ExperimentTag
+} from '../sdk/MlflowMessages';
 import { ArtifactNode } from '../utils/ArtifactUtils';
 import {
   metricsByRunUuid,
   latestMetricsByRunUuid,
   minMetricsByRunUuid,
-  maxMetricsByRunUuid,
+  maxMetricsByRunUuid
 } from './MetricReducer';
 import modelRegistryReducers from '../../model-registry/reducers';
 import _ from 'lodash';
@@ -28,13 +34,13 @@ import {
   isFulfilledApi,
   isPendingApi,
   isRejectedApi,
-  rejected,
+  rejected
 } from '../../common/utils/ActionUtils';
 import { SEARCH_MODEL_VERSIONS } from '../../model-registry/actions';
 import { getProtoField } from '../../model-registry/utils';
 import Utils from '../../common/utils/Utils';
 
-export const getExperiments = (state) => {
+export const getExperiments = state => {
   return Object.values(state.entities.experimentsById);
 };
 
@@ -52,9 +58,11 @@ export const experimentsById = (state = {}, action) => {
         // if we kept the old state and updated the experiments based on their id,
         // deleted experiments (via CLI or UI) would remain until the page is refreshed
         newState = {};
-        action.payload.experiments.forEach((eJson) => {
+        action.payload.experiments.forEach(eJson => {
           const experiment = Experiment.fromJs(eJson);
-          newState = Object.assign(newState, { [experiment.getExperimentId()]: experiment });
+          newState = Object.assign(newState, {
+            [experiment.getExperimentId()]: experiment
+          });
         });
       }
       return newState;
@@ -67,12 +75,13 @@ export const experimentsById = (state = {}, action) => {
       // into the existing record. We're replacing it only if no experiment
       // with this ID exists in the state.
       const mergedExperiment =
-        state[experiment.experiment_id]?.mergeDeep(Experiment.fromJs(experiment)) ||
-        Experiment.fromJs(experiment);
+        state[experiment.experiment_id]?.mergeDeep(
+          Experiment.fromJs(experiment)
+        ) || Experiment.fromJs(experiment);
 
       return {
         ...state,
-        [experiment.experiment_id]: mergedExperiment,
+        [experiment.experiment_id]: mergedExperiment
       };
     }
     default:
@@ -93,7 +102,7 @@ export const runInfosByUuid = (state = {}, action) => {
     case fulfilled(SEARCH_RUNS_API): {
       const newState = {};
       if (action.payload && action.payload.runs) {
-        action.payload.runs.forEach((rJson) => {
+        action.payload.runs.forEach(rJson => {
           const runInfo = RunInfo.fromJs(rJson.info);
           newState[runInfo.getRunUuid()] = runInfo;
         });
@@ -106,7 +115,7 @@ export const runInfosByUuid = (state = {}, action) => {
     case fulfilled(LOAD_MORE_RUNS_API): {
       const newState = { ...state };
       if (action.payload && action.payload.runs) {
-        action.payload.runs.forEach((rJson) => {
+        action.payload.runs.forEach(rJson => {
           const runInfo = RunInfo.fromJs(rJson.info);
           newState[runInfo.getRunUuid()] = runInfo;
         });
@@ -126,7 +135,7 @@ export const modelVersionsByRunUuid = (state = {}, action) => {
       if (action.payload) {
         const modelVersions = action.payload[getProtoField('model_versions')];
         if (modelVersions) {
-          modelVersions.forEach((model_version) => {
+          modelVersions.forEach(model_version => {
             if (model_version.run_id in updatedState) {
               updatedState[model_version.run_id].push(model_version);
             } else {
@@ -149,7 +158,7 @@ export const modelVersionsByRunUuid = (state = {}, action) => {
 const amendRunInfosByUuid = (state, runInfo) => {
   return {
     ...state,
-    [runInfo.getRunUuid()]: runInfo,
+    [runInfo.getRunUuid()]: runInfo
   };
 };
 
@@ -163,9 +172,9 @@ export const getParams = (runUuid, state) => {
 };
 
 export const paramsByRunUuid = (state = {}, action) => {
-  const paramArrToObject = (params) => {
+  const paramArrToObject = params => {
     const paramObj = {};
-    params.forEach((p) => (paramObj[p.key] = Param.fromJs(p)));
+    params.forEach(p => (paramObj[p.key] = Param.fromJs(p)));
     return paramObj;
   };
   switch (action.type) {
@@ -182,7 +191,7 @@ export const paramsByRunUuid = (state = {}, action) => {
       const { runs } = action.payload;
       const newState = { ...state };
       if (runs) {
-        runs.forEach((rJson) => {
+        runs.forEach(rJson => {
           const runUuid = rJson.info.run_uuid;
           const params = rJson.data.params || [];
           newState[runUuid] = paramArrToObject(params);
@@ -195,7 +204,8 @@ export const paramsByRunUuid = (state = {}, action) => {
   }
 };
 
-export const getRunTags = (runUuid, state) => state.entities.tagsByRunUuid[runUuid] || {};
+export const getRunTags = (runUuid, state) =>
+  state.entities.tagsByRunUuid[runUuid] || {};
 
 export const getExperimentTags = (experimentId, state) => {
   const tags = state.entities.experimentTagsByExperimentId[experimentId];
@@ -203,9 +213,9 @@ export const getExperimentTags = (experimentId, state) => {
 };
 
 export const tagsByRunUuid = (state = {}, action) => {
-  const tagArrToObject = (tags) => {
+  const tagArrToObject = tags => {
     const tagObj = {};
-    tags.forEach((tag) => (tagObj[tag.key] = RunTag.fromJs(tag)));
+    tags.forEach(tag => (tagObj[tag.key] = RunTag.fromJs(tag)));
     return tagObj;
   };
   switch (action.type) {
@@ -222,7 +232,7 @@ export const tagsByRunUuid = (state = {}, action) => {
       const { runs } = action.payload;
       const newState = { ...state };
       if (runs) {
-        runs.forEach((rJson) => {
+        runs.forEach(rJson => {
           const runUuid = rJson.info.run_uuid;
           const tags = rJson.data.tags || [];
           newState[runUuid] = tagArrToObject(tags);
@@ -252,15 +262,15 @@ export const tagsByRunUuid = (state = {}, action) => {
 const amendTagsByRunUuid = (state, tags, runUuid) => {
   let newState = { ...state };
   if (tags) {
-    tags.forEach((tJson) => {
+    tags.forEach(tJson => {
       const tag = RunTag.fromJs(tJson);
       const oldTags = newState[runUuid] ? newState[runUuid] : {};
       newState = {
         ...newState,
         [runUuid]: {
           ...oldTags,
-          [tag.getKey()]: tag,
-        },
+          [tag.getKey()]: tag
+        }
       };
     });
   }
@@ -268,9 +278,9 @@ const amendTagsByRunUuid = (state, tags, runUuid) => {
 };
 
 export const experimentTagsByExperimentId = (state = {}, action) => {
-  const tagArrToObject = (tags) => {
+  const tagArrToObject = tags => {
     const tagObj = {};
-    tags.forEach((tag) => (tagObj[tag.key] = ExperimentTag.fromJs(tag)));
+    tags.forEach(tag => (tagObj[tag.key] = ExperimentTag.fromJs(tag)));
     return tagObj;
   };
   switch (action.type) {
@@ -283,7 +293,11 @@ export const experimentTagsByExperimentId = (state = {}, action) => {
     }
     case fulfilled(SET_EXPERIMENT_TAG_API): {
       const tag = { key: action.meta.key, value: action.meta.value };
-      return amendExperimentTagsByExperimentId(state, [tag], action.meta.experimentId);
+      return amendExperimentTagsByExperimentId(
+        state,
+        [tag],
+        action.meta.experimentId
+      );
     }
     default:
       return state;
@@ -293,15 +307,15 @@ export const experimentTagsByExperimentId = (state = {}, action) => {
 const amendExperimentTagsByExperimentId = (state, tags, expId) => {
   let newState = { ...state };
   if (tags) {
-    tags.forEach((tJson) => {
+    tags.forEach(tJson => {
       const tag = ExperimentTag.fromJs(tJson);
       const oldTags = newState[expId] ? newState[expId] : {};
       newState = {
         ...newState,
         [expId]: {
           ...oldTags,
-          [tag.getKey()]: tag,
-        },
+          [tag.getKey()]: tag
+        }
       };
     });
   }
@@ -334,7 +348,7 @@ export const artifactsByRunUuid = (state = {}, action) => {
         // Otherwise, traverse the queryPath to get to the appropriate artifact node.
         const pathParts = queryPath.split('/');
         let curArtifactNode = artifactNode;
-        pathParts.forEach((part) => {
+        pathParts.forEach(part => {
           curArtifactNode = curArtifactNode.children[part];
         });
         // Then set children on that artifact node.
@@ -344,12 +358,12 @@ export const artifactsByRunUuid = (state = {}, action) => {
             curArtifactNode.setChildren(files);
           }
         } catch (err) {
-          Utils.logErrorAndNotifyUser(`Unable to construct the artifact tree.`);
+          Utils.logErrorAndNotifyUser('Unable to construct the artifact tree.');
         }
       }
       return {
         ...state,
-        [runUuid]: artifactNode,
+        [runUuid]: artifactNode
       };
     }
     default:
@@ -368,7 +382,7 @@ export const artifactRootUriByRunUuid = (state = {}, action) => {
       const runUuid = runInfo.getRunUuid();
       return {
         ...state,
-        [runUuid]: runInfo.getArtifactUri(),
+        [runUuid]: runInfo.getArtifactUri()
       };
     }
     default:
@@ -389,29 +403,39 @@ export const entities = combineReducers({
   artifactsByRunUuid,
   artifactRootUriByRunUuid,
   modelVersionsByRunUuid,
-  ...modelRegistryReducers,
+  ...modelRegistryReducers
 });
 
 export const getSharedParamKeysByRunUuids = (runUuids, state) =>
   _.intersection(
-    ...runUuids.map((runUuid) => Object.keys(state.entities.paramsByRunUuid[runUuid])),
+    ...runUuids.map(runUuid =>
+      Object.keys(state.entities.paramsByRunUuid[runUuid])
+    )
   );
 
 export const getSharedMetricKeysByRunUuids = (runUuids, state) =>
   _.intersection(
-    ...runUuids.map((runUuid) => Object.keys(state.entities.latestMetricsByRunUuid[runUuid])),
+    ...runUuids.map(runUuid =>
+      Object.keys(state.entities.latestMetricsByRunUuid[runUuid])
+    )
   );
 
 export const getAllParamKeysByRunUuids = (runUuids, state) =>
-  _.union(...runUuids.map((runUuid) => Object.keys(state.entities.paramsByRunUuid[runUuid])));
+  _.union(
+    ...runUuids.map(runUuid =>
+      Object.keys(state.entities.paramsByRunUuid[runUuid])
+    )
+  );
 
 export const getAllMetricKeysByRunUuids = (runUuids, state) =>
   _.union(
-    ...runUuids.map((runUuid) => Object.keys(state.entities.latestMetricsByRunUuid[runUuid])),
+    ...runUuids.map(runUuid =>
+      Object.keys(state.entities.latestMetricsByRunUuid[runUuid])
+    )
   );
 
 export const getApis = (requestIds, state) => {
-  return requestIds.map((id) => state.apis[id] || {});
+  return requestIds.map(id => state.apis[id] || {});
 };
 
 export const apis = (state = {}, action) => {
@@ -421,7 +445,7 @@ export const apis = (state = {}, action) => {
     }
     return {
       ...state,
-      [action.meta.id]: { id: action.meta.id, active: true },
+      [action.meta.id]: { id: action.meta.id, active: true }
     };
   } else if (isFulfilledApi(action)) {
     if (!action?.meta?.id) {
@@ -429,7 +453,11 @@ export const apis = (state = {}, action) => {
     }
     return {
       ...state,
-      [action.meta.id]: { id: action.meta.id, active: false, data: action.payload },
+      [action.meta.id]: {
+        id: action.meta.id,
+        active: false,
+        data: action.payload
+      }
     };
   } else if (isRejectedApi(action)) {
     if (!action?.meta?.id) {
@@ -437,7 +465,11 @@ export const apis = (state = {}, action) => {
     }
     return {
       ...state,
-      [action.meta.id]: { id: action.meta.id, active: false, error: action.payload },
+      [action.meta.id]: {
+        id: action.meta.id,
+        active: false,
+        error: action.payload
+      }
     };
   } else {
     return state;
@@ -454,32 +486,36 @@ const defaultCompareExperimentsState = {
   comparedExperimentIds: [],
   // Indicates whether the user has navigated to `/compare-experiments` before
   // Should be set to false when the user navigates to `/experiments/<experiment_id>`
-  hasComparedExperimentsBefore: false,
+  hasComparedExperimentsBefore: false
 };
-export const compareExperiments = (state = defaultCompareExperimentsState, action) => {
+export const compareExperiments = (
+  state = defaultCompareExperimentsState,
+  action
+) => {
   if (action.type === SET_COMPARE_EXPERIMENTS) {
-    const { comparedExperimentIds, hasComparedExperimentsBefore } = action.payload;
+    const { comparedExperimentIds, hasComparedExperimentsBefore } =
+      action.payload;
     return {
       ...state,
       comparedExperimentIds,
-      hasComparedExperimentsBefore,
+      hasComparedExperimentsBefore
     };
   } else {
     return state;
   }
 };
 
-export const isErrorModalOpen = (state) => {
+export const isErrorModalOpen = state => {
   return state.views.errorModal.isOpen;
 };
 
-export const getErrorModalText = (state) => {
+export const getErrorModalText = state => {
   return state.views.errorModal.text;
 };
 
 const errorModalDefault = {
   isOpen: false,
-  text: '',
+  text: ''
 };
 
 const errorModal = (state = errorModalDefault, action) => {
@@ -487,13 +523,13 @@ const errorModal = (state = errorModalDefault, action) => {
     case CLOSE_ERROR_MODAL: {
       return {
         ...state,
-        isOpen: false,
+        isOpen: false
       };
     }
     case OPEN_ERROR_MODAL: {
       return {
         isOpen: true,
-        text: action.text,
+        text: action.text
       };
     }
     default:
@@ -502,16 +538,16 @@ const errorModal = (state = errorModalDefault, action) => {
 };
 
 export const views = combineReducers({
-  errorModal,
+  errorModal
 });
 
 export const rootReducer = combineReducers({
   entities,
   views,
   apis,
-  compareExperiments,
+  compareExperiments
 });
 
-export const getEntities = (state) => {
+export const getEntities = state => {
   return state.entities;
 };

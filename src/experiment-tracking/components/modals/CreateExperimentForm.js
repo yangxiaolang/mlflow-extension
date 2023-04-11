@@ -13,34 +13,39 @@ export const ARTIFACT_LOCATION = 'artifactLocation';
 class CreateExperimentFormComponent extends Component {
   static propTypes = {
     validator: PropTypes.func,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
-    innerRef: PropTypes.any.isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired,
+    innerRef: PropTypes.any.isRequired
   };
 
   render() {
     return (
-      <Form ref={this.props.innerRef} layout='vertical'>
+      <Form ref={this.props.innerRef} layout="vertical">
         <Form.Item
           label={this.props.intl.formatMessage({
             defaultMessage: 'Experiment Name',
-            description: 'Label for create experiment modal to enter a valid experiment name',
+            description:
+              'Label for create experiment modal to enter a valid experiment name'
           })}
           name={EXP_NAME_FIELD}
           rules={[
             {
               required: true,
               message: this.props.intl.formatMessage({
-                defaultMessage: 'Please input a new name for the new experiment.',
-                description: 'Error message for name requirement in create experiment for MLflow',
+                defaultMessage:
+                  'Please input a new name for the new experiment.',
+                description:
+                  'Error message for name requirement in create experiment for MLflow'
               }),
-              validator: this.props.validator,
-            },
+              validator: this.props.validator
+            }
           ]}
         >
           <Input
             placeholder={this.props.intl.formatMessage({
               defaultMessage: 'Input an experiment name',
-              description: 'Input placeholder to enter experiment name for create experiment',
+              description:
+                'Input placeholder to enter experiment name for create experiment'
             })}
             autoFocus
           />
@@ -49,18 +54,20 @@ class CreateExperimentFormComponent extends Component {
           name={ARTIFACT_LOCATION}
           label={this.props.intl.formatMessage({
             defaultMessage: 'Artifact Location',
-            description: 'Label for create experiment modal to enter a artifact location',
+            description:
+              'Label for create experiment modal to enter a artifact location'
           })}
           rules={[
             {
-              required: false,
-            },
+              required: false
+            }
           ]}
         >
           <Input
             placeholder={this.props.intl.formatMessage({
               defaultMessage: 'Input an artifact location (optional)',
-              description: 'Input placeholder to enter artifact location for create experiment',
+              description:
+                'Input placeholder to enter artifact location for create experiment'
             })}
           />
         </Form.Item>

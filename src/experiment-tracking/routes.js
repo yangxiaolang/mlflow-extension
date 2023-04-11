@@ -57,7 +57,7 @@ class Routes {
     lineSmoothness = 1,
     showPoint = false,
     deselectedCurves = [],
-    lastLinearYAxisRange = [],
+    lastLinearYAxisRange = []
   ) {
     // If runs to display are specified (e.g. if user filtered to specific runs in a metric
     // comparison plot), embed them in the URL, otherwise default to metricKey
@@ -65,7 +65,9 @@ class Routes {
     // Convert boolean to enum to keep URL format extensible to adding new types of y axis scales
     const yAxisScale = yAxisLogScale ? 'log' : 'linear';
     return (
-      `/metric/${encodeURIComponent(metricKey)}?runs=${JSON.stringify(runUuids)}&` +
+      `/metric/${encodeURIComponent(metricKey)}?runs=${JSON.stringify(
+        runUuids
+      )}&` +
       `experiments=${JSON.stringify(experimentIds)}` +
       `&plot_metric_keys=${JSON.stringify(finalPlotMetricKeys)}` +
       `&plot_layout=${JSON.stringify(plotLayout)}` +
@@ -81,9 +83,9 @@ class Routes {
   static metricPageRoute = '/metric/:metricKey';
 
   static getCompareRunPageRoute(runUuids, experimentIds) {
-    return `/compare-runs?runs=${JSON.stringify(runUuids)}&experiments=${JSON.stringify(
-      experimentIds,
-    )}`;
+    return `/compare-runs?runs=${JSON.stringify(
+      runUuids
+    )}&experiments=${JSON.stringify(experimentIds)}`;
   }
 
   static compareRunPageRoute = '/compare-runs';
@@ -91,9 +93,9 @@ class Routes {
   static compareExperimentsPageRoute = '/compare-experiments';
   static compareExperimentsSearchPageRoute = `${Routes.compareExperimentsPageRoute}/:searchString`;
   static getCompareExperimentsPageRoute(experimentIds) {
-    return `${Routes.compareExperimentsPageRoute}/s?experiments=${JSON.stringify(
-      experimentIds.slice().sort(),
-    )}`;
+    return `${
+      Routes.compareExperimentsPageRoute
+    }/s?experiments=${JSON.stringify(experimentIds.slice().sort())}`;
   }
 }
 

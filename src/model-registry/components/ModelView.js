@@ -3,28 +3,38 @@ import PropTypes from 'prop-types';
 import { ModelVersionTable } from './ModelVersionTable';
 import Utils from '../../common/utils/Utils';
 import { Link } from 'react-router-dom';
-import { modelListPageRoute, getCompareModelVersionsPageRoute, getModelPageRoute } from '../routes';
+import {
+  modelListPageRoute,
+  getCompareModelVersionsPageRoute,
+  getModelPageRoute
+} from '../routes';
 import { message } from 'antd';
 import { ACTIVE_STAGES } from '../constants';
 import { CollapsibleSection } from '../../common/components/CollapsibleSection';
 import { EditableNote } from '../../common/components/EditableNote';
 import { EditableTagsTableView } from '../../common/components/EditableTagsTableView';
 import { getRegisteredModelTags } from '../reducers';
-import { setRegisteredModelTagApi, deleteRegisteredModelTagApi } from '../actions';
+import {
+  setRegisteredModelTagApi,
+  deleteRegisteredModelTagApi
+} from '../actions';
 import { connect } from 'react-redux';
-import { OverflowMenu, PageHeader } from '../../shared/building_blocks/PageHeader';
+import {
+  OverflowMenu,
+  PageHeader
+} from '../../shared/building_blocks/PageHeader';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import {
   Modal,
   Button,
   SegmentedControlGroup,
-  SegmentedControlButton,
+  SegmentedControlButton
 } from '@databricks/design-system';
 import { Descriptions } from '../../common/components/Descriptions';
 
 export const StageFilters = {
   ALL: 'ALL',
-  ACTIVE: 'ACTIVE',
+  ACTIVE: 'ACTIVE'
 };
 
 export class ModelViewImpl extends React.Component {
@@ -37,12 +47,12 @@ export class ModelViewImpl extends React.Component {
     model: PropTypes.shape({
       name: PropTypes.string.isRequired,
       creation_timestamp: PropTypes.number.isRequired,
-      last_updated_timestamp: PropTypes.number.isRequired,
+      last_updated_timestamp: PropTypes.number.isRequired
     }),
     modelVersions: PropTypes.arrayOf(
       PropTypes.shape({
-        current_stage: PropTypes.string.isRequired,
-      }),
+        current_stage: PropTypes.string.isRequired
+      })
     ),
     handleEditDescription: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
@@ -50,7 +60,7 @@ export class ModelViewImpl extends React.Component {
     tags: PropTypes.object.isRequired,
     setRegisteredModelTagApi: PropTypes.func.isRequired,
     deleteRegisteredModelTagApi: PropTypes.func.isRequired,
-    intl: PropTypes.any,
+    intl: PropTypes.any
   };
 
   state = {
@@ -60,7 +70,7 @@ export class ModelViewImpl extends React.Component {
     isDeleteModalConfirmLoading: false,
     runsSelected: {},
     isTagsRequestPending: false,
-    updatingEmailPreferences: false,
+    updatingEmailPreferences: false
   };
 
   formRef = React.createRef();
@@ -70,14 +80,15 @@ export class ModelViewImpl extends React.Component {
     Utils.updatePageTitle(pageTitle);
   }
 
-  handleStageFilterChange = (e) => {
+  handleStageFilterChange = e => {
     this.setState({ stageFilter: e.target.value });
   };
 
   getActiveVersionsCount() {
     const { modelVersions } = this.props;
     return modelVersions
-      ? modelVersions.filter((v) => ACTIVE_STAGES.includes(v.current_stage)).length
+      ? modelVersions.filter(v => ACTIVE_STAGES.includes(v.current_stage))
+          .length
       : 0;
   }
 
@@ -85,13 +96,13 @@ export class ModelViewImpl extends React.Component {
     this.setState({ showDescriptionEditor: false });
   };
 
-  handleSubmitEditDescription = (description) => {
+  handleSubmitEditDescription = description => {
     return this.props.handleEditDescription(description).then(() => {
       this.setState({ showDescriptionEditor: false });
     });
   };
 
-  startEditingDescription = (e) => {
+  startEditingDescription = e => {
     e.stopPropagation();
     this.setState({ showDescriptionEditor: true });
   };
@@ -102,14 +113,15 @@ export class ModelViewImpl extends React.Component {
         id: 'delete',
         itemName: (
           <FormattedMessage
-            defaultMessage='Delete'
+            defaultMessage="Delete"
+            id="9fVZg8"
             // eslint-disable-next-line max-len
-            description='Text for disabled delete button due to active versions on model view page header'
+            description="Text for disabled delete button due to active versions on model view page header"
           />
         ),
         onClick: this.showDeleteModal,
-        disabled: this.getActiveVersionsCount() > 0,
-      },
+        disabled: this.getActiveVersionsCount() > 0
+      }
     ];
 
     return menuItems;
@@ -139,13 +151,13 @@ export class ModelViewImpl extends React.Component {
       .then(() => {
         history.push(modelListPageRoute);
       })
-      .catch((e) => {
+      .catch(e => {
         this.hideConfirmLoading();
         Utils.logErrorAndNotifyUser(e);
       });
   };
 
-  handleAddTag = (values) => {
+  handleAddTag = values => {
     const form = this.formRef.current;
     const { model } = this.props;
     const modelName = model.name;
@@ -156,7 +168,7 @@ export class ModelViewImpl extends React.Component {
         this.setState({ isTagsRequestPending: false });
         form.resetFields();
       })
-      .catch((ex) => {
+      .catch(ex => {
         this.setState({ isTagsRequestPending: false });
         console.error(ex);
         message.error('Failed to add tag. Error: ' + ex.getUserVisibleError());
@@ -166,16 +178,18 @@ export class ModelViewImpl extends React.Component {
   handleSaveEdit = ({ name, value }) => {
     const { model } = this.props;
     const modelName = model.name;
-    return this.props.setRegisteredModelTagApi(modelName, name, value).catch((ex) => {
-      console.error(ex);
-      message.error('Failed to set tag. Error: ' + ex.getUserVisibleError());
-    });
+    return this.props
+      .setRegisteredModelTagApi(modelName, name, value)
+      .catch(ex => {
+        console.error(ex);
+        message.error('Failed to set tag. Error: ' + ex.getUserVisibleError());
+      });
   };
 
   handleDeleteTag = ({ name }) => {
     const { model } = this.props;
     const modelName = model.name;
-    return this.props.deleteRegisteredModelTagApi(modelName, name).catch((ex) => {
+    return this.props.deleteRegisteredModelTagApi(modelName, name).catch(ex => {
       console.error(ex);
       message.error('Failed to delete tag. Error: ' + ex.getUserVisibleError());
     });
@@ -184,10 +198,10 @@ export class ModelViewImpl extends React.Component {
   onChange = (selectedRowKeys, selectedRows) => {
     const newState = Object.assign({}, this.state);
     newState.runsSelected = {};
-    selectedRows.forEach((row) => {
+    selectedRows.forEach(row => {
       newState.runsSelected = {
         ...newState.runsSelected,
-        [row.version]: row.run_id,
+        [row.version]: row.run_id
       };
     });
     this.setState(newState);
@@ -195,22 +209,26 @@ export class ModelViewImpl extends React.Component {
 
   onCompare() {
     this.props.history.push(
-      getCompareModelVersionsPageRoute(this.props.model.name, this.state.runsSelected),
+      getCompareModelVersionsPageRoute(
+        this.props.model.name,
+        this.state.runsSelected
+      )
     );
   }
 
   renderDescriptionEditIcon() {
     return (
       <Button
-        data-test-id='descriptionEditButton'
-        type='link'
+        data-test-id="descriptionEditButton"
+        type="link"
         css={styles.editButton}
         onClick={this.startEditingDescription}
       >
         <FormattedMessage
-          defaultMessage='Edit'
-          description='Text for the edit button next to the description section title on
-             the model view page'
+          defaultMessage="Edit"
+          id="36g3aR"
+          description="Text for the edit button next to the description section title on
+             the model view page"
         />
       </Button>
     );
@@ -223,30 +241,30 @@ export class ModelViewImpl extends React.Component {
       showDescriptionEditor,
       isDeleteModalVisible,
       isDeleteModalConfirmLoading,
-      isTagsRequestPending,
+      isTagsRequestPending
     } = this.state;
     const modelName = model.name;
     const compareDisabled = Object.keys(this.state.runsSelected).length < 2;
     return (
       <div css={styles.wrapper}>
         {/* Metadata List */}
-        <Descriptions columns={3} data-testid='model-view-metadata'>
+        <Descriptions columns={3} data-testid="model-view-metadata">
           <Descriptions.Item
-            data-testid='model-view-metadata-item'
+            data-testid="model-view-metadata-item"
             label={this.props.intl.formatMessage({
               defaultMessage: 'Created Time',
               description:
-                'Label name for the created time under details tab on the model view page',
+                'Label name for the created time under details tab on the model view page'
             })}
           >
             {Utils.formatTimestamp(model.creation_timestamp)}
           </Descriptions.Item>
           <Descriptions.Item
-            data-testid='model-view-metadata-item'
+            data-testid="model-view-metadata-item"
             label={this.props.intl.formatMessage({
               defaultMessage: 'Last Modified',
               description:
-                'Label name for the last modified time under details tab on the model view page',
+                'Label name for the last modified time under details tab on the model view page'
             })}
           >
             {Utils.formatTimestamp(model.last_updated_timestamp)}
@@ -255,10 +273,11 @@ export class ModelViewImpl extends React.Component {
           {/* eslint-disable-next-line react/prop-types */}
           {model.user_id && (
             <Descriptions.Item
-              data-testid='model-view-metadata-item'
+              data-testid="model-view-metadata-item"
               label={this.props.intl.formatMessage({
                 defaultMessage: 'Creator',
-                description: 'Lable name for the creator under details tab on the model view page',
+                description:
+                  'Lable name for the creator under details tab on the model view page'
               })}
             >
               {/* eslint-disable-next-line react/prop-types */}
@@ -273,9 +292,10 @@ export class ModelViewImpl extends React.Component {
           title={
             <span>
               <FormattedMessage
-                defaultMessage='Description'
-                description='Title text for the description section under details tab on the model
-                   view page'
+                defaultMessage="Description"
+                id="oHW+ks"
+                description="Title text for the description section under details tab on the model
+                   view page"
               />{' '}
               {!showDescriptionEditor ? this.renderDescriptionEditIcon() : null}
             </span>
@@ -284,7 +304,7 @@ export class ModelViewImpl extends React.Component {
           // Reported during ESLint upgrade
           // eslint-disable-next-line react/prop-types
           defaultCollapsed={!model.description}
-          data-test-id='model-description-section'
+          data-test-id="model-description-section"
         >
           <EditableNote
             // Reported during ESLint upgrade
@@ -295,17 +315,18 @@ export class ModelViewImpl extends React.Component {
             showEditor={showDescriptionEditor}
           />
         </CollapsibleSection>
-        <div data-test-id='tags-section'>
+        <div data-test-id="tags-section">
           <CollapsibleSection
             title={
               <FormattedMessage
-                defaultMessage='Tags'
-                description='Title text for the tags section under details tab on the model view
-                   page'
+                defaultMessage="Tags"
+                id="HyBP+D"
+                description="Title text for the tags section under details tab on the model view
+                   page"
               />
             }
             defaultCollapsed={Utils.getVisibleTagValues(tags).length === 0}
-            data-test-id='model-tags-section'
+            data-test-id="model-tags-section"
           >
             <EditableTagsTableView
               innerRef={this.formRef}
@@ -323,18 +344,20 @@ export class ModelViewImpl extends React.Component {
               <div css={styles.versionsTabButtons}>
                 <span>
                   <FormattedMessage
-                    defaultMessage='Versions'
-                    description='Title text for the versions section under details tab on the
-                       model view page'
+                    defaultMessage="Versions"
+                    id="Z5en2d"
+                    description="Title text for the versions section under details tab on the
+                       model view page"
                   />
                 </span>
                 <SegmentedControlGroup
                   value={this.state.stageFilter}
-                  onChange={(e) => this.handleStageFilterChange(e)}
+                  onChange={e => this.handleStageFilterChange(e)}
                 >
                   <SegmentedControlButton value={StageFilters.ALL}>
                     <FormattedMessage
-                      defaultMessage='All'
+                      defaultMessage="All"
+                      id="vi2MM7"
                       description={
                         'Tab text to view all versions under details tab on' +
                         ' the model view page'
@@ -343,28 +366,30 @@ export class ModelViewImpl extends React.Component {
                   </SegmentedControlButton>
                   <SegmentedControlButton value={StageFilters.ACTIVE}>
                     <FormattedMessage
-                      defaultMessage='Active'
-                      description='Tab text to view active versions under details tab
-                               on the model view page'
+                      defaultMessage="Active"
+                      id="KEL9Js"
+                      description="Tab text to view active versions under details tab
+                               on the model view page"
                     />{' '}
                     {this.getActiveVersionsCount()}
                   </SegmentedControlButton>
                 </SegmentedControlGroup>
                 <Button
-                  data-test-id='compareButton'
+                  data-test-id="compareButton"
                   disabled={compareDisabled}
                   onClick={this.onCompare}
                 >
                   <FormattedMessage
-                    defaultMessage='Compare'
-                    description='Text for compare button to compare versions under details tab
-                       on the model view page'
+                    defaultMessage="Compare"
+                    id="FpjDSq"
+                    description="Text for compare button to compare versions under details tab
+                       on the model view page"
                   />
                 </Button>
               </div>
             </>
           }
-          data-test-id='model-versions-section'
+          data-test-id="model-versions-section"
         >
           <ModelVersionTable
             activeStageOnly={stageFilter === StageFilters.ACTIVE}
@@ -378,26 +403,27 @@ export class ModelViewImpl extends React.Component {
         <Modal
           title={this.props.intl.formatMessage({
             defaultMessage: 'Delete Model',
-            description: 'Title text for delete model modal on model view page',
+            description: 'Title text for delete model modal on model view page'
           })}
           visible={isDeleteModalVisible}
           confirmLoading={isDeleteModalConfirmLoading}
           onOk={this.handleDeleteConfirm}
           okText={this.props.intl.formatMessage({
             defaultMessage: 'Delete',
-            description: 'OK text for delete model modal on model view page',
+            description: 'OK text for delete model modal on model view page'
           })}
           cancelText={this.props.intl.formatMessage({
             defaultMessage: 'Cancel',
-            description: 'Cancel text for delete model modal on model view page',
+            description: 'Cancel text for delete model modal on model view page'
           })}
-          okType='danger'
+          okType="danger"
           onCancel={this.hideDeleteModal}
         >
           <span>
             <FormattedMessage
-              defaultMessage='Are you sure you want to delete {modelName}? This cannot be undone.'
-              description='Confirmation message for delete model modal on model view page'
+              defaultMessage="Are you sure you want to delete {modelName}? This cannot be undone."
+              id="HUf9qJ"
+              description="Confirmation message for delete model modal on model view page"
               values={{ modelName: modelName }}
             />
           </span>
@@ -417,13 +443,17 @@ export class ModelViewImpl extends React.Component {
     const breadcrumbs = [
       <Link to={modelListPageRoute}>
         <FormattedMessage
-          defaultMessage='Registered Models'
-          description='Text for link back to model page under the header on the model view page'
+          defaultMessage="Registered Models"
+          id="raa3Ij"
+          description="Text for link back to model page under the header on the model view page"
         />
       </Link>,
-      <Link data-test-id='breadcrumbRegisteredModel' to={getModelPageRoute(modelName)}>
+      <Link
+        data-test-id="breadcrumbRegisteredModel"
+        to={getModelPageRoute(modelName)}
+      >
         {modelName}
-      </Link>,
+      </Link>
     ];
     return (
       <div>
@@ -441,17 +471,23 @@ const mapStateToProps = (state, ownProps) => {
   const tags = getRegisteredModelTags(modelName, state);
   return { tags };
 };
-const mapDispatchToProps = { setRegisteredModelTagApi, deleteRegisteredModelTagApi };
+const mapDispatchToProps = {
+  setRegisteredModelTagApi,
+  deleteRegisteredModelTagApi
+};
 
 const styles = {
-  emailNotificationPreferenceDropdown: (theme) => ({ width: 300, marginBottom: theme.spacing.md }),
-  emailNotificationPreferenceTip: (theme) => ({
-    paddingLeft: theme.spacing.sm,
-    paddingRight: theme.spacing.sm,
+  emailNotificationPreferenceDropdown: theme => ({
+    width: 300,
+    marginBottom: theme.spacing.md
   }),
-  wrapper: (theme) => ({
+  emailNotificationPreferenceTip: theme => ({
+    paddingLeft: theme.spacing.sm,
+    paddingRight: theme.spacing.sm
+  }),
+  wrapper: theme => ({
     '.collapsible-panel': {
-      marginBottom: theme.spacing.md,
+      marginBottom: theme.spacing.md
     },
     /**
      * This seems to be a best and most stable method to catch
@@ -459,17 +495,20 @@ const styles = {
      * and using class names.
      */
     'div[role="button"][aria-expanded]': {
-      height: theme.general.buttonHeight,
-    },
+      height: theme.general.buttonHeight
+    }
   }),
-  editButton: (theme) => ({
-    marginLeft: theme.spacing.md,
+  editButton: theme => ({
+    marginLeft: theme.spacing.md
   }),
-  versionsTabButtons: (theme) => ({
+  versionsTabButtons: theme => ({
     display: 'flex',
     gap: theme.spacing.md,
-    alignItems: 'center',
-  }),
+    alignItems: 'center'
+  })
 };
 
-export const ModelView = connect(mapStateToProps, mapDispatchToProps)(injectIntl(ModelViewImpl));
+export const ModelView = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(ModelViewImpl));

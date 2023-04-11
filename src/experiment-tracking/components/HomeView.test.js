@@ -9,9 +9,21 @@ import HomeView, { getFirstActiveExperiment } from './HomeView';
 import { mount } from 'enzyme';
 
 const experiments = {
-  1: Fixtures.createExperiment({ experiment_id: '1', name: '1', lifecycle_stage: 'deleted' }),
-  3: Fixtures.createExperiment({ experiment_id: '3', name: '3', lifecycle_stage: 'active' }),
-  2: Fixtures.createExperiment({ experiment_id: '2', name: '2', lifecycle_stage: 'active' }),
+  1: Fixtures.createExperiment({
+    experiment_id: '1',
+    name: '1',
+    lifecycle_stage: 'deleted'
+  }),
+  3: Fixtures.createExperiment({
+    experiment_id: '3',
+    name: '3',
+    lifecycle_stage: 'active'
+  }),
+  2: Fixtures.createExperiment({
+    experiment_id: '2',
+    name: '2',
+    lifecycle_stage: 'active'
+  })
 };
 
 describe('HomeView', () => {
@@ -24,13 +36,13 @@ describe('HomeView', () => {
   beforeEach(() => {
     minimalProps = {
       experimentIds: undefined,
-      compareExperiments: false,
+      compareExperiments: false
     };
     minimalStore = mockStore({
       entities: {
-        experimentsById: {},
+        experimentsById: {}
       },
-      apis: jest.fn(() => ({})),
+      apis: jest.fn(() => ({}))
     });
   });
 
@@ -40,26 +52,28 @@ describe('HomeView', () => {
         <BrowserRouter>
           <HomeView />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.length).toBe(1);
   });
 
   test('getFirstActiveExperiment works', () => {
-    expect(getFirstActiveExperiment(Object.values(experiments)).experiment_id).toEqual('2');
+    expect(
+      getFirstActiveExperiment(Object.values(experiments)).experiment_id
+    ).toEqual('2');
   });
 
   test('reroute to first active experiment works', () => {
     minimalStore = mockStore({
       entities: { experimentsById: experiments },
-      apis: jest.fn(() => ({})),
+      apis: jest.fn(() => ({}))
     });
     wrapper = mount(
       <Provider store={minimalStore}>
         <BrowserRouter>
           <HomeView {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(window.location.pathname).toBe('/experiments/2');
   });

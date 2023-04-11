@@ -23,7 +23,7 @@ import {
   DEFAULT_ORDER_BY_ASC,
   DEFAULT_START_TIME,
   DEFAULT_LIFECYCLE_FILTER,
-  DEFAULT_MODEL_VERSION_FILTER,
+  DEFAULT_MODEL_VERSION_FILTER
 } from '../constants';
 
 /**
@@ -54,9 +54,9 @@ export const ExperimentPagePersistedState = Immutable.Record(
     // Columns unselected before turning on the diff-view switch
     preSwitchCategorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
     // Columns unselected as the result of turning on the diff-view switch
-    postSwitchCategorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS,
+    postSwitchCategorizedUncheckedKeys: DEFAULT_CATEGORIZED_UNCHECKED_KEYS
   },
-  'ExperimentPagePersistedState',
+  'ExperimentPagePersistedState'
 );
 /**
  * This class wraps attributes of the ExperimentPage component's state that should be
@@ -74,9 +74,9 @@ export const ExperimentViewPersistedState = Immutable.Record(
     // lists to help keep them ordered (i.e. splitting out a column shouldn't change the ordering of
     // columns that have already been split out)
     unbaggedMetrics: [],
-    unbaggedParams: [],
+    unbaggedParams: []
   },
-  'ExperimentViewPersistedState',
+  'ExperimentViewPersistedState'
 );
 
 /**
@@ -84,5 +84,5 @@ export const ExperimentViewPersistedState = Immutable.Record(
  */
 export const AgGridPersistedState = Immutable.Record({
   // column group open/close state
-  columnGroupState: [],
+  columnGroupState: []
 });

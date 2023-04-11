@@ -13,13 +13,13 @@ import {
   ATTRIBUTE_COLUMN_LABELS,
   ATTRIBUTE_COLUMN_SORT_KEY,
   DEFAULT_EXPANDED_VALUE,
-  COLUMN_TYPES,
+  COLUMN_TYPES
 } from '../constants';
 import {
   CheckCircleBorderIcon,
   Clock1Icon,
   XCircleBorderIcon,
-  useDesignSystemTheme,
+  useDesignSystemTheme
 } from '@databricks/design-system';
 
 function ErrorIcon() {
@@ -27,7 +27,7 @@ function ErrorIcon() {
   return (
     <XCircleBorderIcon
       css={{
-        color: theme.colors.textValidationDanger,
+        color: theme.colors.textValidationDanger
       }}
     />
   );
@@ -38,7 +38,7 @@ function FinishedIcon() {
   return (
     <CheckCircleBorderIcon
       css={{
-        color: theme.colors.textValidationSuccess,
+        color: theme.colors.textValidationSuccess
       }}
     />
   );
@@ -49,9 +49,13 @@ export default class ExperimentViewUtil {
   static getCheckboxForRow(selected, checkboxHandler, cellType) {
     const CellComponent = `${cellType}`;
     return (
-      <CellComponent key='meta-check' className='run-table-container'>
+      <CellComponent key="meta-check" className="run-table-container">
         <div>
-          <input type='checkbox' checked={selected} onChange={checkboxHandler} />
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={checkboxHandler}
+          />
         </div>
       </CellComponent>
     );
@@ -60,19 +64,19 @@ export default class ExperimentViewUtil {
   static styles = {
     sortIconStyle: {
       verticalAlign: 'middle',
-      fontSize: 20,
+      fontSize: 20
     },
     sortIconContainer: {
       marginLeft: 2,
       minWidth: 12.5,
-      display: 'inline-block',
+      display: 'inline-block'
     },
     expander: {
-      pointer: 'cursor',
+      pointer: 'cursor'
     },
     runInfoCell: {
-      maxWidth: 250,
-    },
+      maxWidth: 250
+    }
   };
 
   /**
@@ -96,10 +100,18 @@ export default class ExperimentViewUtil {
    * Returns table cells describing run metadata (i.e. not params/metrics) comprising part of
    * the display row for a run.
    */
-  static getRunInfoCellsForRow(runInfo, tags, isParent, cellType, handleCellToggle, excludedKeys) {
+  static getRunInfoCellsForRow(
+    runInfo,
+    tags,
+    isParent,
+    cellType,
+    handleCellToggle,
+    excludedKeys
+  ) {
     const CellComponent = `${cellType}`;
     const user = Utils.getUser(runInfo, tags);
-    const queryParams = window.location && window.location.search ? window.location.search : '';
+    const queryParams =
+      window.location && window.location.search ? window.location.search : '';
     const sourceType = Utils.renderSource(tags, queryParams);
     const { status, start_time: startTime, end_time: endTime } = runInfo;
     const duration = Utils.getDuration(startTime, endTime);
@@ -110,7 +122,7 @@ export default class ExperimentViewUtil {
         key: 'status',
         className: 'run-table-container',
         title: status,
-        children: ExperimentViewUtil.getRunStatusIcon(status),
+        children: ExperimentViewUtil.getRunStatusIcon(status)
       },
       {
         key: ATTRIBUTE_COLUMN_LABELS.DATE,
@@ -118,61 +130,81 @@ export default class ExperimentViewUtil {
         style: { whiteSpace: 'inherit' },
         children: (
           <div style={childLeftMargin}>
-            <Link to={Routes.getRunPageRoute(runInfo.experiment_id, runInfo.run_uuid)}>
+            <Link
+              to={Routes.getRunPageRoute(
+                runInfo.experiment_id,
+                runInfo.run_uuid
+              )}
+            >
               {Utils.formatTimestamp(startTime)}
             </Link>
           </div>
-        ),
+        )
       },
       {
         key: ATTRIBUTE_COLUMN_LABELS.DURATION,
         className: 'run-table-container',
         title: duration,
         children: (
-          <div className='truncate-text single-line' style={ExperimentViewUtil.styles.runInfoCell}>
+          <div
+            className="truncate-text single-line"
+            style={ExperimentViewUtil.styles.runInfoCell}
+          >
             {duration}
           </div>
-        ),
+        )
       },
       {
         key: ATTRIBUTE_COLUMN_LABELS.USER,
         className: 'run-table-container',
         title: user,
         children: (
-          <div className='truncate-text single-line' style={ExperimentViewUtil.styles.runInfoCell}>
+          <div
+            className="truncate-text single-line"
+            style={ExperimentViewUtil.styles.runInfoCell}
+          >
             {user}
           </div>
-        ),
+        )
       },
       {
         key: ATTRIBUTE_COLUMN_LABELS.RUN_NAME,
         className: 'run-table-container',
         title: runName,
         children: (
-          <div className='truncate-text single-line' style={ExperimentViewUtil.styles.runInfoCell}>
+          <div
+            className="truncate-text single-line"
+            style={ExperimentViewUtil.styles.runInfoCell}
+          >
             {runName}
           </div>
-        ),
+        )
       },
       {
         key: ATTRIBUTE_COLUMN_LABELS.SOURCE,
         className: 'run-table-container',
         title: sourceType,
         children: (
-          <div className='truncate-text single-line' style={ExperimentViewUtil.styles.runInfoCell}>
+          <div
+            className="truncate-text single-line"
+            style={ExperimentViewUtil.styles.runInfoCell}
+          >
             {Utils.renderSourceTypeIcon(tags)}
             {sourceType}
           </div>
-        ),
+        )
       },
       {
         key: ATTRIBUTE_COLUMN_LABELS.VERSION,
         className: 'run-table-container',
         children: (
-          <div className='truncate-text single-line' style={ExperimentViewUtil.styles.runInfoCell}>
+          <div
+            className="truncate-text single-line"
+            style={ExperimentViewUtil.styles.runInfoCell}
+          >
             {Utils.renderVersion(tags)}
           </div>
-        ),
+        )
       },
       {
         key: 'Tags',
@@ -181,13 +213,13 @@ export default class ExperimentViewUtil {
           <div style={ExperimentViewUtil.styles.runInfoCell}>
             <CollapsibleTagsCell tags={tags} onToggle={handleCellToggle} />
           </div>
-        ),
-      },
+        )
+      }
     ];
     const excludedKeysSet = new Set(excludedKeys);
     return columnProps
-      .filter((column) => !excludedKeysSet.has(column.key))
-      .map((props) => <CellComponent {...props} />);
+      .filter(column => !excludedKeysSet.has(column.key))
+      .map(props => <CellComponent {...props} />);
   }
 
   /**
@@ -245,7 +277,7 @@ export default class ExperimentViewUtil {
     tagKeyList,
     paramsList,
     metricsList,
-    tagsList,
+    tagsList
   ) {
     const columns = [
       'Start Time',
@@ -258,7 +290,7 @@ export default class ExperimentViewUtil {
       'Status',
       ...paramKeyList,
       ...metricKeyList,
-      ...tagKeyList,
+      ...tagKeyList
     ];
 
     const data = runInfos.map((runInfo, index) => {
@@ -270,27 +302,27 @@ export default class ExperimentViewUtil {
         Utils.getSourceType(tagsList[index]),
         Utils.getSourceName(tagsList[index]),
         Utils.getUser(runInfo, tagsList[index]),
-        runInfo.status,
+        runInfo.status
       ];
       const paramsMap = ExperimentViewUtil.toParamsMap(paramsList[index]);
       const metricsMap = ExperimentViewUtil.toMetricsMap(metricsList[index]);
       const tagsMap = tagsList[index];
 
-      paramKeyList.forEach((paramKey) => {
+      paramKeyList.forEach(paramKey => {
         if (paramsMap[paramKey]) {
           row.push(paramsMap[paramKey].getValue());
         } else {
           row.push('');
         }
       });
-      metricKeyList.forEach((metricKey) => {
+      metricKeyList.forEach(metricKey => {
         if (metricsMap[metricKey]) {
           row.push(metricsMap[metricKey].getValue());
         } else {
           row.push('');
         }
       });
-      tagKeyList.forEach((tagKey) => {
+      tagKeyList.forEach(tagKey => {
         if (tagsMap[tagKey]) {
           row.push(tagsMap[tagKey].getValue());
         } else {
@@ -326,8 +358,15 @@ export default class ExperimentViewUtil {
   static getSelectAllCheckbox(onCheckAll, isAllCheckedBool, cellType) {
     const CellComponent = `${cellType}`;
     return (
-      <CellComponent key='meta-check' className='bottom-row run-table-container'>
-        <input type='checkbox' onChange={onCheckAll} checked={isAllCheckedBool} />
+      <CellComponent
+        key="meta-check"
+        className="bottom-row run-table-container"
+      >
+        <input
+          type="checkbox"
+          onChange={onCheckAll}
+          checked={isAllCheckedBool}
+        />
       </CellComponent>
     );
   }
@@ -335,27 +374,37 @@ export default class ExperimentViewUtil {
   /**
    * Returns header-row table cells for columns containing run metadata.
    */
-  static getRunMetadataHeaderCells(onSortBy, curOrderByKey, curOrderByAsc, cellType, excludedCols) {
+  static getRunMetadataHeaderCells(
+    onSortBy,
+    curOrderByKey,
+    curOrderByAsc,
+    cellType,
+    excludedCols
+  ) {
     const CellComponent = `${cellType}`;
     const getHeaderCell = (key, text, canonicalSortKey) => {
       const sortIcon = ExperimentViewUtil.getSortIcon(
         curOrderByKey,
         curOrderByAsc,
-        canonicalSortKey,
+        canonicalSortKey
       );
       const isSortable = canonicalSortKey !== null;
       const cellClassName = classNames('run-table-container', {
-        sortable: isSortable,
+        sortable: isSortable
       });
       return (
         <CellComponent
           key={'meta-' + key}
           className={cellClassName}
-          onClick={() => (isSortable ? onSortBy(canonicalSortKey, !curOrderByAsc) : null)}
+          onClick={() =>
+            isSortable ? onSortBy(canonicalSortKey, !curOrderByAsc) : null
+          }
         >
           <span>{text}</span>
           {isSortable && (
-            <span style={ExperimentViewUtil.styles.sortIconContainer}>{sortIcon}</span>
+            <span style={ExperimentViewUtil.styles.sortIconContainer}>
+              {sortIcon}
+            </span>
           )}
         </CellComponent>
       );
@@ -364,51 +413,53 @@ export default class ExperimentViewUtil {
     return [
       {
         key: 'status',
-        canonicalSortKey: null,
+        canonicalSortKey: null
       },
       {
         key: 'start_time',
         displayName: ATTRIBUTE_COLUMN_LABELS.DATE,
-        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.DATE,
+        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.DATE
       },
       {
         key: 'duration',
         displayName: ATTRIBUTE_COLUMN_LABELS.DURATION,
-        canonicalSortKey: null,
+        canonicalSortKey: null
       },
       {
         key: 'user_id',
         displayName: ATTRIBUTE_COLUMN_LABELS.USER,
-        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.USER,
+        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.USER
       },
       {
         key: 'run_name',
         displayName: ATTRIBUTE_COLUMN_LABELS.RUN_NAME,
-        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.RUN_NAME,
+        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.RUN_NAME
       },
       {
         key: 'source',
         displayName: ATTRIBUTE_COLUMN_LABELS.SOURCE,
-        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.SOURCE,
+        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.SOURCE
       },
       {
         key: 'source_version',
         displayName: ATTRIBUTE_COLUMN_LABELS.VERSION,
-        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.VERSION,
+        canonicalSortKey: ATTRIBUTE_COLUMN_SORT_KEY.VERSION
       },
       {
         key: 'tags',
         displayName: 'Tags',
-        canonicalSortKey: null,
+        canonicalSortKey: null
       },
       {
         key: 'linked-models',
         displayName: 'Linked Models',
-        canonicalSortKey: null,
-      },
+        canonicalSortKey: null
+      }
     ]
-      .filter((column) => !excludedColsSet.has(column.displayName))
-      .map((h) => getHeaderCell(h.key, <span>{h.displayName}</span>, h.canonicalSortKey));
+      .filter(column => !excludedColsSet.has(column.displayName))
+      .map(h =>
+        getHeaderCell(h.key, <span>{h.displayName}</span>, h.canonicalSortKey)
+      );
   }
 
   static makeCanonicalKey(keyType, keyName) {
@@ -451,9 +502,9 @@ export default class ExperimentViewUtil {
         <CellComponent className={className} key={keyName}>
           {/* We need the extra div because metric-filler-bg is inline-block */}
           <div>
-            <div className='metric-filler-bg'>
-              <div className='metric-filler-fg' style={{ width: percent }} />
-              <div className='metric-text'>{Utils.formatMetric(metric)}</div>
+            <div className="metric-filler-bg">
+              <div className="metric-filler-fg" style={{ width: percent }} />
+              <div className="metric-text">{Utils.formatMetric(metric)}</div>
             </div>
           </div>
         </CellComponent>
@@ -480,17 +531,19 @@ export default class ExperimentViewUtil {
   static renderLinkedModelCell(modelVersion) {
     const { name, version } = modelVersion;
     return (
-      <div className='version-link'>
-        <img src={registryIcon} alt='MLflow Model Registry Icon' />
-        <span className='model-link-text'>
+      <div className="version-link">
+        <img src={registryIcon} alt="MLflow Model Registry Icon" />
+        <span className="model-link-text">
           {/* Reported during ESLint upgrade */}
           {/* eslint-disable-next-line react/jsx-no-target-blank */}
           <a
-            href={Utils.getIframeCorrectedRoute(getModelVersionPageRoute(name, version))}
-            className='model-version-link'
+            href={Utils.getIframeCorrectedRoute(
+              getModelVersionPageRoute(name, version)
+            )}
+            className="model-version-link"
             title={`${name}, v${version}`}
             style={{ verticalAlign: 'middle' }}
-            target='_blank'
+            target="_blank"
           >
             <TrimmedText text={name} maxSize={10} className={'model-name'} />
             <span>/{version}&nbsp;</span>
@@ -504,9 +557,11 @@ export default class ExperimentViewUtil {
     const className = 'run-table-container';
     if (associatedModelVersions && associatedModelVersions.length > 0) {
       return (
-        <div className={className} key='linked=models'>
+        <div className={className} key="linked=models">
           <ExpandableList
-            children={associatedModelVersions.map((version) => this.renderLinkedModelCell(version))}
+            children={associatedModelVersions.map(version =>
+              this.renderLinkedModelCell(version)
+            )}
             showLines={1}
             onToggle={handleCellToggle}
           />
@@ -519,12 +574,12 @@ export default class ExperimentViewUtil {
 
   static computeMetricRanges(metricsByRun) {
     const ret = {};
-    metricsByRun.forEach((metrics) => {
-      metrics.forEach((metric) => {
+    metricsByRun.forEach(metrics => {
+      metrics.forEach(metric => {
         if (!ret.hasOwnProperty(metric.key)) {
           ret[metric.key] = {
             min: Math.min(metric.value, metric.value * 0.7),
-            max: metric.value,
+            max: metric.value
           };
         } else {
           if (metric.value < ret[metric.key].min) {
@@ -544,7 +599,7 @@ export default class ExperimentViewUtil {
    */
   static toMetricsMap(metrics) {
     const ret = {};
-    metrics.forEach((metric) => {
+    metrics.forEach(metric => {
       ret[metric.key] = metric;
     });
     return ret;
@@ -555,7 +610,7 @@ export default class ExperimentViewUtil {
    */
   static toParamsMap(params) {
     const ret = {};
-    params.forEach((param) => {
+    params.forEach(param => {
       ret[param.key] = param;
     });
     return ret;
@@ -563,25 +618,46 @@ export default class ExperimentViewUtil {
 
   static isExpanderOpen(runsExpanded, runId) {
     let expanderOpen = DEFAULT_EXPANDED_VALUE;
-    if (runsExpanded[runId] !== undefined) expanderOpen = runsExpanded[runId];
+    if (runsExpanded[runId] !== undefined) {
+      expanderOpen = runsExpanded[runId];
+    }
     return expanderOpen;
   }
 
-  static getExpander(hasExpander, expanderOpen, onExpandBound, runUuid, cellType) {
+  static getExpander(
+    hasExpander,
+    expanderOpen,
+    onExpandBound,
+    runUuid,
+    cellType
+  ) {
     const CellComponent = `${cellType}`;
     if (!hasExpander) {
-      return <CellComponent key={'Expander-' + runUuid} style={{ padding: 8 }}></CellComponent>;
+      return (
+        <CellComponent
+          key={'Expander-' + runUuid}
+          style={{ padding: 8 }}
+        ></CellComponent>
+      );
     }
     if (expanderOpen) {
       return (
-        <CellComponent onClick={onExpandBound} key={'Expander-' + runUuid} style={{ padding: 8 }}>
-          <i className='ExperimentView-expander far fa-minus-square-o' />
+        <CellComponent
+          onClick={onExpandBound}
+          key={'Expander-' + runUuid}
+          style={{ padding: 8 }}
+        >
+          <i className="ExperimentView-expander far fa-minus-square-o" />
         </CellComponent>
       );
     } else {
       return (
-        <CellComponent onClick={onExpandBound} key={'Expander-' + runUuid} style={{ padding: 8 }}>
-          <i className='ExperimentView-expander far fa-plus-square-o' />
+        <CellComponent
+          onClick={onExpandBound}
+          key={'Expander-' + runUuid}
+          style={{ padding: 8 }}
+        >
+          <i className="ExperimentView-expander far fa-plus-square-o" />
         </CellComponent>
       );
     }
@@ -592,7 +668,7 @@ export default class ExperimentViewUtil {
     runInfos.forEach((r, idx) => {
       runIdToIdx[r.run_uuid] = idx;
     });
-    const treeNodes = runInfos.map((r) => new TreeNode(r.run_uuid));
+    const treeNodes = runInfos.map(r => new TreeNode(r.run_uuid));
     tagsList.forEach((tags, idx) => {
       const parentRunId = tags['mlflow.parentRunId'];
       if (parentRunId) {
@@ -624,7 +700,7 @@ export default class ExperimentViewUtil {
 
     const mergedRows = [];
     const visited = new Set();
-    rootsIdxs.forEach((index) => {
+    rootsIdxs.forEach(index => {
       function dfs(idx, curr_level) {
         if (!visited.has(idx)) {
           const runId = runInfos[idx].run_uuid;
@@ -634,13 +710,23 @@ export default class ExperimentViewUtil {
               idx,
               isParent: true,
               hasExpander: true,
-              expanderOpen: ExperimentViewUtil.isExpanderOpen(runsExpanded, runId),
-              childrenIds: parentIdToChildren[runId].map((cIdx) => runInfos[cIdx].run_uuid),
+              expanderOpen: ExperimentViewUtil.isExpanderOpen(
+                runsExpanded,
+                runId
+              ),
+              childrenIds: parentIdToChildren[runId].map(
+                cIdx => runInfos[cIdx].run_uuid
+              ),
               runId,
-              level: curr_level,
+              level: curr_level
             };
           } else {
-            row = { idx, isParent: false, hasExpander: false, level: curr_level };
+            row = {
+              idx,
+              isParent: false,
+              hasExpander: false,
+              level: curr_level
+            };
           }
 
           mergedRows.push(row);
@@ -649,7 +735,7 @@ export default class ExperimentViewUtil {
           const childrenIdxs = parentIdToChildren[row.runId];
           if (childrenIdxs) {
             if (ExperimentViewUtil.isExpanderOpen(runsExpanded, row.runId)) {
-              childrenIdxs.forEach((dIdx) => {
+              childrenIdxs.forEach(dIdx => {
                 dfs(dIdx, curr_level + 1);
               });
             }
@@ -661,15 +747,24 @@ export default class ExperimentViewUtil {
     return mergedRows.slice(0);
   }
 
-  static getRowRenderMetadata({ runInfos, tagsList, runsExpanded, nestChildren }) {
+  static getRowRenderMetadata({
+    runInfos,
+    tagsList,
+    runsExpanded,
+    nestChildren
+  }) {
     if (nestChildren) {
-      return this.getNestedRowRenderMetadata({ runInfos, tagsList, runsExpanded });
+      return this.getNestedRowRenderMetadata({
+        runInfos,
+        tagsList,
+        runsExpanded
+      });
     } else {
-      return [...Array(runInfos.length).keys()].map((idx) => ({
+      return [...Array(runInfos.length).keys()].map(idx => ({
         idx,
         isParent: true,
         hasExpander: false,
-        runId: runInfos[idx].run_uuid,
+        runId: runInfos[idx].run_uuid
       }));
     }
   }
@@ -678,16 +773,16 @@ export default class ExperimentViewUtil {
     const mergedRows = ExperimentViewUtil.getRowRenderMetadata({
       runInfos,
       tagsList,
-      runsExpanded,
+      runsExpanded
     });
-    return mergedRows.map((rowMetadata) => getRow(rowMetadata));
+    return mergedRows.map(rowMetadata => getRow(rowMetadata));
   }
 
   static renderRows(rows) {
-    return rows.map((row) => {
+    return rows.map(row => {
       const style = row.isChild ? { backgroundColor: '#fafafa' } : {};
       return (
-        <tr key={row.key} style={style} className='ExperimentView-row'>
+        <tr key={row.key} style={style} className="ExperimentView-row">
           {row.contents}
         </tr>
       );
@@ -714,29 +809,32 @@ export default class ExperimentViewUtil {
     runInfos,
     paramsList,
     metricsList,
-    tagsList,
+    tagsList
   }) {
     const attributeColumnsToTags = {
       // Leave the User and Source columns out of consideration because they normally have values.
       [ATTRIBUTE_COLUMN_LABELS.RUN_NAME]: Utils.runNameTag,
       [ATTRIBUTE_COLUMN_LABELS.VERSION]: Utils.gitCommitTag,
-      [ATTRIBUTE_COLUMN_LABELS.MODELS]: Utils.loggedModelsTag,
+      [ATTRIBUTE_COLUMN_LABELS.MODELS]: Utils.loggedModelsTag
     };
     const attributeKeyList = Object.keys(attributeColumnsToTags);
     const tagKeyList = Utils.getVisibleTagKeyList(tagsList);
     let attributeColumnsToUncheck = _.difference(
       attributeKeyList,
-      categorizedUncheckedKeys[COLUMN_TYPES.ATTRIBUTES],
+      categorizedUncheckedKeys[COLUMN_TYPES.ATTRIBUTES]
     );
     let paramColumnsToUncheck = _.difference(
       paramKeyList,
-      categorizedUncheckedKeys[COLUMN_TYPES.PARAMS],
+      categorizedUncheckedKeys[COLUMN_TYPES.PARAMS]
     );
     let metricColumnsToUncheck = _.difference(
       metricKeyList,
-      categorizedUncheckedKeys[COLUMN_TYPES.METRICS],
+      categorizedUncheckedKeys[COLUMN_TYPES.METRICS]
     );
-    let tagColumnsToUncheck = _.difference(tagKeyList, categorizedUncheckedKeys[COLUMN_TYPES.TAGS]);
+    let tagColumnsToUncheck = _.difference(
+      tagKeyList,
+      categorizedUncheckedKeys[COLUMN_TYPES.TAGS]
+    );
 
     const dropDiffColumns = (columns, prevRow, currRow) => {
       // What each argument represents:
@@ -749,7 +847,7 @@ export default class ExperimentViewUtil {
       // a, d: may be a diff column, we need to check the next row
       // b, c, e: is a diff column, we don't need to check the next row
 
-      return columns.filter((col) => {
+      return columns.filter(col => {
         const prevValue = prevRow[col];
         const currValue = currRow[col];
         if (!prevValue && !currValue) {
@@ -771,7 +869,7 @@ export default class ExperimentViewUtil {
     for (const [index] of runInfos.entries()) {
       // Drop non-empty attribute columns
       attributeColumnsToUncheck = attributeColumnsToUncheck.filter(
-        (col) => !(attributeColumnsToTags[col] in tagsList[index]),
+        col => !(attributeColumnsToTags[col] in tagsList[index])
       );
 
       if (index === 0) {
@@ -783,19 +881,19 @@ export default class ExperimentViewUtil {
       paramColumnsToUncheck = dropDiffColumns(
         paramColumnsToUncheck,
         ExperimentViewUtil.toParamsMap(paramsList[index - 1]),
-        ExperimentViewUtil.toParamsMap(paramsList[index]),
+        ExperimentViewUtil.toParamsMap(paramsList[index])
       );
 
       metricColumnsToUncheck = dropDiffColumns(
         metricColumnsToUncheck,
         ExperimentViewUtil.toMetricsMap(metricsList[index - 1]),
-        ExperimentViewUtil.toMetricsMap(metricsList[index]),
+        ExperimentViewUtil.toMetricsMap(metricsList[index])
       );
 
       tagColumnsToUncheck = dropDiffColumns(
         tagColumnsToUncheck,
         tagsList[index - 1],
-        tagsList[index],
+        tagsList[index]
       );
 
       // Short-circuit loop if there are no more columns to take a look at
@@ -812,20 +910,20 @@ export default class ExperimentViewUtil {
     return {
       [COLUMN_TYPES.ATTRIBUTES]: _.concat(
         categorizedUncheckedKeys[COLUMN_TYPES.ATTRIBUTES],
-        attributeColumnsToUncheck,
+        attributeColumnsToUncheck
       ),
       [COLUMN_TYPES.PARAMS]: _.concat(
         categorizedUncheckedKeys[COLUMN_TYPES.PARAMS],
-        paramColumnsToUncheck,
+        paramColumnsToUncheck
       ),
       [COLUMN_TYPES.METRICS]: _.concat(
         categorizedUncheckedKeys[COLUMN_TYPES.METRICS],
-        metricColumnsToUncheck,
+        metricColumnsToUncheck
       ),
       [COLUMN_TYPES.TAGS]: _.concat(
         categorizedUncheckedKeys[COLUMN_TYPES.TAGS],
-        tagColumnsToUncheck,
-      ),
+        tagColumnsToUncheck
+      )
     };
   }
 
@@ -842,31 +940,34 @@ export default class ExperimentViewUtil {
   static getRestoredCategorizedUncheckedKeys({
     preSwitchCategorizedUncheckedKeys,
     postSwitchCategorizedUncheckedKeys,
-    currCategorizedUncheckedKeys,
+    currCategorizedUncheckedKeys
   }) {
-    const restoredUncheckedKeys = (column_type) => {
+    const restoredUncheckedKeys = column_type => {
       // keys that the user checked while being in diff view
       const userCheckedKeys = _.difference(
         postSwitchCategorizedUncheckedKeys[column_type],
-        currCategorizedUncheckedKeys[column_type],
+        currCategorizedUncheckedKeys[column_type]
       );
       // keys that the user unchecked while being in diff view
       const userUncheckedKeys = _.difference(
         currCategorizedUncheckedKeys[column_type],
-        postSwitchCategorizedUncheckedKeys[column_type],
+        postSwitchCategorizedUncheckedKeys[column_type]
       );
       return _.uniq(
         _.without(
-          _.concat(preSwitchCategorizedUncheckedKeys[column_type], userUncheckedKeys),
-          ...userCheckedKeys,
-        ),
+          _.concat(
+            preSwitchCategorizedUncheckedKeys[column_type],
+            userUncheckedKeys
+          ),
+          ...userCheckedKeys
+        )
       );
     };
     return {
       [COLUMN_TYPES.ATTRIBUTES]: restoredUncheckedKeys(COLUMN_TYPES.ATTRIBUTES),
       [COLUMN_TYPES.PARAMS]: restoredUncheckedKeys(COLUMN_TYPES.PARAMS),
       [COLUMN_TYPES.METRICS]: restoredUncheckedKeys(COLUMN_TYPES.METRICS),
-      [COLUMN_TYPES.TAGS]: restoredUncheckedKeys(COLUMN_TYPES.TAGS),
+      [COLUMN_TYPES.TAGS]: restoredUncheckedKeys(COLUMN_TYPES.TAGS)
     };
   }
 }

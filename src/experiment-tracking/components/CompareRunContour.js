@@ -21,9 +21,11 @@ const { Option } = Select;
 export class CompareRunContour extends Component {
   static propTypes = {
     runInfos: PropTypes.arrayOf(PropTypes.instanceOf(RunInfo)).isRequired,
-    metricLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
-    paramLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
-    runDisplayNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    metricLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object))
+      .isRequired,
+    paramLists: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object))
+      .isRequired,
+    runDisplayNames: PropTypes.arrayOf(PropTypes.string).isRequired
   };
 
   // Size limits for displaying keys and values in our plot axes and tooltips
@@ -47,28 +49,28 @@ export class CompareRunContour extends Component {
           ...common,
           xaxis: { key: this.paramKeys[0], isMetric: false },
           yaxis: { key: this.paramKeys[1], isMetric: false },
-          zaxis: { key: this.paramKeys[2], isMetric: false },
+          zaxis: { key: this.paramKeys[2], isMetric: false }
         };
       } else if (this.paramKeys.length === 0) {
         this.state = {
           ...common,
           xaxis: { key: this.metricKeys[0], isMetric: true },
           yaxis: { key: this.metricKeys[1], isMetric: true },
-          zaxis: { key: this.metricKeys[2], isMetric: true },
+          zaxis: { key: this.metricKeys[2], isMetric: true }
         };
       } else if (this.paramKeys.length === 1) {
         this.state = {
           ...common,
           xaxis: { key: this.paramKeys[0], isMetric: false },
           yaxis: { key: this.metricKeys[0], isMetric: true },
-          zaxis: { key: this.metricKeys[1], isMetric: true },
+          zaxis: { key: this.metricKeys[1], isMetric: true }
         };
       } else {
         this.state = {
           ...common,
           xaxis: { key: this.paramKeys[0], isMetric: false },
           yaxis: { key: this.paramKeys[1], isMetric: false },
-          zaxis: { key: this.metricKeys[0], isMetric: true },
+          zaxis: { key: this.metricKeys[0], isMetric: true }
         };
       }
     }
@@ -80,7 +82,7 @@ export class CompareRunContour extends Component {
   getValue(i, { key, isMetric }) {
     const value = CompareRunUtil.findInList(
       (isMetric ? this.props.metricLists : this.props.paramLists)[i],
-      key,
+      key
     );
     return value === undefined ? value : value.value;
   }
@@ -107,14 +109,17 @@ export class CompareRunContour extends Component {
       [0.5, 'rgb(70,100,245)'],
       [0.6, 'rgb(90,120,245)'],
       [0.7, 'rgb(106,137,247)'],
-      [1, 'rgb(220,220,220)'],
+      [1, 'rgb(220,220,220)']
     ];
 
     if (this.state.reverseColor) {
       return colorscale;
     } else {
       // reverse only RGB values
-      return colorscale.map(([val], index) => [val, colorscale[colorscale.length - 1 - index][1]]);
+      return colorscale.map(([val], index) => [
+        val,
+        colorscale[colorscale.length - 1 - index][1]
+      ]);
     }
   }
 
@@ -123,11 +128,12 @@ export class CompareRunContour extends Component {
       return (
         <div>
           <FormattedMessage
-            defaultMessage='Contour plots can only be rendered when comparing a group of runs
+            defaultMessage="Contour plots can only be rendered when comparing a group of runs
               with three or more unique metrics or params. Log more metrics or params to your
-              runs to visualize them using the contour plot.'
-            description='Text explanation when contour plot is disabled in comparison pages
-              in MLflow'
+              runs to visualize them using the contour plot."
+            id="fyyTaq"
+            description="Text explanation when contour plot is disabled in comparison pages
+              in MLflow"
           />
         </div>
       );
@@ -187,8 +193,8 @@ export class CompareRunContour extends Component {
               colorscale: this.getColorscale(),
               connectgaps: true,
               contours: {
-                coloring: 'heatmap',
-              },
+                coloring: 'heatmap'
+              }
             },
             // scatter plot
             {
@@ -200,23 +206,27 @@ export class CompareRunContour extends Component {
               mode: 'markers',
               marker: {
                 size: 10,
-                color: 'rgba(200, 50, 100, .75)',
-              },
-            },
+                color: 'rgba(200, 50, 100, .75)'
+              }
+            }
           ]}
           layout={{
             margin: {
-              t: 30,
+              t: 30
             },
             hovermode: 'closest',
             xaxis: {
-              title: this.encodeHtml(Utils.truncateString(this.state['xaxis'].key, keyLength)),
-              range: [Math.min(...xs), Math.max(...xs)],
+              title: this.encodeHtml(
+                Utils.truncateString(this.state['xaxis'].key, keyLength)
+              ),
+              range: [Math.min(...xs), Math.max(...xs)]
             },
             yaxis: {
-              title: this.encodeHtml(Utils.truncateString(this.state['yaxis'].key, keyLength)),
-              range: [Math.min(...ys), Math.max(...ys)],
-            },
+              title: this.encodeHtml(
+                Utils.truncateString(this.state['yaxis'].key, keyLength)
+              ),
+              range: [Math.min(...ys), Math.max(...ys)]
+            }
           }}
           config={{
             responsive: true,
@@ -228,8 +238,8 @@ export class CompareRunContour extends Component {
               'lasso2d',
               'resetScale2d',
               'hoverClosestCartesian',
-              'hoverCompareCartesian',
-            ],
+              'hoverCompareCartesian'
+            ]
           }}
           useResizeHandler
         />
@@ -241,45 +251,49 @@ export class CompareRunContour extends Component {
         controls={
           <>
             <div>
-              <label htmlFor='x-axis-selector'>
+              <label htmlFor="x-axis-selector">
                 <FormattedMessage
-                  defaultMessage='X-axis:'
-                  description='Label text for x-axis in contour plot comparison in MLflow'
+                  defaultMessage="X-axis:"
+                  id="UGAKJp"
+                  description="Label text for x-axis in contour plot comparison in MLflow"
                 />
               </label>
               {this.renderSelect('xaxis')}
             </div>
-            <Spacer size='medium' />
+            <Spacer size="medium" />
             <div>
-              <label htmlFor='y-axis-selector'>
+              <label htmlFor="y-axis-selector">
                 <FormattedMessage
-                  defaultMessage='Y-axis:'
-                  description='Label text for y-axis in contour plot comparison in MLflow'
+                  defaultMessage="Y-axis:"
+                  id="0ElvS9"
+                  description="Label text for y-axis in contour plot comparison in MLflow"
                 />
               </label>
               {this.renderSelect('yaxis')}
             </div>
-            <Spacer size='medium' />
+            <Spacer size="medium" />
             <div>
-              <label htmlFor='z-axis-selector'>
+              <label htmlFor="z-axis-selector">
                 <FormattedMessage
-                  defaultMessage='Z-axis:'
-                  description='Label text for z-axis in contour plot comparison in MLflow'
+                  defaultMessage="Z-axis:"
+                  id="WJF+wY"
+                  description="Label text for z-axis in contour plot comparison in MLflow"
                 />
               </label>
               {this.renderSelect('zaxis')}
             </div>
-            <Spacer size='medium' />
-            <div className='inline-control'>
+            <Spacer size="medium" />
+            <div className="inline-control">
               <FormattedMessage
-                defaultMessage='Reverse color:'
-                description='Label text for reverse color toggle in contour plot comparison
-                      in MLflow'
+                defaultMessage="Reverse color:"
+                id="fZPf0W"
+                description="Label text for reverse color toggle in contour plot comparison
+                      in MLflow"
               />{' '}
               <Switch
-                className='show-point-toggle'
+                className="show-point-toggle"
                 checked={this.state.reverseColor}
-                onChange={(checked) => this.setState({ reverseColor: checked })}
+                onChange={checked => this.setState({ reverseColor: checked })}
               />
             </div>
           </>
@@ -296,23 +310,26 @@ export class CompareRunContour extends Component {
         css={styles.select}
         id={axis + '-axis-selector'}
         aria-label={`${axis} axis`}
-        onChange={(value) => {
+        onChange={value => {
           const [prefix, ...keyParts] = value.split('-');
           const key = keyParts.join('-');
           const isMetric = prefix === 'metric';
           this.setState({ [axis]: { isMetric, key } });
         }}
-        value={(this.state[axis].isMetric ? 'metric-' : 'param-') + this.state[axis].key}
+        value={
+          (this.state[axis].isMetric ? 'metric-' : 'param-') +
+          this.state[axis].key
+        }
       >
-        <OptGroup label='Parameter'>
-          {this.paramKeys.map((p) => (
+        <OptGroup label="Parameter">
+          {this.paramKeys.map(p => (
             <Option key={'param-' + p} value={'param-' + p}>
               {p}
             </Option>
           ))}
         </OptGroup>
-        <OptGroup label='Metric'>
-          {this.metricKeys.map((m) => (
+        <OptGroup label="Metric">
+          {this.metricKeys.map(m => (
             <Option key={'metric-' + m} value={'metric-' + m}>
               {m}
             </Option>
@@ -328,7 +345,7 @@ export class CompareRunContour extends Component {
     const runName = this.props.runDisplayNames[index];
     let result = `<b>${this.encodeHtml(runName)}</b><br>`;
     const paramList = this.props.paramLists[index];
-    paramList.forEach((p) => {
+    paramList.forEach(p => {
       result +=
         this.encodeHtml(Utils.truncateString(p.key, keyLength)) +
         ': ' +
@@ -338,7 +355,7 @@ export class CompareRunContour extends Component {
     const metricList = this.props.metricLists[index];
     if (metricList.length > 0) {
       result += paramList.length > 0 ? '<br>' : '';
-      metricList.forEach((m) => {
+      metricList.forEach(m => {
         result +=
           this.encodeHtml(Utils.truncateString(m.key, keyLength)) +
           ': ' +
@@ -352,16 +369,16 @@ export class CompareRunContour extends Component {
 
 const styles = {
   select: {
-    width: '100%',
+    width: '100%'
   },
   plot: {
-    width: '100%',
+    width: '100%'
   },
-  noDataMessage: (theme) => ({
+  noDataMessage: theme => ({
     padding: theme.spacing.sm,
     display: 'flex',
-    justifyContent: 'center',
-  }),
+    justifyContent: 'center'
+  })
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -369,7 +386,7 @@ const mapStateToProps = (state, ownProps) => {
   const metricLists = [];
   const paramLists = [];
   const { runUuids } = ownProps;
-  runUuids.forEach((runUuid) => {
+  runUuids.forEach(runUuid => {
     runInfos.push(getRunInfo(runUuid, state));
     metricLists.push(Object.values(getLatestMetrics(runUuid, state)));
     paramLists.push(Object.values(getParams(runUuid, state)));

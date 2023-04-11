@@ -15,7 +15,7 @@ export class RunLinksPopover extends React.Component {
     runItems: PropTypes.arrayOf(PropTypes.object).isRequired,
     handleClose: PropTypes.func.isRequired,
     handleKeyDown: PropTypes.func.isRequired,
-    handleVisibleChange: PropTypes.func.isRequired,
+    handleVisibleChange: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -36,7 +36,10 @@ export class RunLinksPopover extends React.Component {
           return (
             <Link key={key} to={to}>
               <p style={{ color }}>
-                <i className='fas fa-external-link-o' style={{ marginRight: 5 }} />
+                <i
+                  className="fas fa-external-link-o"
+                  style={{ marginRight: 5 }}
+                />
                 {`${name}, ${Utils.formatMetric(y)}`}
               </p>
             </Link>
@@ -52,7 +55,7 @@ export class RunLinksPopover extends React.Component {
       <div>
         <span>Jump to individual runs</span>
         <IconButton
-          icon={<i className='fas fa-times' />}
+          icon={<i className="fas fa-times" />}
           onClick={handleClose}
           style={{ float: 'right', marginLeft: '7px' }}
         />
@@ -66,7 +69,7 @@ export class RunLinksPopover extends React.Component {
       <Popover
         content={this.renderContent()}
         title={this.renderTitle()}
-        placement='left'
+        placement="left"
         visible={visible}
         onVisibleChange={handleVisibleChange}
       >
@@ -74,7 +77,7 @@ export class RunLinksPopover extends React.Component {
           style={{
             left: x,
             top: y,
-            position: 'absolute',
+            position: 'absolute'
           }}
         />
       </Popover>

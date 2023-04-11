@@ -20,21 +20,23 @@ export class CreateModelModalImpl extends React.Component {
     // This allows for the modal to route back to previous page
     // on closing it when hitting cancel or exit button, not submit.
     navigateBackOnCancel: PropTypes.bool,
-    intl: PropTypes.any,
+    intl: PropTypes.any
   };
 
   createRegisteredModelRequestId = getUUID();
 
-  handleCreateRegisteredModel = async (values) => {
+  handleCreateRegisteredModel = async values => {
     const result = await this.props.createRegisteredModelApi(
       values[MODEL_NAME_FIELD],
-      this.createRegisteredModelRequestId,
+      this.createRegisteredModelRequestId
     );
     const newModel = result.value && result.value.registered_model;
     if (newModel) {
       // Jump to the page of newly created model. Here we are yielding to next tick to allow modal
       // and form to finish closing and cleaning up.
-      setTimeout(() => this.props.history.push(getModelPageRoute(newModel.name)));
+      setTimeout(() =>
+        this.props.history.push(getModelPageRoute(newModel.name))
+      );
     }
   };
 
@@ -52,31 +54,36 @@ export class CreateModelModalImpl extends React.Component {
       <GenericInputModal
         title={this.props.intl.formatMessage({
           defaultMessage: 'Create Model',
-          description: 'Title text for creating model in the model registry',
+          description: 'Title text for creating model in the model registry'
         })}
         okText={this.props.intl.formatMessage({
           defaultMessage: 'Create',
-          description: 'Create button text for creating model in the model registry',
+          description:
+            'Create button text for creating model in the model registry'
         })}
         cancelText={this.props.intl.formatMessage({
           defaultMessage: 'Cancel',
-          description: 'Cancel button text for creating model in the model registry',
+          description:
+            'Cancel button text for creating model in the model registry'
         })}
         isOpen={modalVisible}
         handleSubmit={this.handleCreateRegisteredModel}
         onClose={hideModal}
         onCancel={this.handleOnCancel}
       >
-        <CreateModelForm visible={modalVisible} validator={this.debouncedModelNameValidator} />
+        <CreateModelForm
+          visible={modalVisible}
+          validator={this.debouncedModelNameValidator}
+        />
       </GenericInputModal>
     );
   }
 }
 
 const mapDispatchToProps = {
-  createRegisteredModelApi,
+  createRegisteredModelApi
 };
 
 export const CreateModelModal = withRouter(
-  connect(undefined, mapDispatchToProps)(injectIntl(CreateModelModalImpl)),
+  connect(undefined, mapDispatchToProps)(injectIntl(CreateModelModalImpl))
 );

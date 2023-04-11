@@ -19,26 +19,26 @@ describe('HomePage', () => {
   beforeEach(() => {
     minimalProps = {
       history: {},
-      dispatchListExperimentsApi: jest.fn(),
+      dispatchListExperimentsApi: jest.fn()
     };
     minimalStore = mockStore({
       entities: {},
-      apis: jest.fn((key) => {
+      apis: jest.fn(key => {
         return {};
-      }),
+      })
     });
   });
 
   test('should render with minimal props without exploding', () => {
     wrapper = shallow(<HomePageImpl {...minimalProps} />, {
-      wrappingComponent: (props) => {
+      wrappingComponent: props => {
         const { children } = props;
         return (
           <Provider store={minimalStore}>
             <BrowserRouter>{children}</BrowserRouter>
           </Provider>
         );
-      },
+      }
     });
     expect(wrapper.length).toBe(1);
   });
@@ -46,18 +46,18 @@ describe('HomePage', () => {
   test('should render HomeView', () => {
     const props = {
       ...minimalProps,
-      experimentId: '0',
+      experimentId: '0'
     };
 
     wrapper = shallow(<HomePageImpl {...props} />, {
-      wrappingComponent: (wrappingProps) => {
+      wrappingComponent: wrappingProps => {
         const { children } = wrappingProps;
         return (
           <Provider store={minimalStore}>
             <BrowserRouter>{children}</BrowserRouter>
           </Provider>
         );
-      },
+      }
     });
     expect(wrapper.find(HomeView).length).toBe(1);
   });

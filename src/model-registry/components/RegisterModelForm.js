@@ -22,20 +22,22 @@ export class RegisterModelForm extends React.Component {
   static propTypes = {
     modelByName: PropTypes.object,
     onSearchRegisteredModels: PropTypes.func.isRequired,
-    innerRef: PropTypes.object.isRequired,
+    innerRef: PropTypes.object.isRequired
   };
 
   state = {
-    selectedModel: null,
+    selectedModel: null
   };
 
-  handleModelSelectChange = (selectedModel) => {
+  handleModelSelectChange = selectedModel => {
     this.setState({ selectedModel });
   };
 
   modelNameValidator = (rule, value, callback) => {
     const { modelByName } = this.props;
-    callback(modelByName[value] ? `Model "${value}" already exists.` : undefined);
+    callback(
+      modelByName[value] ? `Model "${value}" already exists.` : undefined
+    );
   };
 
   handleFilterOption = (input, option) => {
@@ -55,26 +57,35 @@ export class RegisterModelForm extends React.Component {
     const { selectedModel } = this.state;
     const creatingNewModel = selectedModel === CREATE_NEW_MODEL_OPTION_VALUE;
     return (
-      <Form ref={innerRef} layout='vertical' className='register-model-form'>
+      <Form ref={innerRef} layout="vertical" className="register-model-form">
         {/* "+ Create new model" OR "Select existing model" */}
         <Form.Item
-          label='Model'
+          label="Model"
           name={SELECTED_MODEL_FIELD}
-          rules={[{ required: true, message: 'Please select a model or create a new one.' }]}
+          rules={[
+            {
+              required: true,
+              message: 'Please select a model or create a new one.'
+            }
+          ]}
         >
           <Select
-            dropdownClassName='model-select-dropdown'
+            dropdownClassName="model-select-dropdown"
             onChange={this.handleModelSelectChange}
-            placeholder='Select a model'
+            placeholder="Select a model"
             filterOption={this.handleFilterOption}
             onSearch={this.props.onSearchRegisteredModels}
             showSearch
           >
-            <Option value={CREATE_NEW_MODEL_OPTION_VALUE} className='create-new-model-option'>
-              <i className='fa fa-plus fa-fw' style={{ fontSize: 13 }} /> {CREATE_NEW_MODEL_LABEL}
+            <Option
+              value={CREATE_NEW_MODEL_OPTION_VALUE}
+              className="create-new-model-option"
+            >
+              <i className="fa fa-plus fa-fw" style={{ fontSize: 13 }} />{' '}
+              {CREATE_NEW_MODEL_LABEL}
             </Option>
-            <OptGroup label='Models'>
-              {Object.values(modelByName).map((model) => this.renderModel(model))}
+            <OptGroup label="Models">
+              {Object.values(modelByName).map(model => this.renderModel(model))}
             </OptGroup>
           </Select>
         </Form.Item>
@@ -82,30 +93,35 @@ export class RegisterModelForm extends React.Component {
         {/* Name the new model when "+ Create new model" is selected */}
         {creatingNewModel ? (
           <Form.Item
-            label='Model Name'
+            label="Model Name"
             name={MODEL_NAME_FIELD}
             rules={[
-              { required: true, message: 'Please input a name for the new model.' },
-              { validator: this.modelNameValidator },
+              {
+                required: true,
+                message: 'Please input a name for the new model.'
+              },
+              { validator: this.modelNameValidator }
             ]}
           >
-            <Input placeholder='Input a model name' />
+            <Input placeholder="Input a model name" />
           </Form.Item>
         ) : null}
 
         {/* Model/Model Version Description */}
         {ENABLE_DESCRIPTION && selectedModel ? (
-          <Form.Item label='Description' name={DESCRIPTION_FIELD}>
+          <Form.Item label="Description" name={DESCRIPTION_FIELD}>
             <TextArea
               rows={3}
-              placeholder={`Description for the new ${creatingNewModel ? 'model' : 'version'}`}
+              placeholder={`Description for the new ${
+                creatingNewModel ? 'model' : 'version'
+              }`}
             />
           </Form.Item>
         ) : null}
 
         {/* Explanatory text shown when existing model is selected */}
         {selectedModel && !creatingNewModel ? (
-          <p className='modal-explanatory-text'>
+          <p className="modal-explanatory-text">
             The model will be registered as a new version of {selectedModel}.
           </p>
         ) : null}

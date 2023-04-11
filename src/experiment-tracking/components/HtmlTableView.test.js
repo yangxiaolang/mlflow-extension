@@ -10,7 +10,7 @@ describe('HtmlTableView', () => {
   beforeEach(() => {
     minimalProps = {
       columns: [],
-      values: [],
+      values: []
     };
   });
 
@@ -24,12 +24,12 @@ describe('HtmlTableView', () => {
       columns: [
         { title: 'one', dataIndex: 'one' },
         { title: 'two', dataIndex: 'two' },
-        { title: 'three', dataIndex: 'three' },
+        { title: 'three', dataIndex: 'three' }
       ],
       values: [
         { key: 'row-one', one: 1, two: 2, three: 3 },
-        { key: 'row-two', one: 4, two: 5, three: 6 },
-      ],
+        { key: 'row-two', one: 4, two: 5, three: 6 }
+      ]
     };
 
     wrapper = mount(<HtmlTableView {...props} />);
@@ -60,8 +60,8 @@ describe('HtmlTableView', () => {
       ...minimalProps,
       styles: {
         width: 'auto',
-        minWidth: '400px',
-      },
+        minWidth: '400px'
+      }
     };
 
     wrapper = shallow(<HtmlTableView {...props} />);

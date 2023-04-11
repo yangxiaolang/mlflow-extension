@@ -10,7 +10,7 @@ import {
   IMAGE_EXTENSIONS,
   TEXT_EXTENSIONS,
   MAP_EXTENSIONS,
-  HTML_EXTENSIONS,
+  HTML_EXTENSIONS
 } from '../../../common/utils/FileUtils';
 import { RunTag } from '../../sdk/MlflowMessages';
 
@@ -22,7 +22,7 @@ describe('ShowArtifactPage', () => {
   beforeEach(() => {
     minimalProps = {
       runUuid: 'fakeUuid',
-      artifactRootUri: 'path/to/root/artifact',
+      artifactRootUri: 'path/to/root/artifact'
     };
     ShowArtifactPage.prototype.fetchArtifacts = jest.fn();
     commonProps = { ...minimalProps, path: 'fakepath' };
@@ -45,7 +45,11 @@ describe('ShowArtifactPage', () => {
   });
 
   test('should render "too large to preview" view when size is too large', () => {
-    wrapper.setProps({ path: 'file_without_extension', runUuid: 'runId', size: 100000000 });
+    wrapper.setProps({
+      path: 'file_without_extension',
+      runUuid: 'runId',
+      size: 100000000
+    });
     expect(wrapper.text().includes('Select a file to preview')).toBe(false);
     expect(wrapper.text().includes('File is too large to preview')).toBe(true);
   });
@@ -60,11 +64,11 @@ describe('ShowArtifactPage', () => {
             {
               run_id: 'run-uuid',
               artifact_path: 'somePath',
-              flavors: { keras: {}, python_function: {} },
-            },
-          ]),
-        }),
-      },
+              flavors: { keras: {}, python_function: {} }
+            }
+          ])
+        })
+      }
     });
     expect(wrapper.find(ShowArtifactLoggedModelView).length).toBe(1);
   });
@@ -80,28 +84,28 @@ describe('ShowArtifactPage', () => {
   });
 
   test('should render image view for common image extensions', () => {
-    IMAGE_EXTENSIONS.forEach((ext) => {
+    IMAGE_EXTENSIONS.forEach(ext => {
       wrapper.setProps({ path: `image.${ext}`, runUuid: 'runId' });
       expect(wrapper.find(ShowArtifactImageView).length).toBe(1);
     });
   });
 
   test('should render html view for common html extensions', () => {
-    HTML_EXTENSIONS.forEach((ext) => {
+    HTML_EXTENSIONS.forEach(ext => {
       wrapper.setProps({ path: `image.${ext}`, runUuid: 'runId' });
       expect(wrapper.find(ShowArtifactHtmlView).length).toBe(1);
     });
   });
 
   test('should render map view for common map extensions', () => {
-    MAP_EXTENSIONS.forEach((ext) => {
+    MAP_EXTENSIONS.forEach(ext => {
       wrapper.setProps({ path: `image.${ext}`, runUuid: 'runId' });
       expect(wrapper.find(ShowArtifactMapView).length).toBe(1);
     });
   });
 
   test('should render text view for common text extensions', () => {
-    TEXT_EXTENSIONS.forEach((ext) => {
+    TEXT_EXTENSIONS.forEach(ext => {
       wrapper.setProps({ path: `image.${ext}`, runUuid: 'runId' });
       expect(wrapper.find(ShowArtifactTextView).length).toBe(1);
     });

@@ -1,4 +1,7 @@
-import { CompareModelVersionsView, CompareModelVersionsViewImpl } from './CompareModelVersionsView';
+import {
+  CompareModelVersionsView,
+  CompareModelVersionsViewImpl
+} from './CompareModelVersionsView';
 import React from 'react';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
@@ -29,20 +32,20 @@ describe('unconnected tests', () => {
       inputsListByName: [],
       inputsListByIndex: [],
       outputsListByName: [],
-      outputsListByIndex: [],
+      outputsListByIndex: []
     };
 
     minimalStore = mockStore({
       entities: {
         runInfosByUuid: { 123: RunInfo.fromJs({ dummy_key: 'dummy_value' }) },
         latestMetricsByRunUuid: {
-          123: [{ key: 'test_metric', value: 0.0 }],
+          123: [{ key: 'test_metric', value: 0.0 }]
         },
         paramsByRunUuid: { 123: [{ key: 'test_param', value: '0.0' }] },
         tagsByRunUuid: { 123: [{ key: 'test_tag', value: 'test.user' }] },
-        mlModelArtifactByModelVersion: {},
+        mlModelArtifactByModelVersion: {}
       },
-      apis: {},
+      apis: {}
     });
 
     commonProps = {
@@ -56,11 +59,11 @@ describe('unconnected tests', () => {
           start_time: '0',
           end_time: '21',
           artifact_uri: './mlruns',
-          lifecycle_stage: 'active',
+          lifecycle_stage: 'active'
         }),
         RunInfo.fromJs({
-          run_uuid: 'somebadrunID',
-        }),
+          run_uuid: 'somebadrunID'
+        })
       ],
       runInfosValid: [true, false],
       metricLists: [[{ key: 'test_metric', value: 0.0 }]],
@@ -68,7 +71,7 @@ describe('unconnected tests', () => {
       inputsListByName: [],
       inputsListByIndex: [],
       outputsListByName: [],
-      outputsListByIndex: [],
+      outputsListByIndex: []
     };
   });
 
@@ -78,7 +81,7 @@ describe('unconnected tests', () => {
         <BrowserRouter>
           <CompareModelVersionsView {...minimumProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.length).toBe(1);
   });
@@ -89,17 +92,25 @@ describe('unconnected tests', () => {
         <BrowserRouter>
           <CompareModelVersionsView {...commonProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     // Checking the breadcrumb renders correctly
     expect(
-      wrapper.containsAllMatchingElements(['Registered Models', 'test', 'Comparing 2 Versions']),
+      wrapper.containsAllMatchingElements([
+        'Registered Models',
+        'test',
+        'Comparing 2 Versions'
+      ])
     ).toEqual(true);
 
     // Checking the model version shows up
-    expect(wrapper.containsAllMatchingElements(['Model Version:', '1'])).toEqual(true);
-    expect(wrapper.containsAllMatchingElements(['Model Version:', '2'])).toEqual(true);
+    expect(
+      wrapper.containsAllMatchingElements(['Model Version:', '1'])
+    ).toEqual(true);
+    expect(
+      wrapper.containsAllMatchingElements(['Model Version:', '2'])
+    ).toEqual(true);
   });
 });
 
@@ -113,20 +124,20 @@ describe('connected tests', () => {
   beforeEach(() => {
     minimumProps = {
       modelName: 'test',
-      versionsToRuns: { 1: '123' },
+      versionsToRuns: { 1: '123' }
     };
 
     minimalStore = mockStore({
       entities: {
         runInfosByUuid: { 123: RunInfo.fromJs({ dummy_key: 'dummy_value' }) },
         latestMetricsByRunUuid: {
-          123: [{ key: 'test_metric', value: 0.0 }],
+          123: [{ key: 'test_metric', value: 0.0 }]
         },
         paramsByRunUuid: { 123: [{ key: 'test_param', value: '0.0' }] },
         tagsByRunUuid: { 123: [{ key: 'test_tag', value: 'test.user' }] },
-        mlModelArtifactByModelVersion: {},
+        mlModelArtifactByModelVersion: {}
       },
-      apis: {},
+      apis: {}
     });
 
     commonStore = mockStore({
@@ -140,11 +151,13 @@ describe('connected tests', () => {
             start_time: '0',
             end_time: '21',
             artifact_uri: './mlruns',
-            lifecycle_stage: 'active',
-          }),
+            lifecycle_stage: 'active'
+          })
         },
         latestMetricsByRunUuid: {
-          123: [{ key: 'test_metric', value: 0.0, timestamp: '321', step: '42' }],
+          123: [
+            { key: 'test_metric', value: 0.0, timestamp: '321', step: '42' }
+          ]
         },
         paramsByRunUuid: { 123: [{ key: 'test_param', value: '0.0' }] },
         tagsByRunUuid: { 123: [{ key: 'test_tag', value: 'test.user' }] },
@@ -158,13 +171,13 @@ describe('connected tests', () => {
                   '{"name": "petal length (cm)", "type": "double"}, ' +
                   '{"name":"petal width (cm)", "type": "double"}, ' +
                   '{"type": "double"}]',
-                outputs: '[{"type": "double"}]',
-              },
-            },
-          },
-        },
+                outputs: '[{"type": "double"}]'
+              }
+            }
+          }
+        }
       },
-      apis: {},
+      apis: {}
     });
   });
 
@@ -174,7 +187,7 @@ describe('connected tests', () => {
         <BrowserRouter>
           <CompareModelVersionsView {...minimumProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find(CompareModelVersionsView).length).toBe(1);
   });
@@ -185,42 +198,54 @@ describe('connected tests', () => {
         <BrowserRouter>
           <CompareModelVersionsView {...minimumProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     expect(wrapper.find(CompareModelVersionsView).length).toBe(1);
 
     // Checking the breadcrumb renders correctly
     expect(
-      wrapper.containsAllMatchingElements(['Registered Models', 'test', 'Comparing 1 Versions']),
+      wrapper.containsAllMatchingElements([
+        'Registered Models',
+        'test',
+        'Comparing 1 Versions'
+      ])
     ).toEqual(true);
 
     // Checking the model version shows up
-    expect(wrapper.containsAllMatchingElements(['Model Version:', '1'])).toEqual(true);
+    expect(
+      wrapper.containsAllMatchingElements(['Model Version:', '1'])
+    ).toEqual(true);
   });
 
   test('validate that comparison works with null run IDs or invalid run IDs', () => {
     const testProps = {
       modelName: 'test',
-      versionsToRuns: { 1: '123', 2: null, 3: 'cats' },
+      versionsToRuns: { 1: '123', 2: null, 3: 'cats' }
     };
     wrapper = mountWithIntl(
       <Provider store={commonStore}>
         <BrowserRouter>
           <CompareModelVersionsView {...testProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
 
     expect(wrapper.find(CompareModelVersionsView).length).toBe(1);
 
     // Checking the breadcrumb renders correctly
     expect(
-      wrapper.containsAllMatchingElements(['Registered Models', 'test', 'Comparing 3 Versions']),
+      wrapper.containsAllMatchingElements([
+        'Registered Models',
+        'test',
+        'Comparing 3 Versions'
+      ])
     ).toEqual(true);
 
     // Checking the model version shows up
-    expect(wrapper.containsAllMatchingElements(['Model Version:', '1'])).toEqual(true);
+    expect(
+      wrapper.containsAllMatchingElements(['Model Version:', '1'])
+    ).toEqual(true);
   });
 
   test('inputsList and outputsList props contains correct columns', () => {
@@ -229,7 +254,7 @@ describe('connected tests', () => {
         <BrowserRouter>
           <CompareModelVersionsView {...minimumProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     const props = wrapper.find(CompareModelVersionsViewImpl).props();
     expect(props.inputsListByName).toEqual([
@@ -238,8 +263,8 @@ describe('connected tests', () => {
         { key: 'sepal width (cm)', value: 'double' },
         { key: 'petal length (cm)', value: 'double' },
         { key: 'petal width (cm)', value: 'double' },
-        { key: '-', value: 'double' },
-      ],
+        { key: '-', value: 'double' }
+      ]
     ]);
     expect(props.inputsListByIndex).toEqual([
       [
@@ -247,8 +272,8 @@ describe('connected tests', () => {
         { key: 1, value: 'sepal width (cm): double' },
         { key: 2, value: 'petal length (cm): double' },
         { key: 3, value: 'petal width (cm): double' },
-        { key: 4, value: 'double' },
-      ],
+        { key: 4, value: 'double' }
+      ]
     ]);
     expect(props.outputsListByName).toEqual([[{ key: '-', value: 'double' }]]);
     expect(props.outputsListByIndex).toEqual([[{ key: 0, value: 'double' }]]);

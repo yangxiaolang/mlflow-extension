@@ -11,7 +11,7 @@ describe('DirectTransitionForm', () => {
 
   beforeEach(() => {
     minimalProps = {
-      innerRef: React.createRef(),
+      innerRef: React.createRef()
     };
   });
 
@@ -21,15 +21,17 @@ describe('DirectTransitionForm', () => {
   });
 
   test('should render checkbox only for active stage', () => {
-    const [activeStages, nonActiveStages] = _.partition(Stages, (s) => ACTIVE_STAGES.includes(s));
+    const [activeStages, nonActiveStages] = _.partition(Stages, s =>
+      ACTIVE_STAGES.includes(s)
+    );
 
-    activeStages.forEach((toStage) => {
+    activeStages.forEach(toStage => {
       const props = { ...minimalProps, toStage };
       wrapper = mountWithIntl(<DirectTransitionForm {...props} />);
       expect(wrapper.find(Checkbox).length).toBe(1);
     });
 
-    nonActiveStages.forEach((toStage) => {
+    nonActiveStages.forEach(toStage => {
       const props = { ...minimalProps, toStage };
       wrapper = mountWithIntl(<DirectTransitionForm {...props} />);
       expect(wrapper.find(Checkbox).length).toBe(0);

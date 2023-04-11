@@ -9,7 +9,12 @@
 */
 
 import React from 'react';
-import { Tooltip, Button, WithDesignSystemThemeHoc, SyncIcon } from '@databricks/design-system';
+import {
+  Tooltip,
+  Button,
+  WithDesignSystemThemeHoc,
+  SyncIcon
+} from '@databricks/design-system';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
@@ -20,25 +25,33 @@ export class LoadMoreBarImpl extends React.PureComponent {
     onLoadMore: PropTypes.func.isRequired,
     disableButton: PropTypes.bool,
     nestChildren: PropTypes.bool,
-    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
-    designSystemThemeApi: PropTypes.any.isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired })
+      .isRequired,
+    designSystemThemeApi: PropTypes.any.isRequired
   };
 
   renderButton() {
-    const { disableButton, onLoadMore, nestChildren, intl, designSystemThemeApi } = this.props;
+    const {
+      disableButton,
+      onLoadMore,
+      nestChildren,
+      intl,
+      designSystemThemeApi
+    } = this.props;
     const loadMoreButton = (
       <Button
-        className='load-more-button'
+        className="load-more-button"
         style={styles.loadMoreButton}
-        type='primary'
-        htmlType='button'
+        type="primary"
+        htmlType="button"
         onClick={onLoadMore}
-        size='small'
+        size="small"
         disabled={disableButton}
       >
         <FormattedMessage
-          defaultMessage='Load more'
-          description='Load more button text to load more experiment runs'
+          defaultMessage="Load more"
+          id="9CqEWy"
+          description="Load more button text to load more experiment runs"
         />
       </Button>
     );
@@ -46,12 +59,13 @@ export class LoadMoreBarImpl extends React.PureComponent {
     if (disableButton) {
       return (
         <Tooltip
-          className='load-more-button-disabled-tooltip'
-          placement='bottom'
+          className="load-more-button-disabled-tooltip"
+          placement="bottom"
           title={intl.formatMessage({
             defaultMessage: 'No more runs to load.',
+            id: 'ir96eY',
             description:
-              'Tooltip text for load more button when there are no more experiment runs to load',
+              'Tooltip text for load more button when there are no more experiment runs to load'
           })}
         >
           {loadMoreButton}
@@ -62,20 +76,24 @@ export class LoadMoreBarImpl extends React.PureComponent {
         <div>
           {loadMoreButton}
           <Tooltip
-            className='load-more-button-nested-info-tooltip'
-            placement='bottom'
+            className="load-more-button-nested-info-tooltip"
+            placement="bottom"
             title={intl.formatMessage({
-              defaultMessage: 'Loaded child runs are nested under their parents.',
+              defaultMessage:
+                'Loaded child runs are nested under their parents.',
+              id: '3ioIKi',
               description:
                 // eslint-disable-next-line max-len
-                'Tooltip text for load more button explaining the runs are nested under their parent experiment run',
+                'Tooltip text for load more button explaining the runs are nested under their parent experiment run'
             })}
           >
             <i
-              className='fas fa-info-circle'
+              className="fas fa-info-circle"
               css={{
                 marginLeft: designSystemThemeApi.theme.spacing.sm,
-                color: designSystemThemeApi.theme.colors.actionPrimaryBackgroundDefault,
+                color:
+                  designSystemThemeApi.theme.colors
+                    .actionPrimaryBackgroundDefault
               }}
             />
           </Tooltip>
@@ -89,9 +107,15 @@ export class LoadMoreBarImpl extends React.PureComponent {
   render() {
     const { loadingMore, style } = this.props;
     return (
-      <div className='load-more-row' style={{ ...styles.loadMoreRows, ...style }}>
+      <div
+        className="load-more-row"
+        style={{ ...styles.loadMoreRows, ...style }}
+      >
         {loadingMore ? (
-          <div className='loading-more-wrapper' style={styles.loadingMoreWrapper}>
+          <div
+            className="loading-more-wrapper"
+            style={styles.loadingMoreWrapper}
+          >
             <SyncIcon spin style={styles.loadingMoreIcon} />
           </div>
         ) : (
@@ -107,19 +131,21 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    background: 'white',
+    background: 'white'
   },
   loadingMoreWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   loadingMoreIcon: {
-    fontSize: 20,
+    fontSize: 20
   },
   loadMoreButton: {
     paddingLeft: 16,
-    paddingRight: 16,
-  },
+    paddingRight: 16
+  }
 };
 
-export const LoadMoreBar = WithDesignSystemThemeHoc(injectIntl(LoadMoreBarImpl));
+export const LoadMoreBar = WithDesignSystemThemeHoc(
+  injectIntl(LoadMoreBarImpl)
+);

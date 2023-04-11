@@ -5,7 +5,10 @@ import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { CompareModelVersionsPageImpl, CompareModelVersionsPage } from './CompareModelVersionsPage';
+import {
+  CompareModelVersionsPageImpl,
+  CompareModelVersionsPage
+} from './CompareModelVersionsPage';
 
 describe('CompareModelVersionPage', () => {
   let wrapper;
@@ -16,7 +19,11 @@ describe('CompareModelVersionPage', () => {
   beforeEach(() => {
     // TODO: remove global fetch mock by explicitly mocking all the service API calls
     global.fetch = jest.fn(() =>
-      Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('') }),
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('')
+      })
     );
     const modelName = 'normal-model-name';
     minimalProps = {
@@ -27,19 +34,19 @@ describe('CompareModelVersionPage', () => {
           '&runs=' +
           JSON.stringify({
             1: '123',
-            2: '234',
-          }),
+            2: '234'
+          })
       },
       versionsToRuns: {
         1: '123',
-        2: '234',
+        2: '234'
       },
       getRegisteredModelApi: jest.fn(),
       getModelVersionApi: jest.fn(),
-      parseMlModelFile: jest.fn(),
+      parseMlModelFile: jest.fn()
     };
     minimalStore = mockStore({
-      apis: {},
+      apis: {}
     });
   });
 
@@ -49,7 +56,7 @@ describe('CompareModelVersionPage', () => {
         <BrowserRouter>
           <CompareModelVersionsPage {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
   });
 
@@ -62,16 +69,16 @@ describe('CompareModelVersionPage', () => {
           '&runs=' +
           JSON.stringify({
             1: '123',
-            2: '234',
-          }),
-      },
+            2: '234'
+          })
+      }
     };
     wrapper = mount(
       <Provider store={minimalStore}>
         <BrowserRouter>
           <CompareModelVersionsPage {...props} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find(CompareModelVersionsPageImpl).length).toBe(1);
   });
@@ -80,14 +87,16 @@ describe('CompareModelVersionPage', () => {
     const mockError = {
       getErrorCode() {
         return 'RESOURCE_DOES_NOT_EXIST';
-      },
+      }
     };
     const getRunApi = jest.fn().mockReturnValue(Promise.reject(mockError));
-    const getModelVersionArtifactApi = jest.fn().mockReturnValue(Promise.reject(mockError));
+    const getModelVersionArtifactApi = jest
+      .fn()
+      .mockReturnValue(Promise.reject(mockError));
     const myProps = {
       getRunApi: getRunApi,
       getModelVersionArtifactApi: getModelVersionArtifactApi,
-      ...minimalProps,
+      ...minimalProps
     };
     const wrapper2 = shallow(<CompareModelVersionsPageImpl {...myProps} />);
     expect(wrapper2.state('requestIds').length).toBe(4);

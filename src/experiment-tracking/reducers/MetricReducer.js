@@ -3,7 +3,7 @@ import {
   GET_METRIC_HISTORY_API,
   GET_RUN_API,
   LOAD_MORE_RUNS_API,
-  SEARCH_RUNS_API,
+  SEARCH_RUNS_API
 } from '../actions';
 import { RunInfo, Metric } from '../sdk/MlflowMessages';
 import { fulfilled } from '../../common/utils/ActionUtils';
@@ -35,9 +35,9 @@ export const getMaxMetrics = (runUuid, state) => {
  * Return latest metrics by run UUID (object of run UUID -> object of metric key -> Metric object)
  */
 export const latestMetricsByRunUuid = (state = {}, action) => {
-  const metricArrToObject = (metrics) => {
+  const metricArrToObject = metrics => {
     const metricObj = {};
-    metrics.forEach((m) => (metricObj[m.key] = Metric.fromJs(m)));
+    metrics.forEach(m => (metricObj[m.key] = Metric.fromJs(m)));
     return metricObj;
   };
   switch (action.type) {
@@ -47,14 +47,14 @@ export const latestMetricsByRunUuid = (state = {}, action) => {
       const metrics = action.payload.run.data.metrics || [];
       return {
         ...state,
-        [runUuid]: metricArrToObject(metrics),
+        [runUuid]: metricArrToObject(metrics)
       };
     }
     case fulfilled(SEARCH_RUNS_API):
     case fulfilled(LOAD_MORE_RUNS_API): {
       const newState = { ...state };
       if (action.payload.runs) {
-        action.payload.runs.forEach((rJson) => {
+        action.payload.runs.forEach(rJson => {
           const runUuid = rJson.info.run_uuid;
           const metrics = rJson.data.metrics || [];
           newState[runUuid] = metricArrToObject(metrics);
@@ -106,13 +106,13 @@ const reducedMetricsByRunUuid = (state = {}, action, reducer) => {
  * Return minimum metrics by run UUID (object of run UUID -> object of metric key -> Metric object)
  */
 export const minMetricsByRunUuid = (state = {}, action) =>
-  reducedMetricsByRunUuid(state, action, (metrics) => minBy(metrics, 'value'));
+  reducedMetricsByRunUuid(state, action, metrics => minBy(metrics, 'value'));
 
 /**
  * Return maximum metrics by run UUID (object of run UUID -> object of metric key -> Metric object)
  */
 export const maxMetricsByRunUuid = (state = {}, action) =>
-  reducedMetricsByRunUuid(state, action, (metrics) => maxBy(metrics, 'value'));
+  reducedMetricsByRunUuid(state, action, metrics => maxBy(metrics, 'value'));
 
 export const metricsByRunUuid = (state = {}, action) => {
   switch (action.type) {
@@ -121,7 +121,7 @@ export const metricsByRunUuid = (state = {}, action) => {
       const metrics = action.payload.metrics || [];
       return {
         ...state,
-        [runUuid]: metricsByKey(state[runUuid], action, metrics),
+        [runUuid]: metricsByKey(state[runUuid], action, metrics)
       };
     }
     default:
@@ -134,7 +134,7 @@ export const metricsByKey = (state = {}, action, metrics) => {
   switch (action.type) {
     case fulfilled(GET_METRIC_HISTORY_API): {
       const { key } = action.meta;
-      newState[key] = metrics.map((m) => Metric.fromJs(m));
+      newState[key] = metrics.map(m => Metric.fromJs(m));
       return newState;
     }
     default:

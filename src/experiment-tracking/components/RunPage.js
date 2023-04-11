@@ -21,7 +21,7 @@ export class RunPageImpl extends Component {
     getRunApi: PropTypes.func.isRequired,
     getExperimentApi: PropTypes.func.isRequired,
     searchModelVersionsApi: PropTypes.func.isRequired,
-    setTagApi: PropTypes.func.isRequired,
+    setTagApi: PropTypes.func.isRequired
   };
 
   getRunRequestId = getUUID();
@@ -36,7 +36,10 @@ export class RunPageImpl extends Component {
     const { experimentId, runUuid } = this.props;
     this.props.getRunApi(runUuid, this.getRunRequestId);
     this.props.getExperimentApi(experimentId, this.getExperimentRequestId);
-    this.props.searchModelVersionsApi({ run_id: runUuid }, this.searchModelVersionsRequestId);
+    this.props.searchModelVersionsApi(
+      { run_id: runUuid },
+      this.searchModelVersionsRequestId
+    );
   }
 
   handleSetRunTag = (tagName, value) => {
@@ -50,8 +53,14 @@ export class RunPageImpl extends Component {
     if (isLoading) {
       return <Spinner />;
     } else if (shouldRenderError) {
-      const getRunRequest = Utils.getRequestWithId(requests, this.getRunRequestId);
-      if (getRunRequest.error.getErrorCode() === ErrorCodes.RESOURCE_DOES_NOT_EXIST) {
+      const getRunRequest = Utils.getRequestWithId(
+        requests,
+        this.getRunRequestId
+      );
+      if (
+        getRunRequest.error.getErrorCode() ===
+        ErrorCodes.RESOURCE_DOES_NOT_EXIST
+      ) {
         return <RunNotFoundView runId={this.props.runUuid} />;
       }
       return null;
@@ -59,8 +68,10 @@ export class RunPageImpl extends Component {
     return (
       <RunView
         runUuid={this.props.runUuid}
-        getMetricPagePath={(key) =>
-          Routes.getMetricPageRoute([this.props.runUuid], key, [this.props.experimentId])
+        getMetricPagePath={key =>
+          Routes.getMetricPageRoute([this.props.runUuid], key, [
+            this.props.experimentId
+          ])
         }
         experimentId={this.props.experimentId}
         modelVersions={this.props.modelVersions}
@@ -88,13 +99,15 @@ const mapStateToProps = (state, ownProps) => {
   const { match } = ownProps;
   const { runUuid, experimentId } = match.params;
   const { modelVersionsByRunUuid } = state.entities;
-  const modelVersions = modelVersionsByRunUuid ? modelVersionsByRunUuid[runUuid] : null;
+  const modelVersions = modelVersionsByRunUuid
+    ? modelVersionsByRunUuid[runUuid]
+    : null;
   return {
     runUuid,
     experimentId,
     modelVersions,
     // so that we re-render the component when the route changes
-    key: runUuid + experimentId,
+    key: runUuid + experimentId
   };
 };
 
@@ -102,7 +115,10 @@ const mapDispatchToProps = {
   getRunApi,
   getExperimentApi,
   searchModelVersionsApi,
-  setTagApi,
+  setTagApi
 };
 
-export const RunPage = connect(mapStateToProps, mapDispatchToProps)(RunPageImpl);
+export const RunPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RunPageImpl);

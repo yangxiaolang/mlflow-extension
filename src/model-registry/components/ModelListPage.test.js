@@ -3,12 +3,15 @@ import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
-import { mockModelVersionDetailed, mockRegisteredModelDetailed } from '../test-utils';
+import {
+  mockModelVersionDetailed,
+  mockRegisteredModelDetailed
+} from '../test-utils';
 import {
   ModelVersionStatus,
   REGISTERED_MODELS_SEARCH_TIMESTAMP_FIELD,
   REGISTERED_MODELS_SEARCH_NAME_FIELD,
-  Stages,
+  Stages
 } from '../constants';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -31,9 +34,9 @@ describe('ModelListPage', () => {
     const history = {
       location: {
         pathName: '/models',
-        search: '',
+        search: ''
       },
-      push: pushSpy,
+      push: pushSpy
     };
     minimalProps = {
       models: [],
@@ -43,19 +46,24 @@ describe('ModelListPage', () => {
       getRegistryWidePermissionsApi: jest.fn(() => Promise.resolve({})),
       apis: {},
       history,
-      location,
+      location
     };
     const name = 'Model A';
     const versions = [
-      mockModelVersionDetailed('Model A', 1, Stages.PRODUCTION, ModelVersionStatus.READY),
+      mockModelVersionDetailed(
+        'Model A',
+        1,
+        Stages.PRODUCTION,
+        ModelVersionStatus.READY
+      )
     ];
     minimalStore = mockStore({
       entities: {
         modelByName: {
-          [name]: mockRegisteredModelDetailed(name, versions),
-        },
+          [name]: mockRegisteredModelDetailed(name, versions)
+        }
       },
-      apis: {},
+      apis: {}
     });
   });
 
@@ -66,7 +74,7 @@ describe('ModelListPage', () => {
           <BrowserRouter>
             <ModelListPageImpl {...minimalProps} />
           </BrowserRouter>
-        </Provider>,
+        </Provider>
       );
     });
 
@@ -74,7 +82,9 @@ describe('ModelListPage', () => {
       instance = wrapper.find(ModelListPageImpl).instance();
       jest.spyOn(instance, 'loadPage').mockImplementation(loadPageMock);
       expect(instance.state.searchInput).toBe('');
-      expect(instance.state.orderByKey).toBe(REGISTERED_MODELS_SEARCH_NAME_FIELD);
+      expect(instance.state.orderByKey).toBe(
+        REGISTERED_MODELS_SEARCH_NAME_FIELD
+      );
       expect(instance.state.orderByAsc).toBe(true);
     });
 
@@ -98,7 +108,9 @@ describe('ModelListPage', () => {
       instance = wrapper.find(ModelListPageImpl).instance();
       jest.spyOn(instance, 'loadPage').mockImplementation(loadPageMock);
       instance.handleSearch(noop, noop, 'name ilike "%xyz%" AND tags.k="v"');
-      expect(instance.state.searchInput).toBe('name ilike "%xyz%" AND tags.k="v"');
+      expect(instance.state.searchInput).toBe(
+        'name ilike "%xyz%" AND tags.k="v"'
+      );
       expect(instance.state.currentPage).toBe(1);
     });
     test('the states should be correctly set when user clear input', () => {
@@ -117,7 +129,7 @@ describe('ModelListPage', () => {
         <BrowserRouter>
           <ModelListPageImpl {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(wrapper.find(ModelListPageImpl).length).toBe(1);
   });
@@ -128,16 +140,17 @@ describe('ModelListPage', () => {
         <BrowserRouter>
           <ModelListPageImpl {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     instance = wrapper.find(ModelListPageImpl).instance();
     instance.updateUrlWithSearchFilter(
       'name ilike "%name%" AND tag.key=value',
       REGISTERED_MODELS_SEARCH_TIMESTAMP_FIELD,
       false,
-      2,
+      2
     );
-    const expectedUrl = `/models?searchInput=name%20ilike%20%22%25name%25%22%20AND%20tag.key%3Dvalue&orderByKey=timestamp&orderByAsc=false&page=2`;
+    const expectedUrl =
+      '/models?searchInput=name%20ilike%20%22%25name%25%22%20AND%20tag.key%3Dvalue&orderByKey=timestamp&orderByAsc=false&page=2';
     expect(pushSpy).toHaveBeenCalledWith(expectedUrl);
   });
 
@@ -148,7 +161,7 @@ describe('ModelListPage', () => {
         <BrowserRouter>
           <ModelListPageImpl {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     instance = wrapper.find(ModelListPageImpl).instance();
     const expectedUrl = '/models?searchInput=abc';
@@ -163,22 +176,23 @@ describe('ModelListPage', () => {
         <BrowserRouter>
           <ModelListPageImpl {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     instance = wrapper.find(ModelListPageImpl).instance();
-    const expectedUrl = `/models?searchInput=tags.k%20%3D%20%22v%22`;
+    const expectedUrl = '/models?searchInput=tags.k%20%3D%20%22v%22';
     instance.render();
     expect(pushSpy).toHaveBeenCalledWith(expectedUrl);
   });
 
   test('should pushes URL correctly from old URLs with nameSearchInput and tagSearchInput', () => {
-    minimalProps['location']['search'] = 'nameSearchInput=abc&tagSearchInput=tags.k%20%3D%20"v"';
+    minimalProps['location']['search'] =
+      'nameSearchInput=abc&tagSearchInput=tags.k%20%3D%20"v"';
     wrapper = mount(
       <Provider store={minimalStore}>
         <BrowserRouter>
           <ModelListPageImpl {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     instance = wrapper.find(ModelListPageImpl).instance();
     const expectedUrl =
@@ -195,7 +209,7 @@ describe('ModelListPage', () => {
         <BrowserRouter>
           <ModelListPageImpl {...minimalProps} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     instance = wrapper.find(ModelListPageImpl).instance();
     const expectedUrl =

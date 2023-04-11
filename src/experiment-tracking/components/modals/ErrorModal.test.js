@@ -11,7 +11,7 @@ describe('ErrorModalImpl', () => {
     minimalProps = {
       isOpen: false,
       onClose: jest.fn(),
-      text: 'Error popup content',
+      text: 'Error popup content'
     };
     wrapper = mountWithIntl(<ErrorModalWithIntl {...minimalProps} />);
   });

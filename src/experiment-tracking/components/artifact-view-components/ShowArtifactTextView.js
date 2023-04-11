@@ -16,17 +16,17 @@ class ShowArtifactTextView extends Component {
   static propTypes = {
     runUuid: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    getArtifact: PropTypes.func,
+    getArtifact: PropTypes.func
   };
 
   static defaultProps = {
-    getArtifact: getArtifactContent,
+    getArtifact: getArtifactContent
   };
 
   state = {
     loading: true,
     error: undefined,
-    text: undefined,
+    text: undefined
   };
 
   componentDidMount() {
@@ -34,18 +34,21 @@ class ShowArtifactTextView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.path !== prevProps.path || this.props.runUuid !== prevProps.runUuid) {
+    if (
+      this.props.path !== prevProps.path ||
+      this.props.runUuid !== prevProps.runUuid
+    ) {
       this.fetchArtifacts();
     }
   }
 
   render() {
     if (this.state.loading) {
-      return <div className='artifact-text-view-loading'>Loading...</div>;
+      return <div className="artifact-text-view-loading">Loading...</div>;
     }
     if (this.state.error) {
       return (
-        <div className='artifact-text-view-error'>
+        <div className="artifact-text-view-error">
           Oops we couldn't load your file because of an error.
         </div>
       );
@@ -57,13 +60,20 @@ class ShowArtifactTextView extends Component {
         overflow: 'auto',
         marginTop: '0',
         width: '100%',
-        height: '100%',
+        height: '100%'
       };
-      const renderedContent = ShowArtifactTextView.prettifyText(language, this.state.text);
+      const renderedContent = ShowArtifactTextView.prettifyText(
+        language,
+        this.state.text
+      );
       return (
-        <div className='ShowArtifactPage'>
-          <div className='text-area-border-box'>
-            <SyntaxHighlighter language={language} style={style} customStyle={overrideStyles}>
+        <div className="ShowArtifactPage">
+          <div className="text-area-border-box">
+            <SyntaxHighlighter
+              language={language}
+              style={style}
+              customStyle={overrideStyles}
+            >
               {renderedContent}
             </SyntaxHighlighter>
           </div>
@@ -89,10 +99,10 @@ class ShowArtifactTextView extends Component {
     const artifactLocation = getSrc(this.props.path, this.props.runUuid);
     this.props
       .getArtifact(artifactLocation)
-      .then((text) => {
+      .then(text => {
         this.setState({ text: text, loading: false });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({ error: error, loading: false });
       });
   }

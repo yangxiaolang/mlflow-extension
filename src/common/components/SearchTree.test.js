@@ -1,7 +1,16 @@
 import React from 'react';
-import { SearchTree, SearchTreeImpl, styles, getParentKey, flattenDataToList } from './SearchTree';
+import {
+  SearchTree,
+  SearchTreeImpl,
+  styles,
+  getParentKey,
+  flattenDataToList
+} from './SearchTree';
 import { Tree } from 'antd';
-import { shallowWithInjectIntl, mountWithIntl } from '../../common/utils/TestUtils';
+import {
+  shallowWithInjectIntl,
+  mountWithIntl
+} from '../../common/utils/TestUtils';
 import { createIntl } from 'react-intl';
 
 const { TreeNode } = Tree;
@@ -17,7 +26,7 @@ describe('SearchTree', () => {
       data: [],
       onCheck: jest.fn(),
       checkedKeys: [],
-      onSearchInputEscapeKeyPress: jest.fn(),
+      onSearchInputEscapeKeyPress: jest.fn()
     };
 
     commonProps = {
@@ -25,7 +34,7 @@ describe('SearchTree', () => {
       data: [
         {
           title: 'Date',
-          key: 'attributes-Date',
+          key: 'attributes-Date'
         },
         {
           title: 'Parameters',
@@ -33,13 +42,13 @@ describe('SearchTree', () => {
           children: [
             {
               title: 'p1',
-              key: 'params-p1',
+              key: 'params-p1'
             },
             {
               title: 'p2',
-              key: 'params-p2',
-            },
-          ],
+              key: 'params-p2'
+            }
+          ]
         },
         {
           title: 'Metrics',
@@ -47,15 +56,15 @@ describe('SearchTree', () => {
           children: [
             {
               title: 'm1',
-              key: 'metrics-m1',
+              key: 'metrics-m1'
             },
             {
               title: 'm2',
-              key: 'metrics-m2',
-            },
-          ],
-        },
-      ],
+              key: 'metrics-m2'
+            }
+          ]
+        }
+      ]
     };
   });
 
@@ -78,16 +87,16 @@ describe('SearchTree', () => {
     instance = wrapper.instance();
     instance.handleSearch({
       target: {
-        value: 'p',
-      },
+        value: 'p'
+      }
     });
     wrapper.update();
     expect(wrapper.find({ style: styles.searchHighlight }).length).toBe(3);
 
     instance.handleSearch({
       target: {
-        value: 'p1',
-      },
+        value: 'p1'
+      }
     });
     wrapper.update();
     expect(wrapper.find({ style: styles.searchHighlight }).length).toBe(1);
@@ -102,7 +111,7 @@ describe('SearchTree', () => {
       { title: 'p2', key: 'params-p2' },
       { title: 'Metrics', key: 'metrics' },
       { title: 'm1', key: 'metrics-m1' },
-      { title: 'm2', key: 'metrics-m2' },
+      { title: 'm2', key: 'metrics-m2' }
     ]);
   });
 
